@@ -1,0 +1,55 @@
+# Starts one demo and waits for it to answer. Run by hand, because a pull request does not
+# need it: the LLM demo downloads a model on first start, which is minutes and gigabytes on
+# a hosted runner. The contributor confirms `docker compose up` locally; this is here for a
+# maintainer who wants to see a stranger's demo come up before merging it.
+name: Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: Which demo to start (its folder name under demos/)
+        required: true
+        default: sqli-demo
+
+permissions:
+  contents: read
+
+jobs:
+  up:
+    name: Start ${{ inputs.demo }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DEMO: ${{ inputs.demo }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: The folder exists
+        run: test -f "demos/$DEMO/compose.yaml"
+
+      - name: Start it
+        run: docker compose up --build --detach "$DEMO"
+
+      - name: Wait for the port the demo publishes
+        run: |
+          port=$(grep -oE '127\.0\.0\.1:[0-9]+' "demos/$DEMO/compose.yaml" | head -1 | cut -d: -f2)
+          echo "waiting for http://127.0.0.1:$port/"
+          for _ in $(seq 1 90); do
+            if curl --silent --fail --max-time 5 "http://127.0.0.1:$port/" > /dev/null; then
+              echo "answered after the stack came up"
+              curl --silent "http://127.0.0.1:$port/" | head -c 400
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::$DEMO never answered on 127.0.0.1:$port"
+          exit 1
+
+      - name: Logs
+        if: failure()
+        run: docker compose logs --tail 200
+
+      - name: Stop it
+        if: always()
+        run: docker compose down --volumes

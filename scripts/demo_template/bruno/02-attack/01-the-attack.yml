@@ -1,0 +1,32 @@
+info:
+  name: The attack on the vulnerable route
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:__PORT__/api/v1/vulnerable/feature
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "input": "TODO(attack): the payload"
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+docs: |-
+  # 02.1 — The attack
+
+  TODO(attack): the payload, what it does on the vulnerable route, and an assertion that
+  proves it worked.

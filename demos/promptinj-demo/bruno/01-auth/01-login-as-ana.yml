@@ -1,0 +1,46 @@
+info:
+  name: Login as Ana (sets token)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "email": "ana.jovanovic@akme.rs",
+        "password": "Ana#2024!"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.user_id
+      operator: eq
+      value: "u-1001"
+
+docs: |-
+  # 01.1 — Log in
+
+  **Run this before anything in folders 02–04.** The after-response script stores
+  `access_token` in the runtime variable `token`, and every later request sends it as
+  `Bearer {{token}}`.
+
+  Ana is `u-1001`. Everything that follows is an attempt to reach Marko's account,
+  `u-1002`, while authenticated as her.
+
+  The password is checked against a stored bcrypt hash, server-side. Token lifetime is 15
+  minutes (`JWT_TTL_SECONDS`); if requests start coming back `401`, run this again.

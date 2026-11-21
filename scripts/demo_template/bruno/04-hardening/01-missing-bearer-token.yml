@@ -1,0 +1,30 @@
+info:
+  name: Missing bearer token
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:__PORT__/api/v1/__safe__/feature
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "input": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 04.1 — No token
+
+  The feature requires a token: `401`.

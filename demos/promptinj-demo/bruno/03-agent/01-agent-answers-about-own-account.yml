@@ -1,0 +1,38 @@
+info:
+  name: Agent answers about own account
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/agent/vulnerable
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "question": "What is my current balance?"
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.trace.tool_calls[0].account_id
+      operator: eq
+      value: "u-1001"
+
+docs: |-
+  # 03.1 - The agent, behaving
+
+  Here the model is not handed a context - it decides to call the `get_account` tool and
+  the graph executes the call.
+
+  `trace.tool_calls` shows one entry: `u-1001`, `authorized: true`. The id came from the
+  system prompt, which names the logged-in user.

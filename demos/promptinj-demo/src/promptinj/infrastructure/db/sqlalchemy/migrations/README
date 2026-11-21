@@ -1,0 +1,11 @@
+Alembic migrations for the lab database.
+
+They live inside the package (next to models.py) so they ship with `COPY src ./src` and
+stay beside the single source of truth they are generated from.
+
+    uv run alembic revision --autogenerate -m "what changed"
+    uv run alembic upgrade head
+
+Both need the admin connection in the environment (DB_HOST, DB_NAME, DB_ADMIN_USER,
+DB_ADMIN_PASSWORD) — the application's `lab_app` role has no DDL rights. The seed job
+runs `upgrade head` for you on every `docker compose up`.

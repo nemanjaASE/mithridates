@@ -1,0 +1,48 @@
+[project]
+name = "__NAME__"
+version = "0.1.0"
+description = "Controlled lab: __TITLE__ and its fix (FastAPI)"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.160,<1",
+    "uvicorn[standard]>=0.32,<1",
+    "pydantic>=2.9,<3",
+    "pyjwt>=2.10,<3",
+    "bcrypt>=4.2,<6",
+# [postgres]
+    "psycopg[binary]>=3.2,<4",
+# [/postgres]
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14",
+    "mypy>=1.14",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "C4"]
+ignore = [
+    "E501",    # long lines are the formatter's business
+    "N818",    # error names read as the condition they describe
+    "UP042",   # `class Variant(str, Enum)` is what FastAPI path parameters accept
+    "B008",    # `Depends(...)` in a default argument is how FastAPI declares a dependency
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Diagram code is geometry: `W`, `H` are the clearest names a coordinate can have.
+"docs/diagrams.py" = ["N", "E741", "C408"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+ignore_missing_imports = true

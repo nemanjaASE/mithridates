@@ -1,0 +1,41 @@
+info:
+  name: UNION is refused
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "' UNION SELECT id, name, value FROM secrets WHERE name = 'flag'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 03.3 — No second query to append to
+
+  `401`, and nothing from `secrets` anywhere in the response.
+
+  Two independent reasons, and it is worth naming both:
+
+  1. the statement is parsed before the value is bound, so there is no place for a second
+     `SELECT` to attach itself;
+  2. even if there were, this route connects as `lab_app`, which has no grant on
+     `secrets` at all.
+
+  Defense in depth: the first reason is the fix, the second is what limits the damage of
+  the next bug.

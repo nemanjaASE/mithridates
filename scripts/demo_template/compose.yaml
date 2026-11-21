@@ -1,0 +1,84 @@
+# __NAME__ — a standalone compose file. To run only this service:
+#   cd demos/__NAME__ && docker compose up --build
+# Or together with the others from the repository root (../../docker-compose.yml).
+# Everything is bound to localhost. Do NOT expose it on a network.
+
+x-hardening: &hardening
+  read_only: true            # the container's root filesystem is read-only
+  cap_drop: [ALL]            # no Linux capabilities
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp
+# [postgres]
+
+# Lab passwords. The database is unreachable from the host (internal network); override in .env.
+x-db-env: &db-env
+  DB_HOST: __TOPIC__-db
+  DB_NAME: lab
+  DB_APP_USER: lab_app
+  DB_APP_PASSWORD: ${__PREFIX___DB_APP_PASSWORD:-lab-app-pass}
+# [/postgres]
+
+services:
+# [postgres]
+  __TOPIC__-db:
+    image: postgres:18-alpine
+    <<: *hardening
+    # The image's entrypoint has to set ownership of the data before it drops privileges.
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    environment:
+      POSTGRES_DB: lab
+      POSTGRES_USER: lab_admin
+      POSTGRES_PASSWORD: ${__PREFIX___DB_ADMIN_PASSWORD:-lab-admin-pass}
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+      - /var/lib/postgresql      # the database is reset on every start anyway
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "lab_admin", "-d", "lab"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  __TOPIC__-seed:                # one-off job: the application account, the schema, the data
+    image: mithridates/__NAME__:local
+    build: .
+    <<: *hardening
+    command: ["python", "-m", "app.seed"]
+    environment:
+      <<: *db-env
+      DB_ADMIN_USER: lab_admin   # only the seed job gets the admin account, never the application
+      DB_ADMIN_PASSWORD: ${__PREFIX___DB_ADMIN_PASSWORD:-lab-admin-pass}
+    networks: [backend]
+    depends_on:
+      __TOPIC__-db:
+        condition: service_healthy
+    restart: "no"
+
+# [/postgres]
+  __NAME__:
+    image: mithridates/__NAME__:local
+    build: .
+    <<: *hardening
+    ports:
+      - "127.0.0.1:__PORT__:8000"   # local only
+    environment:
+# [postgres]
+      <<: *db-env
+# [/postgres]
+      # Lab secret (>= 32 bytes). For anything more serious, set __PREFIX___JWT_SECRET in .env.
+      JWT_SECRET: ${__PREFIX___JWT_SECRET:-lab-only-__TOPIC__-secret-change-me-0123456789}
+      JWT_TTL_SECONDS: ${__PREFIX___JWT_TTL_SECONDS:-900}
+# [postgres]
+    networks: [default, backend]
+    depends_on:
+      __TOPIC__-seed:
+        condition: service_completed_successfully
+
+networks:
+  default:
+  backend:
+    internal: true               # the database reaches neither the internet nor the host
+# [/postgres]

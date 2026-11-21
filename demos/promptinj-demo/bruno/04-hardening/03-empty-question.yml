@@ -1,0 +1,33 @@
+info:
+  name: Empty question
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/assistant/vulnerable
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "question": ""
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "422"
+
+docs: |-
+  # 04.3 - Empty question
+
+  `422` from `min_length=1` on the request model. The body names the offending field and
+  **does not echo the submitted value** - FastAPI's default handler does echo it, so the
+  lab replaces it (OWASP Error Handling).

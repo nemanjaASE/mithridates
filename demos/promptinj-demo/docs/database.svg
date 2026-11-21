@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 824" width="1100" height="824" role="img" aria-labelledby="t d">
+<title id="t">The same document, stored twice</title><desc id="d">Every document is embedded once and kept in two forms. The mitigated variant selects the column that has no card number in it.</desc>
+<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9DA6B7" stroke-width="1.1"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E0E6F0" stroke-width="1.1"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E08585" stroke-width="1.1"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9FEF00" stroke-width="1.1"/></marker></defs>
+<rect width="1100" height="824" fill="#252A33"/>
+<text x="56" y="64" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="132.0" lengthAdjust="spacingAndGlyphs">THE VECTOR STORE</text>
+<text x="56" y="108" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="32" font-weight="700" xml:space="preserve" textLength="545.6" lengthAdjust="spacingAndGlyphs">The same document, stored twice</text>
+<polyline points="56,132 1044,132" fill="none" stroke="#3F4552" stroke-width="1"/>
+<rect x="56" y="210" width="420" height="222" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-system" d="M56,224 V210 H70 M476,224 V210 H462 M56,418 V432 H70 M476,418 V432 H462" fill="none" stroke="#8F98AA" stroke-width="2"/>
+<g transform="translate(72,229)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="16" height="14" rx="1"/><path d="M2 8h16M8 8v9"/></g>
+<text x="100" y="245" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="74.8" lengthAdjust="spacingAndGlyphs">accounts</text>
+<text x="72" y="267" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">[table]</text>
+<path d="M 56 280 H 476" stroke="#8F98AA" stroke-opacity="0.5" stroke-width="1"/>
+<text x="72" y="304" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="12" font-weight="700" xml:space="preserve" textLength="13.2" lengthAdjust="spacingAndGlyphs">PK</text>
+<text x="120" y="304" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="15.4" lengthAdjust="spacingAndGlyphs">id</text>
+<text x="460" y="304" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="120" y="326" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="30.8" lengthAdjust="spacingAndGlyphs">name</text>
+<text x="460" y="326" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="72" y="348" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="12" font-weight="700" xml:space="preserve" textLength="13.2" lengthAdjust="spacingAndGlyphs">UQ</text>
+<text x="120" y="348" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="38.5" lengthAdjust="spacingAndGlyphs">email</text>
+<text x="460" y="348" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="120" y="370" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="30.8" lengthAdjust="spacingAndGlyphs">plan</text>
+<text x="460" y="370" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="120" y="392" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="84.7" lengthAdjust="spacingAndGlyphs">balance_rsd</text>
+<text x="460" y="392" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="42.9" lengthAdjust="spacingAndGlyphs">bigint</text>
+<text x="120" y="414" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="84.7" lengthAdjust="spacingAndGlyphs">card_number</text>
+<text x="460" y="414" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<rect x="600" y="210" width="444" height="200" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-system" d="M600,224 V210 H614 M1044,224 V210 H1030 M600,396 V410 H614 M1044,396 V410 H1030" fill="none" stroke="#8F98AA" stroke-width="2"/>
+<g transform="translate(616,229)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="16" height="14" rx="1"/><path d="M2 8h16M8 8v9"/></g>
+<text x="644" y="245" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="84.15" lengthAdjust="spacingAndGlyphs">documents</text>
+<text x="616" y="267" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">[table]</text>
+<path d="M 600 280 H 1044" stroke="#8F98AA" stroke-opacity="0.5" stroke-width="1"/>
+<text x="616" y="304" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="12" font-weight="700" xml:space="preserve" textLength="13.2" lengthAdjust="spacingAndGlyphs">PK</text>
+<text x="664" y="304" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="15.4" lengthAdjust="spacingAndGlyphs">id</text>
+<text x="1028" y="304" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="42.9" lengthAdjust="spacingAndGlyphs">bigint</text>
+<text x="664" y="326" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="61.6" lengthAdjust="spacingAndGlyphs">owner_id</text>
+<text x="1028" y="326" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="664" y="348" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="700" xml:space="preserve" textLength="30.8" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="1028" y="348" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="128.7" lengthAdjust="spacingAndGlyphs">text · every field</text>
+<text x="664" y="370" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="700" xml:space="preserve" textLength="69.3" lengthAdjust="spacingAndGlyphs">safe_text</text>
+<text x="1028" y="370" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="135.85" lengthAdjust="spacingAndGlyphs">text · allow-listed</text>
+<text x="664" y="392" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="69.3" lengthAdjust="spacingAndGlyphs">embedding</text>
+<text x="1028" y="392" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="78.65" lengthAdjust="spacingAndGlyphs">vector(768)</text>
+<rect x="56" y="512" width="420" height="156" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-system" d="M56,526 V512 H70 M476,526 V512 H462 M56,654 V668 H70 M476,654 V668 H462" fill="none" stroke="#8F98AA" stroke-width="2"/>
+<g transform="translate(72,531)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="16" height="14" rx="1"/><path d="M2 8h16M8 8v9"/></g>
+<text x="100" y="547" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="102.85" lengthAdjust="spacingAndGlyphs">credentials</text>
+<text x="72" y="569" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">[table]</text>
+<path d="M 56 582 H 476" stroke="#8F98AA" stroke-opacity="0.5" stroke-width="1"/>
+<text x="72" y="606" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="12" font-weight="700" xml:space="preserve" textLength="33.0" lengthAdjust="spacingAndGlyphs">PK FK</text>
+<text x="120" y="606" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="77.0" lengthAdjust="spacingAndGlyphs">account_id</text>
+<text x="460" y="606" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="72" y="628" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="12" font-weight="700" xml:space="preserve" textLength="13.2" lengthAdjust="spacingAndGlyphs">UQ</text>
+<text x="120" y="628" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="38.5" lengthAdjust="spacingAndGlyphs">email</text>
+<text x="460" y="628" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<text x="120" y="650" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="100.1" lengthAdjust="spacingAndGlyphs">password_hash</text>
+<text x="460" y="650" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13" font-weight="400" text-anchor="end" xml:space="preserve" textLength="28.6" lengthAdjust="spacingAndGlyphs">text</text>
+<rect x="600" y="512" width="200" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-attack corners-system" d="M600,526 V512 H614 M800,526 V512 H786 M600,603 V617 H614 M800,603 V617 H786" fill="none" stroke="#E08585" stroke-width="2"/>
+<g transform="translate(616,531)" fill="none" stroke="#E08585" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3C4 3 5.5 9 3 10c2.5 1-1 7 4 7M13 3c3 0 1.5 6 4 7-2.5 1 1 7-4 7"/></g>
+<text x="644" y="547" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="93.5" lengthAdjust="spacingAndGlyphs">vulnerable</text>
+<text x="616" y="569" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="66.83" lengthAdjust="spacingAndGlyphs">[variant]</text>
+<text x="616" y="590" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">reads text</text>
+<rect x="844" y="512" width="200" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-fix corners-system" d="M844,526 V512 H858 M1044,526 V512 H1030 M844,603 V617 H858 M1044,603 V617 H1030" fill="none" stroke="#9FEF00" stroke-width="2"/>
+<g transform="translate(860,531)" fill="none" stroke="#9FEF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3C4 3 5.5 9 3 10c2.5 1-1 7 4 7M13 3c3 0 1.5 6 4 7-2.5 1 1 7-4 7"/></g>
+<text x="888" y="547" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="84.15" lengthAdjust="spacingAndGlyphs">mitigated</text>
+<text x="860" y="569" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="66.83" lengthAdjust="spacingAndGlyphs">[variant]</text>
+<text x="860" y="590" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">reads safe_text</text>
+<polyline points="266,508 266,436" fill="none" stroke="#9DA6B7" stroke-width="1.2" marker-end="url(#to)"/>
+<text x="280" y="482" fill="#9DA6B7" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="82.5" lengthAdjust="spacingAndGlyphs">belongs to</text>
+<polyline points="596,258 480,258" fill="none" stroke="#9DA6B7" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#to)"/>
+<text x="500" y="248" fill="#9DA6B7" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs">owner_id</text>
+<polyline points="700,508 700,414" fill="none" stroke="#E08585" stroke-width="1.8" marker-end="url(#to-accent)"/>
+<text x="642" y="482" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="49.5" lengthAdjust="spacingAndGlyphs">SELECT</text>
+<polyline points="944,508 944,414" fill="none" stroke="#9FEF00" stroke-width="1.8" marker-end="url(#to-safe)"/>
+<text x="886" y="482" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="49.5" lengthAdjust="spacingAndGlyphs">SELECT</text>
+<!-- key -->
+<g class="key">
+<rect x="56" y="708" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners" d="M56,714 V708 H62 M84,714 V708 H78 M56,720 V726 H62 M84,720 V726 H78" fill="none" stroke="#8F98AA" stroke-width="2"/>
+<text x="94" y="722" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="74.25" lengthAdjust="spacingAndGlyphs">the system</text>
+<rect x="208.25" y="708" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners" d="M208.25,714 V708 H214.25 M236.25,714 V708 H230.25 M208.25,720 V726 H214.25 M236.25,720 V726 H230.25" fill="none" stroke="#E08585" stroke-width="2"/>
+<text x="246.25" y="722" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="81.68" lengthAdjust="spacingAndGlyphs">attack path</text>
+<rect x="367.93" y="708" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners" d="M367.93,714 V708 H373.93 M395.93,714 V708 H389.93 M367.93,720 V726 H373.93 M395.93,720 V726 H389.93" fill="none" stroke="#9FEF00" stroke-width="2"/>
+<text x="405.93" y="722" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">the fix</text>
+</g>
+<!-- /key -->
+<polyline points="56,766 1044,766" fill="none" stroke="#3F4552" stroke-width="1"/>
+<text x="56" y="796" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="16.5" lengthAdjust="spacingAndGlyphs">05</text>
+<text x="96" y="796" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14.5" font-weight="400" xml:space="preserve" textLength="271.15" lengthAdjust="spacingAndGlyphs">infrastructure/persistence/seed.py</text>
+</svg>

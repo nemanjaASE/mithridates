@@ -1,0 +1,42 @@
+info:
+  name: Service is up
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8001/
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.swagger
+      operator: eq
+      value: "/docs"
+
+docs: |-
+  # 00.1 — Is the lab the real one?
+
+  Run this first. The response lists the published endpoints, so what is actually wired is
+  visible without reading the source:
+
+  ```json
+  {
+    "lab": "SQL injection demo",
+    "warning": "Deliberately vulnerable. Run locally, for education only.",
+    "endpoints": [
+      "POST /api/v1/vulnerable/auth/login",
+      "POST /api/v1/safe/auth/login",
+      "GET /api/v1/users/me  (Authorization: Bearer <token>)",
+      "GET /api/v1/debug/users"
+    ],
+    "swagger": "/docs"
+  }
+  ```
+
+  If `GET /api/v1/debug/users` is missing, the service was started with
+  `ENABLE_DEBUG_ENDPOINTS=false` and request 02.4 will return `404`.

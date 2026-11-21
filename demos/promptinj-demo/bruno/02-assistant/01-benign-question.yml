@@ -1,0 +1,41 @@
+info:
+  name: Benign question
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/assistant/vulnerable
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "question": "What is my current balance?"
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.trace.retrieval_scope
+      operator: eq
+      value: "all owners"
+
+docs: |-
+  # 02.1 - A normal question, on the broken route
+
+  Answers correctly: 84250 RSD, card ending 4421. No attack yet.
+
+  The problem is already visible in the trace, before anything is attempted:
+  `retrieval_scope` is `all owners` and `context_owners` lists **all three** customers. The
+  vector search was never restricted to Ana, so Marko's and Jelena's documents are sitting
+  in the model's context while it answers a question about Ana.
+
+  Nothing has leaked. The material to leak is simply already there.

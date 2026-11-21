@@ -1,0 +1,38 @@
+info:
+  name: Login as ana (sets token)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:__PORT__/api/v1/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "ana",
+        "password": "Ana#2026!"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.token_type
+      operator: eq
+      value: "Bearer"
+
+docs: |-
+  # 01.1 — Log in
+
+  Stores `access_token` in the runtime variable `token`, which the other folders use.

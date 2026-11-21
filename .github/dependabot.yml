@@ -1,0 +1,12 @@
+# Only the actions used by CI. Library and base-image versions are part of what a demo
+# teaches — pinning is deliberate there, so they are not bumped automatically.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    # The title its pull requests get, in the form CI checks: "ci(deps): bump ...".
+    commit-message:
+      prefix: ci
+      include: scope

@@ -1,0 +1,122 @@
+# Every check a pull request has to pass. Nothing here needs a secret and nothing is
+# deployed: the demos are deliberately vulnerable and are meant to run on localhost only.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Actions are pinned to an exact version, never to a moving tag like @v7: a tag can be
+# repointed at new code, which is how the tj-actions compromise reached thousands of
+# repositories. Dependabot raises a pull request when a newer version appears.
+
+jobs:
+  conventions:
+    name: Conventions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.3
+      - name: The contract from CONTRIBUTING.md
+        run: uv run --no-project --with pyyaml python scripts/check_repo.py
+      - name: Lint the repository's own scripts
+        run: uvx --from 'ruff>=0.14,<0.15' ruff check scripts docs
+
+  generator:
+    name: Demo generator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.3
+      # Tested the way a contributor uses it: one demo of each kind, generated into this
+      # checkout, must follow the contract, lint and build before a line of attack is written.
+      - name: Generate two demos
+        run: |
+          python3 scripts/new_demo.py gen-plain --title "Generator check"
+          python3 scripts/new_demo.py gen-db --title "Generator database check" --mitigated --postgres
+      - name: The generated demos follow the contract
+        run: uv run --no-project --with pyyaml python scripts/check_repo.py --allow-todo
+      - name: The TODO(attack) markers are caught
+        run: |
+          if uv run --no-project --with pyyaml python scripts/check_repo.py > /dev/null; then
+            echo "::error::check_repo.py passed a generated demo whose TODO(attack) markers are still there."
+            exit 1
+          fi
+      - name: Ruff
+        run: |
+          for demo in gen-plain-demo gen-db-demo; do
+            (cd "demos/$demo" && uv run --frozen ruff check .)
+          done
+      - name: The images build
+        run: |
+          for demo in gen-plain-demo gen-db-demo; do
+            docker build --tag "mithridates/$demo:ci" "demos/$demo"
+          done
+
+  demos:
+    # The matrix below is read from the folder names under demos/, so a new demo is covered by CI
+    # without this file being edited.
+    name: Find demos
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.find.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: find
+        run: |
+          list=$(cd demos && ls -d *-demo | jq -R . | jq -sc .)
+          echo "found $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  lint:
+    name: Lint ${{ matrix.demo }}
+    needs: demos
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo: ${{ fromJSON(needs.demos.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+          cache-dependency-glob: demos/${{ matrix.demo }}/uv.lock
+      - name: Install exactly what the lock file pins
+        working-directory: demos/${{ matrix.demo }}
+        run: uv sync --frozen
+      - name: Ruff
+        working-directory: demos/${{ matrix.demo }}
+        run: uv run --frozen ruff check .
+      # mypy is configured in every demo and is worth running in an editor, but it does
+      # not gate a pull request: the LLM demo's errors come from third-party generics.
+
+  build:
+    name: Build ${{ matrix.demo }}
+    needs: demos
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo: ${{ fromJSON(needs.demos.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: The compose files parse and resolve
+        run: |
+          docker compose config --quiet
+          docker compose -f "demos/$DEMO/compose.yaml" config --quiet
+        env:
+          DEMO: ${{ matrix.demo }}
+      - name: The image builds
+        run: docker build --tag "mithridates/$DEMO:ci" "demos/$DEMO"
+        env:
+          DEMO: ${{ matrix.demo }}

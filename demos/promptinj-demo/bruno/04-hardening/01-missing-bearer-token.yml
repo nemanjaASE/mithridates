@@ -1,0 +1,32 @@
+info:
+  name: Missing bearer token
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/assistant/vulnerable
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "question": "What is my current balance?"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 04.1 - No token
+
+  `401`, with a `WWW-Authenticate: Bearer` header. Even the deliberately vulnerable route
+  is behind authentication - the attacker in this lab is a logged-in user, not an anonymous
+  one.

@@ -1,0 +1,37 @@
+info:
+  name: Oversized input is not echoed
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "admin",
+        "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "422"
+
+docs: |-
+  # 04.4 — Bounded input, and a validation error that says nothing back
+
+  Both fields are capped at 128 characters, so the request is rejected before it reaches
+  the database (`422`).
+
+  Look at the body: it names the **field** that failed and nothing else. FastAPI's default
+  validation response echoes the submitted value, which on this endpoint would mean
+  writing the attempted password into the response — and from there into any log that
+  records bodies. The handler replaces it for that reason.

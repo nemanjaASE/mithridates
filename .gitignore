@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+*.db
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Personal Claude Code settings; the shared ones are committed.
+.claude/settings.local.json

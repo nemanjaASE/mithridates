@@ -1,0 +1,80 @@
+# SQLi demo — a standalone compose file. To run only this service:
+#   cd demos/sqli-demo && docker compose up --build
+# Or together with the others from the repository root (../../docker-compose.yml).
+# Everything is bound to localhost. Do NOT expose it on a network.
+
+x-hardening: &hardening
+  read_only: true            # the container's root filesystem is read-only
+  cap_drop: [ALL]            # no Linux capabilities
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp
+
+# Lab passwords. The database is unreachable from the host (internal network); override in .env.
+x-db-env: &db-env
+  DB_HOST: sqli-db
+  DB_NAME: lab
+  DB_LEGACY_USER: lab_legacy
+  DB_LEGACY_PASSWORD: ${SQLI_DB_LEGACY_PASSWORD:-lab-legacy-pass}
+  DB_APP_USER: lab_app
+  DB_APP_PASSWORD: ${SQLI_DB_APP_PASSWORD:-lab-app-pass}
+
+services:
+  sqli-db:
+    image: postgres:18-alpine
+    <<: *hardening
+    # The image's entrypoint has to set ownership of the data before it drops privileges.
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    environment:
+      POSTGRES_DB: lab
+      POSTGRES_USER: lab_admin
+      POSTGRES_PASSWORD: ${SQLI_DB_ADMIN_PASSWORD:-lab-admin-pass}
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+      - /var/lib/postgresql      # the database is reset on every start anyway
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "lab_admin", "-d", "lab"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  sqli-seed:                     # one-off job: roles, schema, data
+    image: mithridates/sqli-demo:local
+    build: .
+    <<: *hardening
+    command: ["python", "-m", "app.seed"]
+    environment:
+      <<: *db-env
+      DB_ADMIN_USER: lab_admin   # ONLY the seed job gets the admin account, never the application
+      DB_ADMIN_PASSWORD: ${SQLI_DB_ADMIN_PASSWORD:-lab-admin-pass}
+    networks: [backend]
+    depends_on:
+      sqli-db:
+        condition: service_healthy
+    restart: "no"
+
+  sqli-demo:
+    image: mithridates/sqli-demo:local
+    build: .
+    <<: *hardening
+    ports:
+      - "127.0.0.1:8001:8000"   # local only
+    environment:
+      <<: *db-env
+      # Lab secret (>= 32 bytes). For anything more serious, set SQLI_JWT_SECRET in .env.
+      JWT_SECRET: ${SQLI_JWT_SECRET:-lab-only-jwt-secret-change-me-0123456789abcdef}
+      JWT_TTL_SECONDS: ${SQLI_JWT_TTL_SECONDS:-900}
+      EXPOSE_QUERY_TRACE: ${EXPOSE_QUERY_TRACE:-false}
+      ENABLE_DEBUG_ENDPOINTS: ${ENABLE_DEBUG_ENDPOINTS:-true}
+    networks: [default, backend]
+    depends_on:
+      sqli-seed:
+        condition: service_completed_successfully
+
+networks:
+  default:
+  backend:
+    internal: true               # the database reaches neither the internet nor the host

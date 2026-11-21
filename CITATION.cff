@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use Mithridates in teaching or research, please cite it as below."
+title: "Mithridates"
+abstract: >-
+  A local laboratory of deliberately vulnerable services. Each service demonstrates one
+  attack and ships the affected feature twice, vulnerable and fixed, behind one interface.
+type: software
+authors:
+  - name: "The Mithridates contributors"
+license: MIT
+version: 0.1.0
+keywords:
+  - security
+  - education
+  - sql-injection
+  - prompt-injection
+  - llm-security

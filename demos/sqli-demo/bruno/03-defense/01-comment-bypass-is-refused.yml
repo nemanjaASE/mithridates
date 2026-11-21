@@ -1,0 +1,47 @@
+info:
+  name: Comment bypass is refused
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "admin'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+    - expression: res.body.error
+      operator: eq
+      value: "Invalid username or password."
+
+docs: |-
+  # 03.1 — The same payload, parameterized
+
+  `401`, and the same generic message as a plain wrong password in 01.2.
+
+  The safe adapter sends:
+
+  ```sql
+  SELECT id, username, role, password_hash FROM users WHERE username = %s
+  ```
+
+  with `admin'--` as a **bound parameter**. The database parses the statement first and
+  binds the value afterwards, so the quote and the comment marker are characters in a
+  string — they are searched for, not executed. There simply is no user named `admin'--`.
+
+  This is the difference between a mitigation and a fix: nothing here is detecting an
+  attack. The input cannot become code in the first place.

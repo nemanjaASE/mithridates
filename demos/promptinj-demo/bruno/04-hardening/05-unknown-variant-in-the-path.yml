@@ -1,0 +1,35 @@
+info:
+  name: Unknown variant in the path
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:8002/api/v1/assistant/typo
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "question": "What is my current balance?"
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "422"
+
+docs: |-
+  # 04.5 - A variant that does not exist
+
+  `422`. `variant` is an enum in the path, so only `vulnerable` and `mitigated` reach the
+  use case; the assistant name is composed from it rather than taken from the caller.
+
+  A name that gets past this and still has no assistant raises `UnknownAssistant` and comes
+  back `404` with the known names listed - the same names `GET /` advertises.

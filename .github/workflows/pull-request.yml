@@ -1,0 +1,32 @@
+# The pull request's title and description. A workflow of its own, because it has to run
+# again when the title or description is edited, and the rest of CI should not.
+name: Pull request
+
+on:
+  pull_request:
+    # `edited`: a fixed title clears the failure without a new push.
+    # `synchronize`: a required check has to report on every new commit too.
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pull-request-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Pull request format
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # Title and body go through `env`, never straight into the shell: interpolating
+      # them into `run:` would be command injection from a stranger's pull request.
+      - name: Title and description
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: python3 scripts/check_pr.py

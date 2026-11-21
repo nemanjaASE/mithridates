@@ -1,0 +1,31 @@
+info:
+  name: Oversized input is rejected
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:__PORT__/api/v1/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "422"
+
+docs: |-
+  # 04.4 — Input longer than allowed
+
+  `422`, naming the field without echoing the input.

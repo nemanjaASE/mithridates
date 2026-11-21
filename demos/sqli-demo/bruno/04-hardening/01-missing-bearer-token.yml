@@ -1,0 +1,26 @@
+info:
+  name: Missing bearer token
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8001/api/v1/users/me
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 04.1 — No token at all
+
+  `401` with `WWW-Authenticate: Bearer error="invalid_token"` (RFC 6750), and the same body
+  a malformed token gets.
+
+  The bearer dependency is declared with `auto_error=False` precisely so a missing header
+  and a bad header take the same path: one handler, one answer, no way to tell from the
+  outside which of the two happened.

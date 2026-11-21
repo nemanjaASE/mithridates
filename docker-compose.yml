@@ -1,0 +1,16 @@
+# Repository root — joins every demo service through `include`.
+# Each service has its own compose file (demos/sqli-demo/compose.yaml, demos/promptinj-demo/compose.yaml)
+# and runs on its own; this file only assembles them. That is how the project grows:
+# a new service = a new folder with its own compose.yaml + one line in `include`.
+#
+#   docker compose up --build                  # every service
+#   docker compose up --build sqli-demo        # just one (+ its dependencies)
+#   docker compose down                        # stop everything
+#
+# On its own, per service:
+#   cd demos/sqli-demo && docker compose up --build
+#   cd demos/promptinj-demo && docker compose up --build
+
+include:
+  - demos/sqli-demo/compose.yaml
+  - demos/promptinj-demo/compose.yaml

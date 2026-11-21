@@ -1,0 +1,166 @@
+# Prompt injection demo — a standalone compose file. To run only this service:
+#   cd demos/promptinj-demo && docker compose up --build
+# Or together with the others from the repository root (../../docker-compose.yml).
+# Everything is bound to localhost. Do NOT expose it on a network.
+
+x-hardening: &hardening
+  read_only: true            # the container's root filesystem is read-only
+  cap_drop: [ALL]            # no Linux capabilities
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp
+
+# Lab passwords. The database is unreachable from the host (internal network); override in .env.
+x-db-env: &db-env
+  DB_HOST: promptinj-db
+  DB_NAME: lab
+  DB_APP_USER: lab_app
+  DB_APP_PASSWORD: ${PROMPTINJ_DB_APP_PASSWORD:-lab-app-pass}
+
+# Local models, running in Docker (no internet after the first pull).
+# Models are chosen BY ROLE, not per call site: an assistant's spec asks for a role and
+# LLMFactory resolves it.
+#  - strong : tool calling (the agent loop)       -> MODEL_STRONG
+#  - cheap  : a single completion (RAG assistant) -> MODEL_CHEAP
+# MODEL sets both roles; a per-role variable overrides one of them. By default both point
+# at the same small 3B model, so the lab works on CPU with no configuration at all.
+x-model: &model ${PROMPTINJ_MODEL:-qwen2.5:3b}
+x-model-strong: &model-strong ${PROMPTINJ_MODEL_STRONG:-}
+x-model-cheap: &model-cheap ${PROMPTINJ_MODEL_CHEAP:-}
+# Sampling. 0 = the most repeatable output, which is what a demonstration needs. Raising
+# it is a legitimate thing to do (it shows that a successful injection is a probability,
+# not a certainty), but tool calling degrades fast with temperature -- hence the per-role
+# variant.
+x-temp: &temp ${PROMPTINJ_TEMPERATURE:-0}
+x-temp-strong: &temp-strong ${PROMPTINJ_TEMPERATURE_STRONG:-}
+x-temp-cheap: &temp-cheap ${PROMPTINJ_TEMPERATURE_CHEAP:-}
+# The embedding model is tied to the pgvector table rather than to the task, so it is
+# configured separately: the table can only be searched with vectors from the model that
+# filled it.
+x-embed: &embed ${PROMPTINJ_EMBED_MODEL:-nomic-embed-text}
+
+services:
+  promptinj-db:
+    image: pgvector/pgvector:pg18   # PostgreSQL 18 + the pgvector extension (RAG vectors)
+    <<: *hardening
+    # The image's entrypoint has to set ownership of the data before it drops privileges.
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    environment:
+      POSTGRES_DB: lab
+      POSTGRES_USER: lab_admin
+      POSTGRES_PASSWORD: ${PROMPTINJ_DB_ADMIN_PASSWORD:-lab-admin-pass}
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+      - /var/lib/postgresql      # the database is reset on every start anyway
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "lab_admin", "-d", "lab"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  promptinj-seed:                # one-off job: accounts, credentials, embedded RAG documents
+    image: mithridates/promptinj-demo:local
+    build: .
+    <<: *hardening
+    command: ["python", "-m", "promptinj.seed"]
+    environment:
+      <<: *db-env
+      DB_ADMIN_USER: lab_admin   # ONLY the seed job gets the admin account, never the application
+      DB_ADMIN_PASSWORD: ${PROMPTINJ_DB_ADMIN_PASSWORD:-lab-admin-pass}
+      OLLAMA_BASE_URL: http://ollama:11434   # the seed job computes the document embeddings
+      EMBED_PROVIDER: ollama
+      EMBED_MODEL: *embed
+      EMBED_TIMEOUT_SECONDS: ${PROMPTINJ_EMBED_TIMEOUT:-30}
+    networks: [backend, llm]
+    depends_on:
+      promptinj-db:
+        condition: service_healthy
+      ollama-pull:                 # the embedding model has to be pulled before anything is embedded
+        condition: service_completed_successfully
+    restart: "no"
+
+  ollama:                        # local LLM server (no hosted provider, runs on CPU)
+    image: ollama/ollama:0.12.3
+    <<: *hardening               # read-only except the model volume and /tmp; no port to the host
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434  # so the other containers can reach it on the llm network
+    volumes:
+      - ollama-models:/root/.ollama   # caches pulled models between runs
+    networks: [llm]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  ollama-pull:                   # one-off job: pulls the models the roles ask for, then exits
+    image: ollama/ollama:0.12.3
+    <<: *hardening
+    environment:
+      OLLAMA_HOST: ollama:11434
+      # Each role may point at a different model, so all four values are walked.
+      # An empty one is skipped (a role with no override falls back to MODEL), and
+      # `ollama pull` on an already-pulled model is a no-op -- naming the same model
+      # twice costs nothing.
+      MODEL: *model
+      MODEL_STRONG: *model-strong
+      MODEL_CHEAP: *model-cheap
+      EMBED_MODEL: *embed
+    entrypoint:
+      - /bin/sh
+      - -c
+      - 'for m in "$$MODEL" "$$MODEL_STRONG" "$$MODEL_CHEAP" "$$EMBED_MODEL"; do if [ -n "$$m" ]; then ollama pull "$$m"; fi; done'
+    networks: [llm]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: "no"
+
+  promptinj-demo:
+    image: mithridates/promptinj-demo:local
+    build: .
+    <<: *hardening
+    ports:
+      - "127.0.0.1:8002:8000"   # local only
+    environment:
+      <<: *db-env
+      # Both providers are the local Ollama; there is no hosted API and no keys.
+      # The factories validate the name at startup: an unknown provider is a
+      # ConfigurationError, not a silent fallback to the one that works.
+      LLM_PROVIDER: ollama
+      EMBED_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      MODEL: *model                # both roles
+      MODEL_STRONG: *model-strong  # empty -> stays MODEL (the agent, tool calling)
+      MODEL_CHEAP: *model-cheap    # empty -> stays MODEL (the RAG assistant)
+      TEMPERATURE: *temp           # both roles
+      TEMPERATURE_STRONG: *temp-strong
+      TEMPERATURE_CHEAP: *temp-cheap
+      MAX_TOKENS: ${PROMPTINJ_MAX_TOKENS:-}              # empty -> the code's 512
+      MAX_TOKENS_STRONG: ${PROMPTINJ_MAX_TOKENS_STRONG:-}
+      MAX_TOKENS_CHEAP: ${PROMPTINJ_MAX_TOKENS_CHEAP:-}
+      EMBED_MODEL: *embed
+      EMBED_TIMEOUT_SECONDS: ${PROMPTINJ_EMBED_TIMEOUT:-30}
+      # Lab secret (>= 32 bytes). For anything more serious, set PROMPTINJ_JWT_SECRET in .env.
+      JWT_SECRET: ${PROMPTINJ_JWT_SECRET:-lab-only-promptinj-secret-change-me-0123456789}
+      JWT_TTL_SECONDS: ${PROMPTINJ_JWT_TTL_SECONDS:-900}
+      EXPOSE_PROMPT_TRACE: ${EXPOSE_PROMPT_TRACE:-true}
+      EXPOSE_RAW_OUTPUT: ${EXPOSE_RAW_OUTPUT:-false}
+    networks: [default, backend, llm]
+    depends_on:
+      promptinj-seed:
+        condition: service_completed_successfully
+      ollama-pull:
+        condition: service_completed_successfully
+
+volumes:
+  ollama-models:
+
+networks:
+  default:
+  backend:
+    internal: true               # the database reaches neither the internet nor the host
+  llm:                           # app <-> ollama; ollama has egress for the first pull

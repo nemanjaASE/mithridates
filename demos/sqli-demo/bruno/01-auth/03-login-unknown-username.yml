@@ -1,0 +1,38 @@
+info:
+  name: Unknown username
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "nobody",
+        "password": "not-the-password"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+    - expression: res.body.error
+      operator: eq
+      value: "Invalid username or password."
+
+docs: |-
+  # 01.3 — A login for a user who does not exist
+
+  Byte-for-byte the response of 01.2 (OWASP: no account enumeration).
+
+  The timing is not part of this lab's claims: the safe variant lets the database compare
+  the hash either way, but a timing oracle is a separate measurement and this collection
+  does not make it.

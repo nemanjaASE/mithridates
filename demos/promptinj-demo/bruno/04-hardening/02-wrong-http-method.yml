@@ -1,0 +1,22 @@
+info:
+  name: Wrong HTTP method
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8002/api/v1/assistant/vulnerable
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "405"
+
+docs: |-
+  # 04.2 - GET on a POST route
+
+  `405`. FastAPI routes by method; there is no accidental GET handler to find.

@@ -1,0 +1,30 @@
+info:
+  name: Tampered token
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8001/api/v1/users/me
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9.
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 04.2 — `alg: none`, the classic JWT forgery
+
+  The header above claims `"alg": "none"` and carries `role: admin` with an empty
+  signature. `401`.
+
+  Verification pins the algorithm to HS256 instead of reading it from the token, so an
+  attacker cannot talk the library out of checking the signature. `exp`, `iat`, `nbf`,
+  `iss`, `aud` and `sub` are all required as well — a token missing any of them is
+  rejected before its claims are read.

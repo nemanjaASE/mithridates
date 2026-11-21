@@ -1,0 +1,36 @@
+info:
+  name: Tautology is refused
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "' OR '1'='1'--",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "401"
+
+docs: |-
+  # 03.2 — The tautology is just a username
+
+  `401`. The payload is compared, as text, against the `username` column, and matches
+  nothing.
+
+  Note that no allowlist or character filter is involved anywhere in this service. That is
+  deliberate: a filter would make it ambiguous *which* control stopped the attack, and the
+  point of the lab is that parameterization alone is enough.

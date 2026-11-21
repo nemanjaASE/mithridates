@@ -1,0 +1,19 @@
+# Ruff for the Python that is not part of a demo: `scripts/` and `docs/assets/banner.py`.
+# Each demo keeps its own settings in its `pyproject.toml`, and ruff picks the closest
+# configuration for every file, so this one never reaches a demo.
+line-length = 100
+target-version = "py313"
+# The demo template is not code until scripts/new_demo.py renders it; the demo it
+# renders is linted with its own settings.
+extend-exclude = ["scripts/demo_template"]
+
+[lint]
+select = ["E", "F", "I", "N", "UP", "B", "C4"]
+ignore = [
+    # The formatter's business; a long explanatory comment is not worth a broken line.
+    "E501",
+]
+
+[lint.per-file-ignores]
+# Diagram code is geometry: `W`, `H`, `NX` are the clearest names a coordinate can have.
+"docs/assets/banner.py" = ["N", "E741", "C408"]

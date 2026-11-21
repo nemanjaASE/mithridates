@@ -1,0 +1,32 @@
+info:
+  name: The token really is admin's
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8001/api/v1/users/me
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.username
+      operator: eq
+      value: "admin"
+    - expression: res.body.role
+      operator: eq
+      value: "admin"
+
+docs: |-
+  # 02.2 — The impact, not the trick
+
+  `username: admin`, `role: admin` — from a request that carried no valid password.
+
+  This is why the endpoint from 01.4 matters: a `200` only proves the query returned a
+  row, while this proves the application issued **admin's identity** to an anonymous
+  caller. Everything downstream that trusts the token now trusts the attacker.

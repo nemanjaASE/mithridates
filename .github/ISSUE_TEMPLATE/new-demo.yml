@@ -1,0 +1,40 @@
+name: Propose a demo
+description: An attack you would like to add, before you build it
+title: "demo: "
+labels: [demo]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposing first is optional, but it saves you from building something that
+        overlaps with a demo someone else is already working on.
+  - type: input
+    id: attack
+    attributes:
+      label: The attack
+      placeholder: Reflected XSS on a search page
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: The fix
+      description: What changes between the vulnerable and the fixed version, and is it a real fix or a mitigation?
+    validations:
+      required: true
+  - type: textarea
+    id: stack
+    attributes:
+      label: What it needs to run
+      description: Language, database, anything that has to be downloaded on first start.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Ground rules
+      options:
+        - label: It runs locally, bound to 127.0.0.1, with no real credentials or customer data
+          required: true
+        - label: It is not a tool whose only use is attacking somebody else's system
+          required: true

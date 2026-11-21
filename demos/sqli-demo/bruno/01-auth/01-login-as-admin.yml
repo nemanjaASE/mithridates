@@ -1,0 +1,50 @@
+info:
+  name: Login as admin (sets token)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/safe/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "admin",
+        "password": "S3cr3tAdminPass!"
+      }
+  auth:
+    type: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("token", res.body.access_token);
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.token_type
+      operator: eq
+      value: "Bearer"
+    - expression: res.body.expires_in
+      operator: eq
+      value: "900"
+
+docs: |-
+  # 01.1 — An honest login
+
+  The baseline: a real username with its real password, on the **safe** route. The
+  after-response script stores `access_token` in the runtime variable `token`, which 01.3
+  and the hardening folder reuse.
+
+  The response is an OAuth 2.0 token response (RFC 6749, 5.1): `access_token`,
+  `token_type`, `expires_in`. Token lifetime is 15 minutes (`JWT_TTL_SECONDS`); if
+  requests start coming back `401`, run this again.
+
+  The password is verified in SQL via pgcrypto `crypt()` against a stored bcrypt hash.
+  Nothing anywhere stores the plaintext.
