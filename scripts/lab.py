@@ -4,10 +4,10 @@
     python scripts/lab.py clean [--all] [--models] [--build-cache] [--dry-run]
     python scripts/lab.py check [--title "<pull request title>"] [--all]
 
-`check` runs what CI checks before a pull request can be merged, except building the
-images: the repository conventions, ruff in `scripts/` and `docs/` and in every demo the
-branch changes (`--all`: every demo), and, with `--title`, the pull request title. It
-needs uv, not Docker.
+`check` runs what CI checks before a pull request can be merged, except building and
+running the demos: the repository conventions, ruff in `scripts/` and `docs/` and in
+every demo the branch changes (`--all`: every demo), and, with `--title`, the pull
+request title. It needs uv, not Docker.
 
 `status` lists the lab's containers, images and model volumes, and marks what is left over.
 
@@ -239,9 +239,9 @@ def shorten(text: str) -> str:
 
 
 def check(ui: Terminal, args: argparse.Namespace) -> int:
-    """Runs the checks CI runs, except the image builds, and says whether the branch is ready."""
+    """Runs what CI runs, except the builds and the Bruno runs, and says if the branch is ready."""
     ui.line(f"  {ui.paint('Checks', bold=True)}  "
-            f"{ui.paint('what CI checks, except building the images', dim=True)}")
+            f"{ui.paint('what CI checks, except building and running the demos', dim=True)}")
     ui.line()
     if not shutil.which("uv"):
         ui.line(f"  {ui.paint(ui.glyph['fail'], RED, bold=True)} uv is not installed: "
@@ -290,7 +290,7 @@ def check(ui: Terminal, args: argparse.Namespace) -> int:
                 "Fix what is listed above, then run this again.")
     else:
         ui.line(f"  {ui.paint(ui.glyph['ok'], GREEN, bold=True)} Ready for a pull request. "
-                "CI runs these again, and builds the images.")
+                "CI runs these again, then builds and runs the demos.")
     ui.line()
     return 1 if failed else 0
 

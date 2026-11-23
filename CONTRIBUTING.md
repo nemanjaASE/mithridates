@@ -545,6 +545,21 @@ decision, never the model's wording.
 There are no automated test suites in this repository; the Bruno collection is the
 verification. Please raise it in an issue before adding one.
 
+CI runs the collection too ([`bruno.yml`](.github/workflows/bruno.yml)): it starts the demo
+with `docker compose up` and sends every request, on every pull request. A demo whose stack
+is too slow for that, because it downloads a model for example, can run less often. It says
+so at the top of its `compose.yaml`, with the reason, for a reviewer to weigh:
+
+```yaml
+x-mithridates:
+  bruno-in-ci: on-change
+  reason: the stack downloads about 2 GB of models before it answers, and runs them on CPU
+```
+
+Its collection then runs when a pull request touches the demo, every Monday, and by hand.
+`promptinj-demo` is the only one that does this; without the field, a demo runs on every
+pull request.
+
 ### Documentation
 
 - **The write-up** in `docs/writeups/NN-<topic>.md`, from
@@ -588,18 +603,20 @@ Every pull request runs [`ci.yml`](.github/workflows/ci.yml) and
 | **Conventions** | `scripts/check_repo.py`: the files a demo provides, the Bruno folders, the README sections and their order, the four C4 levels, that every published port is bound to `127.0.0.1` and belongs to its demo, that every container built from the repository is hardened, that no secret has a default value in code, that `.env.example` names exactly the variables `compose.yaml` reads, that no `TODO(attack)` marker is left, and that no document links to a missing path |
 | **Lint** | `uv run ruff check .` in each demo. The list is read from the folder names, so a new demo is covered without editing the workflow |
 | **Build** | the compose files resolve, and every image builds |
+| **Bruno** | every demo starts, and its Bruno collection passes against it ([`bruno.yml`](.github/workflows/bruno.yml)). A demo marked `on-change` runs only when the pull request touches it; see [Verification](#verification) |
 | **Demo generator** | `scripts/new_demo.py` generates one demo of each kind, on Python 3.11, the oldest the scripts support; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them |
 | **Pull request format** | `scripts/check_pr.py`: the title is in the [expected form](#the-pull-request-title), `## What this changes` says what changes, and no checklist item is left unticked. It runs again when you edit the title or the description |
 
-Run them yourself before you push, all but the builds, with one command:
+Run them yourself before you push, all but the builds and the Bruno runs, with one command:
 
 ```bash
 python scripts/lab.py check
 ```
 
-CI does not start a demo: the LLM demo alone downloads gigabytes. Starting a stack is
-[a manual job](.github/workflows/smoke.yml), and your own `docker compose up` is what the
-checklist asks for. Nothing is published or deployed from this repository.
+For the Bruno runs, start your demo and send its collection, as in
+[step 5](#5-run-it-and-try-the-attack). To start any demo on GitHub's machines instead,
+run [Smoke](.github/workflows/smoke.yml) by hand from the Actions tab. Nothing is published
+or deployed from this repository.
 
 ---
 

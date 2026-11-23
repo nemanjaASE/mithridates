@@ -21,6 +21,9 @@ Instructions for AI coding agents working in this repository. People start with
   (`scripts/check_repo.py`), ruff in `scripts/`, `docs/` and every demo the branch
   changes, and the pull request title. The title follows Conventional Commits, with the
   types and scopes in `CONTRIBUTING.md`.
+- The demo's Bruno collection passes against `docker compose up`; CI runs it too
+  (`.github/workflows/bruno.yml`). Where a result is not deterministic, assert on the
+  control, never on a model's wording.
 
 ## Figures
 
