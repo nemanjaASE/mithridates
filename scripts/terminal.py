@@ -8,9 +8,11 @@ records the screenshots in the READMEs.
 from __future__ import annotations
 
 import os
+import re
 import sys
 import threading
 import time
+from pathlib import Path
 from types import TracebackType
 from typing import TextIO
 
@@ -30,6 +32,16 @@ LOGO = (
     "{c}        ━━━━┻━━━━{x}",
 )
 LOGO_CENTER = 12  # the column of the stem, the drop and the space between the eyes
+# The same logo beside the text, for the commands that are run often: six lines, not thirteen.
+LOGO_COMPACT = (
+    "      {r}▗█▖{x}",
+    "      {r}▜█▛{x}",
+    "{c}╭╮━━━━━━━━━━━╭╮{x}",
+    "{c}╰┤ <{x}{r}●{x}{c}>   <{x}{g}●{x}{c}> ├╯{x}",
+    "{c}  ╲▁▁▁▁▁▁▁▁▁╱{x}",
+    "{c}     ━━┻━━{x}",
+)
+COMPACT_TEXT_ROW = 2  # the text starts beside the rim
 WORDMARK = "M I T H R I D A T E S"
 TAGLINE = "Small, controlled doses of real attacks."
 
@@ -68,6 +80,18 @@ def _encodable(stream: TextIO, text: str) -> bool:
     return True
 
 
+def _project() -> tuple[str, str]:
+    """The version and the repository address, from CITATION.cff; empty when unreadable."""
+    try:
+        citation = (Path(__file__).resolve().parent.parent / "CITATION.cff").read_text(encoding="utf-8")
+    except OSError:
+        return "", ""
+    version = re.search(r'^version:\s*"?([^"\n]+?)"?\s*$', citation, re.M)
+    address = re.search(r'^repository-code:\s*"?([^"\n]+?)"?\s*$', citation, re.M)
+    return (version.group(1) if version else "",
+            address.group(1).removeprefix("https://") if address else "")
+
+
 class Terminal:
     """Prints the scripts' output, with color and a spinner where the terminal allows them."""
 
@@ -102,21 +126,43 @@ class Terminal:
             text = text.encode(encoding, "replace").decode(encoding)
         print(text, file=self.stream, flush=True)
 
-    def banner(self) -> None:
-        """Prints the logo, the wordmark and the tagline, centred over one another."""
-        center = 2 + len(TAGLINE) // 2
-        if self.unicode:
-            on = {"r": RED, "g": GREEN, "c": GRAY}
-            if self.color:
-                colors = {k: f"\033[38;2;{v}m" for k, v in on.items()} | {"x": "\033[0m"}
-            else:
-                colors = dict.fromkeys([*on, "x"], "")
+    def banner(self, compact: bool = False, note: str = "") -> None:
+        """Prints the logo with the wordmark, the tagline, and the version and address.
+
+        Args:
+            compact: Put the logo beside the text instead of above it, for the commands
+                that are run often.
+            note: A line printed under the rest, in muted red, such as a warning.
+        """
+        version, address = _project()
+        about = f" {self.glyph['dot']} ".join(p for p in (version and f"v{version}", address) if p)
+        text = [(WORDMARK, True), (TAGLINE, False), *([(about, False)] if about else [])]
+        painted = [self.paint(t, bold=True) if bold else self.paint(t, dim=True) for t, bold in text]
+        on = {"r": RED, "g": GREEN, "c": GRAY}
+        if self.color:
+            colors = {k: f"\033[38;2;{v}m" for k, v in on.items()} | {"x": "\033[0m"}
+        else:
+            colors = dict.fromkeys([*on, "x"], "")
+        self.line()
+        if compact and self.unicode:
+            plain = [re.sub(r"\{[rgcx]\}", "", row) for row in LOGO_COMPACT]
+            width = max(len(row) for row in plain)
+            for i, row in enumerate(LOGO_COMPACT):
+                at = i - COMPACT_TEXT_ROW
+                beside = painted[at] if 0 <= at < len(painted) else ""
+                gap = " " * (width - len(plain[i]) + 4)
+                self.line(f"  {row.format(**colors)}{gap}{beside}".rstrip())
+        else:
+            center = 2 + len(TAGLINE) // 2
+            if self.unicode:
+                for row in LOGO:
+                    self.line(" " * (center - LOGO_CENTER) + row.format(**colors))
+                self.line()
+            for (raw, _), shown in zip(text, painted, strict=True):
+                self.line(" " * max(2, center - len(raw) // 2) + shown)
+        if note:
             self.line()
-            for row in LOGO:
-                self.line(" " * (center - LOGO_CENTER) + row.format(**colors))
-            self.line()
-        self.line(" " * (center - len(WORDMARK) // 2) + self.paint(WORDMARK, bold=True))
-        self.line("  " + self.paint(TAGLINE, dim=True))
+            self.line("  " + self.paint(note, RED, dim=True))
         self.line()
 
     def step(self, running: str, finished: str = "") -> Step:

@@ -310,7 +310,7 @@ def main() -> int:
     if args.command != "check" and not shutil.which("docker"):
         sys.exit("docker is not on the PATH.")
     ui = Terminal()
-    ui.banner()
+    ui.banner(compact=True)
     if args.command == "check":
         return check(ui, args)
     return status(ui) if args.command == "status" else clean(ui, args)
