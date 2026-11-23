@@ -11,8 +11,7 @@ Title: type(scope): description, as in CONTRIBUTING.md. The scope is optional.
 
 ## Checklist
 
-- [ ] `uv run --no-project --with pyyaml python scripts/check_repo.py` passes
-- [ ] `uv run ruff check .` passes in every demo I touched
+- [ ] `python scripts/lab.py check --title "<this title>"` passes
 - [ ] Every default and path the documentation names matches the code
 
 <details>

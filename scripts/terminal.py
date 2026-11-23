@@ -96,7 +96,10 @@ class Terminal:
         return f"\033[{';'.join(codes)}m{text}\033[0m" if codes else text
 
     def line(self, text: str = "") -> None:
-        """Prints one line."""
+        """Prints one line, replacing what the stream's encoding cannot show."""
+        if not self.unicode:
+            encoding = self.stream.encoding or "ascii"
+            text = text.encode(encoding, "replace").decode(encoding)
         print(text, file=self.stream, flush=True)
 
     def banner(self) -> None:
@@ -136,6 +139,7 @@ class Step:
         self.label = finished
         self.detail = ""
         self.problem = ""
+        self.failed = False
         self.started = 0.0
         self._stop = threading.Event()
         self._spinner: threading.Thread | None = None
@@ -147,6 +151,10 @@ class Step:
     def warn(self, problem: str, detail: str = "") -> None:
         """Marks the step as ended with a problem the user has to fix by hand."""
         self.problem, self.detail = problem, detail
+
+    def fail(self, problem: str, detail: str = "") -> None:
+        """Marks the step as failed, and prints `problem` under it."""
+        self.problem, self.detail, self.failed = problem, detail, True
 
     def __enter__(self) -> Step:
         self.started = time.monotonic()
@@ -176,7 +184,7 @@ class Step:
         timing = f"{seconds:.1f}s" if seconds >= 0.5 else ""
         note = f" {g['dot']} ".join(part for part in (self.detail, timing) if part)
         shown = self.running if error is not None or self.problem else self.label
-        if error is not None:
+        if error is not None or self.failed:
             mark, label = t.paint(g["fail"], RED, bold=True), t.paint(shown, RED)
         elif self.problem:
             mark, label = t.paint(g["warn"], YELLOW, bold=True), shown
@@ -186,4 +194,4 @@ class Step:
         t.line(f"  {mark} {label}{gap}{t.paint(note, dim=True)}")
         if self.problem:
             for row in self.problem.strip().splitlines():
-                t.line("      " + t.paint(row, YELLOW))
+                t.line("      " + t.paint(row, RED if self.failed else YELLOW))

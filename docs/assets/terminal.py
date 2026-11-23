@@ -8,8 +8,9 @@ photograph the grid into `docs/assets/terminal/<name>.png`. Block and box-drawin
 characters are drawn as shapes instead of being taken from a font, the way modern
 terminals draw them, so the logo comes out the same on every machine.
 
-- `new-demo` and `check-repo` run in a temporary copy of the repository: the generator
-  creates a demo there, and check_repo.py then reports the markers it left.
+- `lab-check`, `new-demo` and `check-repo` run in a temporary copy of the repository:
+  `lab.py check` on a branch that changes sqli-demo's README, then the generator creates
+  a demo, and check_repo.py reports the markers it left.
 - `lab-status` shows example Docker data, so the picture does not depend on what happens
   to be running on the machine that draws it.
 - `demo-up` is the output of a real `docker compose up`, kept below as text.
@@ -269,6 +270,16 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "mithridates"
         shutil.copytree(ROOT, copy, ignore=SKIP)
+        if shutil.which("git"):  # a contributor's branch that touches sqli-demo's README
+            git = ["git", "-c", "user.name=Mithridates", "-c", "user.email=lab@example.com"]
+            for args in (["init", "-q", "-b", "main"], ["add", "-A"], ["commit", "-q", "-m", "main"],
+                         ["switch", "-q", "-c", "docs/sqli-threat-model"]):
+                subprocess.run([*git, *args], cwd=copy, check=True, capture_output=True)
+            readme = copy / "demos" / "sqli-demo" / "README.md"
+            readme.write_text(readme.read_text(encoding="utf-8") + chr(10), encoding="utf-8")
+            title = "docs(sqli-demo): a clearer threat model"
+            shoot("lab-check", "~/mithridates", f'python scripts/lab.py check --title "{title}"',
+                  run([sys.executable, "scripts/lab.py", "check", "--title", title], copy))
         generate = [sys.executable, "scripts/new_demo.py", "xss", "--title", "Cross-site scripting",
                     "--postgres"]
         output = run(generate, copy)
