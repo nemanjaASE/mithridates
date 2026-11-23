@@ -17,11 +17,10 @@ Instructions for AI coding agents working in this repository. People start with
 
 ## Before you finish
 
-- `uv run --no-project --with pyyaml python scripts/check_repo.py` — the repository rules.
-- `uvx --from 'ruff>=0.14,<0.15' ruff check scripts docs`, and `uv run ruff check .` in
-  every demo you touched.
-- A pull request title follows Conventional Commits, with the types and scopes in
-  `CONTRIBUTING.md`: `python scripts/check_pr.py "<title>"`.
+- `python scripts/lab.py check --title "<title>"`: the repository rules
+  (`scripts/check_repo.py`), ruff in `scripts/`, `docs/` and every demo the branch
+  changes, and the pull request title. The title follows Conventional Commits, with the
+  types and scopes in `CONTRIBUTING.md`.
 
 ## Figures
 

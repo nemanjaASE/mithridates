@@ -1,27 +1,280 @@
 # Contributing
 
 What this repository wants most is **more demos**: one attack, shown twice, vulnerable and
-fixed. Improvements to the existing demos are just as welcome, and need none of the steps
-below: a sharper payload, a clearer figure, a defense that is missing a layer.
+fixed. Improvements to the existing demos are just as welcome: a sharper payload, a
+clearer figure, a defense that is missing a layer.
 
-Adding a demo never means editing another one. You add a folder, and the repository lists
-it in three places.
+**Never contributed to an open-source project before?** This page assumes nothing. It walks
+you from the fork to the merged pull request one command at a time, and says what to do
+when something turns red. If you get stuck, open the pull request anyway and ask in it: an
+unfinished draft is a good way to start the conversation.
 
 Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md). Contributions are
 accepted under the [MIT license](LICENSE).
 
-**From idea to pull request:**
+> [!IMPORTANT]
+> **The ground rules in one line:** everything binds to `127.0.0.1`, nothing uses real
+> credentials or real data, and nothing is aimed at someone else's systems.
+> [The details](#ground-rules).
 
-1. **Check the idea** against [what makes a good demo](#what-makes-a-good-demo) and the
-   [ground rules](#ground-rules). Opening a *Propose a demo* issue first is optional, but
-   it saves you from building something someone else is already working on.
-2. **Generate the demo** with [one command](#start-from-the-generator). It runs and passes
-   the checks before the attack is written.
-3. **Write the attack and the defense** wherever the generated files say `TODO(attack)`,
-   following [the contract](#the-contract).
-4. **Verify it**: `docker compose up`, the Bruno collection, and `check_repo.py`.
-5. **Open the pull request** with a [title in the expected form](#the-pull-request-title)
-   and the [checklist](#before-you-open-a-pull-request) ticked.
+| You want to | Start here |
+| --- | --- |
+| Fix a typo, a sentence or a broken link | [A small fix, straight on GitHub](#a-small-fix-straight-on-github): nothing to install |
+| Improve an existing demo | [Step by step](#your-first-contribution-step-by-step), skipping step 3 |
+| Add a demo | [Step by step](#your-first-contribution-step-by-step), from the top |
+| Report a problem, or propose a demo before building it | [Open an issue](https://github.com/nemanjaASE/mithridates/issues/new/choose) |
+| Find something small to start with | [Issues labelled *good first issue*](https://github.com/nemanjaASE/mithridates/labels/good%20first%20issue) |
+
+---
+
+## <img src="docs/assets/icons/play.svg" width="30" height="23" alt="">Your first contribution, step by step
+
+The commands below contain placeholders in angle brackets. Replace each one, brackets
+included, with your own value, and type everything else exactly as it is written:
+
+| Placeholder | What to put there | For example |
+| --- | --- | --- |
+| `<you>` | your GitHub username | |
+| `<topic>` | your demo's short name, in lowercase; its folder becomes `demos/<topic>-demo` | `xss`, `ssrf`, `idor` |
+| `<Attack name>` | the attack's full name | `Cross-site scripting` |
+| `<summary>` | what your change does, in a few lowercase words | `reflected XSS on the search page` |
+
+When you improve an existing demo instead of adding one, `<topic>` is that demo's: `sqli`
+for `demos/sqli-demo`. The screenshots show example runs; yours will name your own demo.
+
+### 0. What you need
+
+| Tool | What it is for | Check that it works |
+| --- | --- | --- |
+| [Git](https://git-scm.com/downloads) | getting the code and sending your changes | `git --version` |
+| [Docker Desktop](https://docs.docker.com/get-started/get-docker/), or Docker Engine with Compose v2.20 or newer | running the demos | `docker compose version` |
+| [Python](https://www.python.org/downloads/) 3.11 or newer | the repository's scripts | `python --version` |
+| [uv](https://docs.astral.sh/uv/getting-started/installation/) | the checks, and each demo's dependencies | `uv --version` |
+| [Bruno](https://www.usebruno.com/downloads), optional | sending the attack and the defense requests | |
+| A [GitHub account](https://github.com/signup) | your fork and the pull request | |
+
+On Windows, run the commands below in **Git Bash**, which comes with Git, or in PowerShell 7.
+On macOS and Linux, `python` may be called `python3`.
+
+### 1. Fork and clone
+
+Click **Fork** at the top of [the repository's page](https://github.com/nemanjaASE/mithridates).
+GitHub makes your own copy, `github.com/<you>/mithridates`, which you are free to change.
+Then download it:
+
+```bash
+git clone https://github.com/<you>/mithridates.git
+cd mithridates
+git remote add upstream https://github.com/nemanjaASE/mithridates.git
+```
+
+<details>
+<summary>What a fork, a clone and <code>upstream</code> are</summary>
+
+- A **fork** is your copy of the repository on GitHub. You cannot push to the original, so
+  you push to your fork and ask for the change to be pulled in: that is a *pull request*.
+- A **clone** is a copy of your fork on your own computer, where you do the work.
+- **`upstream`** is a name for the original repository. Your clone already calls your fork
+  `origin`; `upstream` lets it also fetch what others have merged in the meantime.
+
+</details>
+
+### 2. Create a branch
+
+A branch keeps your change apart from `main`, so your fork's `main` stays a copy of the
+original and you can work on more than one thing at a time:
+
+```bash
+git switch -c feat/<topic>-demo
+```
+
+| You are | Name the branch |
+| --- | --- |
+| adding a demo | `feat/<topic>-demo` |
+| fixing something | `fix/<what>` |
+| changing documentation | `docs/<what>` |
+
+The name is only for you; nothing checks it.
+
+### 3. Generate the demo
+
+*Only for a new demo.* Check the idea against [what makes a good demo](#what-makes-a-good-demo),
+then:
+
+```bash
+python scripts/new_demo.py <topic> --title "<Attack name>"
+```
+
+<p align="center">
+  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title &quot;Cross-site scripting&quot; --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, nine files marked TODO(attack), and how to run it">
+</p>
+<p align="center"><sub>An example run, for <code>xss</code> with <code>--postgres</code>.</sub></p>
+
+The new demo already builds, runs and passes the checks: what is left is the attack itself.
+`--postgres` adds a database, and `--mitigated` names the second variant for a defense that
+only limits the damage. [All the options](#the-generator-in-detail).
+
+### 4. Write the attack and the defense
+
+Every place that waits for you is marked `TODO(attack)`: the generator listed the files.
+To see the exact lines again:
+
+```bash
+git grep -n --untracked "TODO(attack)" -- demos/<topic>-demo docs/writeups README.md
+```
+
+Fill them in this order, so that each one gives you something to try. The paths are inside
+`demos/<topic>-demo/`:
+
+1. `app/infrastructure/feature/vulnerable.py`: the flaw;
+2. `app/infrastructure/feature/safe.py` (`mitigated.py` with `--mitigated`): the defense,
+   behind the same interface;
+3. `app/api/routers.py`: the route's name;
+4. `bruno/02-attack` and `bruno/03-defense`: the same payload, sent to both variants;
+5. the demo's `README.md`; outside the demo folder, its write-up in `docs/writeups/` and its
+   row in the root `README.md`;
+6. with `--postgres`, the tables, in `app/infrastructure/seed.py`.
+
+[The contract](#the-contract) lists what every demo has to provide.
+
+### 5. Run it and try the attack
+
+```bash
+cd demos/<topic>-demo
+docker compose up --build
+```
+
+When the service is ready, its log says where to open it:
+
+<p align="center">
+  <img src="docs/assets/terminal/demo-up.png" width="600" alt="docker compose up: the database turns healthy, the seed job exits, and the service logs that the demo is ready at its address">
+</p>
+<p align="center"><sub>An example, for <code>sqli-demo</code>: yours names your demo and its port.</sub></p>
+
+- **Swagger UI**, at that address, sends requests from the browser.
+- **Bruno**: *Open Collection*, pick `demos/<topic>-demo/bruno`, and run the whole collection.
+  With Node.js installed, the same from the terminal: `cd bruno && npx @usebruno/cli run -r`.
+- **Stop it** with `Ctrl+C`, then `docker compose down`.
+
+Change the code, run `docker compose up --build` again, and repeat until the attack works
+on `vulnerable` and fails on the second variant.
+
+### 6. Check it
+
+One command runs what CI checks, apart from building the images:
+
+```bash
+python scripts/lab.py check --title "feat(<topic>-demo): <summary>"
+```
+
+<p align="center">
+  <img src="docs/assets/terminal/lab-check.png" width="600" alt="python scripts/lab.py check: the repository conventions, ruff in scripts and docs and in the changed demo, and the pull request title all pass">
+</p>
+<p align="center"><sub>An example run, on a branch that changes <code>sqli-demo</code>.</sub></p>
+
+It fails while a `TODO(attack)` marker is left, and names each one. `--title` checks the
+title you are going to give the pull request. `feat` is the type for a new demo; for any
+other change, pick the type from [the title format](#the-pull-request-title).
+
+### 7. Commit and push
+
+```bash
+git add -A
+git commit -m "feat(<topic>-demo): <summary>"
+git push -u origin feat/<topic>-demo
+```
+
+Commit as often as you like, with any message: the pull request is squash-merged, so only
+its title ends up on `main`. With a single commit, GitHub suggests that commit's message
+as the title, so writing it in the title format saves you a step.
+
+### 8. Open the pull request
+
+1. Open your fork on GitHub. A bar offers **Compare & pull request**: click it. The base
+   is `nemanjaASE/mithridates`, branch `main`; the other side is your branch.
+2. **Title**: the one you checked in step 6.
+3. **Description**: a few sentences under *What this changes*. Tick the checklist items
+   that apply, and **delete** the ones that do not: an unticked box fails the check.
+4. **Create pull request**, or **Create draft pull request** if it is not finished and you
+   would like feedback first.
+
+The checks start at once and take a few minutes. Each one ends with ✔ or ✘ and a
+**Details** link to its log. A red check is a to-do, not a verdict: open Details, fix what
+it says, then commit and push to the same branch. The pull request updates itself.
+
+A maintainer then reviews it. Answer the comments, or push changes, the same way. Once it
+is approved, the maintainer squash-merges it.
+
+### 9. After the merge
+
+Bring your fork up to date and clean up:
+
+```bash
+git switch main
+git pull upstream main
+git push origin main
+git branch -D feat/<topic>-demo
+python scripts/lab.py clean
+```
+
+The branch is deleted with `-D` because a squash merge makes a new commit, so git does not
+see the branch as merged. `lab.py clean` stops the demos and removes the images you no
+longer need.
+
+---
+
+## <img src="docs/assets/icons/file.svg" width="30" height="23" alt="">A small fix, straight on GitHub
+
+For a typo or a sentence there is nothing to install:
+
+1. Open the file on GitHub and click the pencil, **Edit this file**. GitHub makes the fork
+   for you.
+2. Make the change, then **Commit changes…** and **Propose changes**. GitHub makes the
+   branch.
+3. Give the pull request a title in the form `docs: <summary>`, or
+   `docs(<topic>-demo): <summary>` when the change is inside one demo, and
+   **Create pull request**.
+
+The same checks run as for any other pull request.
+
+---
+
+## <img src="docs/assets/icons/wrench.svg" width="30" height="23" alt="">When something goes wrong
+
+| What you see | What to do |
+| --- | --- |
+| **Pull request format** is red | The title or the description; Details says which. Edit them on the pull request page, and the check runs again by itself |
+| **Conventions** or **Lint** is red | Run `python scripts/lab.py check`: it prints the same problems, each with its file |
+| **Build** is red | Run `docker compose build` in the demo's folder and read the first error |
+| *This branch has conflicts* | Someone merged first and you both changed the same lines, usually a row in `README.md`. See below |
+| `Cannot connect to the Docker daemon` | Docker is installed but not running: start Docker Desktop |
+| `port is already allocated` | Another program, or another demo, has the port: `python scripts/lab.py status` shows what is running |
+| `uv: command not found` | Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then open a new terminal |
+| Anything else | Ask in the pull request, or [open an issue](https://github.com/nemanjaASE/mithridates/issues/new/choose), with the command and what it printed |
+
+**Resolving a conflict.** Bring in what was merged meanwhile:
+
+```bash
+git fetch upstream
+git merge upstream/main
+```
+
+Git marks each conflict with `<<<<<<<`, `=======` and `>>>>>>>`. Keep both versions (in a
+table, both rows), delete the markers, then:
+
+```bash
+git add -A
+git commit -m "merge main"
+git push
+```
+
+If the other demo took the same port, `lab.py check` says so: give yours the next free
+one, in `compose.yaml` and in its `PUBLIC_URL`.
+
+---
+
+**Reference.** The rest of this page is what the steps link to: what a demo has to be, how
+it is laid out, and what CI checks.
 
 ---
 
@@ -55,7 +308,7 @@ This repository contains deliberately vulnerable code for teaching. Keep it that
 
 ---
 
-## <img src="docs/assets/icons/zap.svg" width="30" height="23" alt="">Start from the generator
+## <img src="docs/assets/icons/zap.svg" width="30" height="23" alt="">The generator in detail
 
 ```bash
 python scripts/new_demo.py <topic> --title "<Attack name>" [--mitigated] [--postgres]
@@ -77,22 +330,9 @@ the demo in `docker-compose.yml`, `README.md` and `docs/README.md`.
 | `--postgres` | adds a database, a read-only application account and a seed job |
 | `--port` | a port other than the next free one |
 
-It prints each step as it runs, then the files left for you and the command that starts
-the demo:
-
-<p align="center">
-  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title "Cross-site scripting" --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, nine files marked TODO(attack), and how to run it">
-</p>
-
-What is left for you is marked `TODO(attack)`:
-
-- the two implementations, in `app/infrastructure/feature/`;
-- the route name, in `app/api/routers.py`;
-- the payloads, in `bruno/02-attack` and `bruno/03-defense`;
-- the text of the README and the write-up, and the demo's row in the root README;
-- with `--postgres`, the tables, in `app/infrastructure/seed.py`.
-
-`scripts/check_repo.py` fails while any marker is left, and names every one of them:
+What is left for you is marked `TODO(attack)`, in the files
+[step 4](#4-write-the-attack-and-the-defense) lists. `scripts/check_repo.py`, which
+`lab.py check` runs, fails while any marker is left, and names every one of them:
 
 <p align="center">
   <img src="docs/assets/terminal/check-repo.png" width="760" alt="scripts/check_repo.py right after the generator: sqli-demo and promptinj-demo pass, xss-demo and the repository fail on the TODO(attack) markers still left">
@@ -282,10 +522,10 @@ Every pull request runs [`ci.yml`](.github/workflows/ci.yml) and
 | **Demo generator** | `scripts/new_demo.py` generates one demo of each kind; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them |
 | **Pull request format** | `scripts/check_pr.py`: the title is in the [expected form](#the-pull-request-title), `## What this changes` says what changes, and no checklist item is left unticked. It runs again when you edit the title or the description |
 
-Run the conventions yourself before you push:
+Run them yourself before you push, all but the builds, with one command:
 
 ```bash
-uv run --no-project --with pyyaml python scripts/check_repo.py
+python scripts/lab.py check
 ```
 
 CI does not start a demo: the LLM demo alone downloads gigabytes. Starting a stack is
@@ -316,7 +556,7 @@ Pull requests are squash-merged, so the title becomes the commit on `main`. It f
 The scope is optional. When there is one, it is a demo's folder name (`sqli-demo`), or
 `deps`, `scripts` or `house-style`. A `!` before the colon marks a change that breaks how a
 demo is run or called: a route, a port, a variable. The description starts in lowercase,
-has no full stop, and the whole title fits in 72 characters:
+has no full stop, and the whole title fits in 72 characters. Some examples:
 
 ```text
 feat(xss-demo): reflected XSS on the search page
@@ -325,10 +565,10 @@ fix(sqli-demo)!: the login route moves to /api/v2
 ci(deps): bump actions/checkout from 7.0.1 to 7.1.0
 ```
 
-Check a title before you open the pull request:
+Check yours before you open the pull request:
 
 ```bash
-python scripts/check_pr.py "feat(xss-demo): reflected XSS on the search page"
+python scripts/lab.py check --title "<type>(<scope>): <summary>"
 ```
 
 ---
@@ -339,8 +579,7 @@ python scripts/check_pr.py "feat(xss-demo): reflected XSS on the search page"
       `docker compose down` leaves nothing behind.
 - [ ] The attack works on the vulnerable route and fails on the fixed one, and the Bruno
       collection proves both with the same payload.
-- [ ] `uv run ruff check .` passes, and so does
-      `uv run --no-project --with pyyaml python scripts/check_repo.py`.
+- [ ] `python scripts/lab.py check` passes.
 - [ ] Every default in the README matches the code, and every path and identifier the
       documents name exists.
 - [ ] The write-up says whether the attack has a real **fix** or only **mitigations**, and
