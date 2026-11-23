@@ -2,6 +2,8 @@
 
 On an interactive terminal a running step shows a spinner and every line is colored. In CI
 or a pipe each step prints one plain line when it ends, and `NO_COLOR` turns colors off.
+`FORCE_COLOR` keeps the terminal look in a pipe, which is how docs/assets/terminal.py
+records the screenshots in the READMEs.
 """
 from __future__ import annotations
 
@@ -77,7 +79,8 @@ class Terminal:
         if mintty and hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8")
         self.stream = stream
-        self.live = mintty or _ansi_ready(stream)
+        forced = bool(os.environ.get("FORCE_COLOR"))
+        self.live = forced or mintty or _ansi_ready(stream)
         self.color = self.live and "NO_COLOR" not in os.environ
         self.unicode = _encodable(stream, "".join(LOGO) + "".join(FANCY.values()))
         self.glyph = FANCY if self.unicode else PLAIN

@@ -142,6 +142,12 @@ docker compose up --build               # everything
 docker compose down                     # stop everything
 ```
 
+When a demo is ready, its log says where to open it:
+
+<p align="center">
+  <img src="docs/assets/terminal/demo-up.png" width="640" alt="docker compose up --build sqli-demo: the database turns healthy, the seed job exits, and the service logs that sqli-demo is ready at http://127.0.0.1:8001/docs">
+</p>
+
 Naming one demo starts only that demo and the containers it depends on. Each one also
 runs without the root file at all:
 
@@ -163,6 +169,10 @@ python scripts/lab.py clean    # stop every demo, remove leftover images
 
 `clean --all` also removes the demos' own images, `--models` the downloaded models, and
 `--dry-run` prints what would be removed without removing it.
+
+<p align="center">
+  <img src="docs/assets/terminal/lab-status.png" width="560" alt="python scripts/lab.py status: three containers of sqli-demo, two running and one exited, three images with xss-demo marked as a leftover, and the model volume">
+</p>
 
 ---
 
