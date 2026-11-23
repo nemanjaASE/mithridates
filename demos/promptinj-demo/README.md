@@ -247,6 +247,7 @@ the repository root.
 | `DB_HOST`, `DB_NAME`, `DB_APP_USER`, `DB_APP_PASSWORD` | — (required) | without `DB_HOST` the service refuses to start |
 | `JWT_SECRET` | — (required, ≥ 32 bytes) | token signing key; no default value in code |
 | `JWT_TTL_SECONDS` | `900` | token lifetime |
+| `PUBLIC_URL` | `http://127.0.0.1:8000` | the address printed when the service is ready; compose: `http://127.0.0.1:8002` |
 | **`EXPOSE_PROMPT_TRACE`** | `true` | shows the prompt that was sent, in `trace` |
 | **`EXPOSE_RAW_OUTPUT`** | `false` | the model's raw output; **bypasses the filter**, hence off |
 

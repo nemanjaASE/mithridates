@@ -127,6 +127,14 @@ def published_ports(service: dict) -> list[tuple[str, str]]:
     return out
 
 
+def environment(service: dict) -> dict[str, str]:
+    """A service's environment as a dict, from either compose syntax."""
+    env = service.get("environment") or {}
+    if isinstance(env, list):
+        return dict(item.split("=", 1) for item in env if "=" in item)
+    return {str(k): str(v) for k, v in env.items()}
+
+
 def check_demo(demo: Path, report: Report) -> list[tuple[str, str]]:
     """Everything a single demo folder has to provide. Returns its published ports."""
     name = demo.name
@@ -157,6 +165,10 @@ def check_demo(demo: Path, report: Report) -> list[tuple[str, str]]:
                 )
                 report.check(name, service == name,
                              f"only {name} may publish a port, not {service}")
+                # the startup line prints PUBLIC_URL, so it has to name the published port
+                url = str(environment(body).get("PUBLIC_URL", ""))
+                report.check(name, not url or url.rstrip("/").endswith(f":{host_port}"),
+                             f"{service}: PUBLIC_URL {url} does not use the published port {host_port}")
             if "build" in body:
                 opts = body.get("security_opt") or []
                 report.check(name, body.get("read_only") is True, f"{service} is not read_only")

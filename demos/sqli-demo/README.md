@@ -191,6 +191,7 @@ the repository root.
 | `DB_ADMIN_USER` / `_PASSWORD` | — (required, **seed only**) | superuser; the application never gets it |
 | `JWT_SECRET` | — (required, ≥ 32 bytes) | token signing key; no default value in code |
 | `JWT_TTL_SECONDS` | `900` | token lifetime |
+| `PUBLIC_URL` | `http://127.0.0.1:8000` | the address printed when the service is ready; compose: `http://127.0.0.1:8001` |
 | **`EXPOSE_QUERY_TRACE`** | `false` | adds `debug` with the executed SQL to the response |
 | **`ENABLE_DEBUG_ENDPOINTS`** | `true` | enables `GET /api/v1/debug/users` |
 

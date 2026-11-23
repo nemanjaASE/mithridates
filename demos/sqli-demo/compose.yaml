@@ -64,6 +64,7 @@ services:
       - "127.0.0.1:8001:8000"   # local only
     environment:
       <<: *db-env
+      PUBLIC_URL: http://127.0.0.1:8001   # printed at startup; matches the port above
       # Lab secret (>= 32 bytes). For anything more serious, set SQLI_JWT_SECRET in .env.
       JWT_SECRET: ${SQLI_JWT_SECRET:-lab-only-jwt-secret-change-me-0123456789abcdef}
       JWT_TTL_SECONDS: ${SQLI_JWT_TTL_SECONDS:-900}

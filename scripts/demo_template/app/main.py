@@ -8,6 +8,7 @@ import logging
 
 from fastapi import FastAPI
 
+from .api.docs import register_docs
 from .api.error_handlers import register_error_handlers
 from .api.routers import (
     build_auth_router,
@@ -16,8 +17,20 @@ from .api.routers import (
     build_users_router,
 )
 from .api.security_headers import register_security_headers
+from .api.startup import announce
 from .config import Settings
 from .container import Container, build_container
+
+NAME = "__NAME__"
+DESCRIPTION = """<img src="/logo.svg" alt="" width="72" align="right">
+
+**__TITLE__.** One feature in a vulnerable and a __safe__ variant. Send the same payload
+to both.
+
+Deliberately vulnerable: keep it on `127.0.0.1`. The
+[write-up](https://github.com/nemanjaASE/mithridates/blob/main/docs/writeups/__NN__-__SLUG__.md)
+explains the attack and the fix.
+"""
 
 
 def create_app(container: Container | None = None) -> FastAPI:
@@ -32,7 +45,9 @@ def create_app(container: Container | None = None) -> FastAPI:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     container = container or build_container(Settings.from_env())
 
-    app = FastAPI(title="__NAME__", description="Deliberately vulnerable lab: __TITLE__ and its fix.")
+    app = FastAPI(title=f"Mithridates · {NAME}", description=DESCRIPTION, docs_url=None)
+    announce(NAME, container.settings.public_url)
+    register_docs(app)
     register_security_headers(app)
     register_error_handlers(app)
     app.include_router(build_root_router())

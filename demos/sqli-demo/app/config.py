@@ -10,6 +10,9 @@ from .domain.errors import ConfigurationError
 from .infrastructure.persistence import DatabaseCredentials, DatabaseServer
 from .infrastructure.tokens import JwtSettings
 
+# Where the host reaches the service when nothing else is set.
+LOCAL_URL = "http://127.0.0.1:8000"
+
 
 def _env_bool(name: str, default: bool) -> bool:
     """Reads a boolean variable, or returns `default` when it is not set."""
@@ -50,6 +53,8 @@ class Settings:
     # Returns the executed SQL in the response. Off by default: it discloses the query.
     expose_query_trace: bool = False
     enable_debug_endpoints: bool = True
+    # The address printed when the service is ready; compose sets the published port.
+    public_url: str = LOCAL_URL
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -71,6 +76,7 @@ class Settings:
             ),
             expose_query_trace=_env_bool("EXPOSE_QUERY_TRACE", False),
             enable_debug_endpoints=_env_bool("ENABLE_DEBUG_ENDPOINTS", True),
+            public_url=os.environ.get("PUBLIC_URL", LOCAL_URL),
         )
 
 

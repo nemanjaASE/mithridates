@@ -65,6 +65,7 @@ services:
     ports:
       - "127.0.0.1:__PORT__:8000"   # local only
     environment:
+      PUBLIC_URL: http://127.0.0.1:__PORT__   # printed at startup; matches the port above
 # [postgres]
       <<: *db-env
 # [/postgres]
