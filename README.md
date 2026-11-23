@@ -2,7 +2,12 @@
   <img src="docs/assets/logo.svg" alt="Mithridates logo: a drop of poison above a Greek eye-cup with one red and one green eye" width="140">
 </p>
 
-<h1 align="center">Mithridates</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.svg">
+    <img src="docs/assets/wordmark-light.svg" alt="Mithridates" width="400">
+  </picture>
+</h1>
 
 <p align="center"><b>Small, controlled doses of real attacks.</b></p>
 

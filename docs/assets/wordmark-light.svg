@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 64" width="650" height="64">
+  <!-- The wordmark of the social preview, for the README's heading: serif capitals, spaced
+       like an inscription. One file per GitHub theme; README.md picks it with <picture>.
+       textLength fixes the width, so the word fits whichever serif the reader's system has. -->
+  <text x="4" y="59" fill="#1f2328" font-family="Georgia, 'Times New Roman', serif" font-size="78" textLength="642" lengthAdjust="spacing">MITHRIDATES</text>
+</svg>
