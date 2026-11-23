@@ -546,14 +546,17 @@ There are no automated test suites in this repository; the Bruno collection is t
 verification. Please raise it in an issue before adding one.
 
 CI runs the collection too ([`bruno.yml`](.github/workflows/bruno.yml)): it starts the demo
-with `docker compose up` and sends every request, on every pull request. A demo whose stack
-is too slow for that, because it downloads a model for example, can run less often. It says
-so at the top of its `compose.yaml`, with the reason, for a reviewer to weigh:
+with `docker compose up` and sends every request, on every pull request. A demo that would
+hold up every pull request, because it downloads a model for example, can run less often. It
+says so at the top of its `compose.yaml`, with the reason, for a reviewer to weigh:
 
 ```yaml
 x-mithridates:
   bruno-in-ci: on-change
-  reason: the stack downloads about 2 GB of models before it answers, and runs them on CPU
+  reason: >-
+    every run downloads about 2 GB of models and answers on CPU, about 3 minutes against
+    under one for sqli-demo; on every pull request, a change that never touches this demo
+    would wait for it, and fail whenever the model registry is down
 ```
 
 Its collection then runs when a pull request touches the demo, every Monday, and by hand.

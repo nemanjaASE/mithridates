@@ -7,7 +7,10 @@
 # request, but when a change touches this demo, every week, and by hand.
 x-mithridates:
   bruno-in-ci: on-change
-  reason: the stack downloads about 2 GB of models before it answers, and runs them on CPU
+  reason: >-
+    every run downloads about 2 GB of models and answers on CPU, about 3 minutes against
+    under one for sqli-demo; on every pull request, a change that never touches this demo
+    would wait for it, and fail whenever the model registry is down
 
 x-hardening: &hardening
   read_only: true            # the container's root filesystem is read-only

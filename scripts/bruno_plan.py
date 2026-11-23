@@ -7,7 +7,7 @@ A demo's collection runs on every pull request, unless its compose.yaml says oth
 
     x-mithridates:
       bruno-in-ci: on-change
-      reason: the stack downloads 2 GB of models before it answers
+      reason: every run downloads about 2 GB of models and answers on CPU
 
 `on-change` runs it only when the change touches the demo, or how the collections run
 (.github/workflows/bruno.yml and this file). `--all`, the weekly and the manual run,

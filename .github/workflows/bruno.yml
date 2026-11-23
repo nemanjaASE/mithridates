@@ -4,7 +4,7 @@
 #
 # A demo runs on every pull request, unless its compose.yaml sets
 # `x-mithridates.bruno-in-ci: on-change`. Then it runs when a change touches it, every
-# Monday, and by hand: that is for a stack too slow to start on every change, such as one
+# Monday, and by hand: that is for a stack that would hold up every change, such as one
 # that downloads a model. scripts/bruno_plan.py decides which demos run.
 name: Bruno
 
@@ -54,7 +54,7 @@ jobs:
     needs: plan
     if: needs.plan.outputs.demos != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20   # the slowest demo, promptinj-demo, takes about 3 minutes
     strategy:
       fail-fast: false
       matrix:
@@ -63,10 +63,12 @@ jobs:
       DEMO: ${{ matrix.demo }}
     steps:
       - uses: actions/checkout@v7.0.1
-      # --wait returns once every container is healthy and every one-off job has finished;
-      # a stack that pulls a model needs most of the 40 minutes on the first run.
+      # --wait returns once every container is healthy and every one-off job has finished.
+      # On GitHub's runners that is about 25 s for sqli-demo and 80 to 100 s for
+      # promptinj-demo, which pulls its models; ten minutes leave room for a slow download
+      # and still stop a start that hangs.
       - name: Start the demo
-        run: docker compose up --build --detach --wait --wait-timeout 2400 "$DEMO"
+        run: docker compose up --build --detach --wait --wait-timeout 600 "$DEMO"
       # The CLI is pinned like the actions above; Node.js is the runner's own.
       - name: Run its collection
         working-directory: demos/${{ matrix.demo }}/bruno
