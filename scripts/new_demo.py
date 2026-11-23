@@ -22,6 +22,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from terminal import Terminal
+
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = Path(__file__).resolve().parent / "demo_template"
 FIGURES = ROOT / ".claude" / "skills" / "house-style-figures" / "new_figures.py"
@@ -95,9 +97,10 @@ def next_port() -> int:
     return max(ports, default=8000) + 1
 
 
-def copy_template(target: Path, values: dict[str, str], postgres: bool) -> None:
-    """Copies the template to `target`, rendering every text file."""
+def copy_template(target: Path, values: dict[str, str], postgres: bool) -> int:
+    """Copies the template to `target`, rendering every text file, and returns the file count."""
     flags = {"postgres"} if postgres else {"no-postgres"}
+    count = 0
     for source in sorted(TEMPLATE.rglob("*")):
         rel = source.relative_to(TEMPLATE).as_posix()
         if source.is_dir() or any(part in rel for part in SKIP) or (rel in POSTGRES_ONLY and not postgres):
@@ -109,6 +112,8 @@ def copy_template(target: Path, values: dict[str, str], postgres: bool) -> None:
             destination.write_text(text, encoding="utf-8", newline="\n")
         else:
             shutil.copyfile(source, destination)
+        count += 1
+    return count
 
 
 def start_writeup(path: Path, number: str, title: str) -> None:
@@ -150,12 +155,12 @@ def register(name: str, number: str, slug: str, title: str, port: int) -> None:
     index.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
-def run(command: list[str], cwd: Path = ROOT) -> bool:
-    """Runs a command, and reports whether it succeeded."""
+def run(command: list[str], cwd: Path = ROOT) -> str:
+    """Runs a command, and returns its error output if it failed, or an empty string."""
     result = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"  ! {' '.join(command)} failed:\n{result.stderr.strip()}")
-    return result.returncode == 0
+    if result.returncode == 0:
+        return ""
+    return f"`{' '.join(command)}` failed:\n{(result.stderr or result.stdout).strip()}"
 
 
 def main() -> int:
@@ -183,25 +188,57 @@ def main() -> int:
               "__PORT__": str(port), "__NN__": number, "__SLUG__": slug, "__TITLE__": args.title}
     second = "mitigated" if args.mitigated else "safe"
     values |= {"__safe__": second, "__Safe__": second.capitalize(), "__SAFE__": second.upper()}
-    copy_template(target, values, args.postgres)
-    start_writeup(writeup, number, args.title)
-    register(name, number, slug, args.title, port)
-    print(f"created demos/{name} (:{port}) and docs/writeups/{writeup.name}")
 
-    if run([sys.executable, str(FIGURES), f"demos/{name}"]) and run([sys.executable, f"demos/{name}/docs/diagrams.py"]):
-        print("  drew the placeholder C4 figures")
-    if shutil.which("uv") and run(["uv", "lock", "--quiet"], cwd=target):
-        print("  locked the dependencies (uv.lock)")
-    else:
-        print("  ! run `uv lock` in the demo folder: the Dockerfile installs from uv.lock")
+    ui = Terminal()
+    dot = ui.glyph["dot"]
+    ui.banner()
+    ui.line(f"  {ui.paint('New demo', bold=True)}  {name}")
+    for key, value in (("write-up", f"{number} {dot} {args.title}"),
+                       ("port", f"127.0.0.1:{port}"),
+                       ("variants", f"vulnerable {dot} {second}"),
+                       ("database", "PostgreSQL" if args.postgres else "none")):
+        ui.line(f"    {ui.paint(f'{key:<10}', dim=True)}{value}")
+    ui.line()
+
+    with ui.step("Copying the template", "Copied the template") as step:
+        step.done(f"{copy_template(target, values, args.postgres)} files")
+    with ui.step("Starting the write-up", "Started the write-up") as step:
+        start_writeup(writeup, number, args.title)
+        step.done(writeup.relative_to(ROOT).as_posix())
+    with ui.step("Listing the demo", "Listed the demo") as step:
+        register(name, number, slug, args.title, port)
+        step.done(f"compose file {dot} README {dot} docs index")
+    with ui.step("Drawing the C4 figures", "Drew the placeholder C4 figures") as step:
+        problem = (run([sys.executable, str(FIGURES), f"demos/{name}"])
+                   or run([sys.executable, f"demos/{name}/docs/diagrams.py"]))
+        if problem:
+            step.warn(problem)
+        else:
+            step.done(f"{len(list(target.rglob('*.svg')))} figures")
+    with ui.step("Locking the dependencies", "Locked the dependencies") as step:
+        if not shutil.which("uv"):
+            step.warn(f"uv is not installed: run `uv lock` in demos/{name}, "
+                      "the Dockerfile installs from uv.lock")
+        elif problem := run(["uv", "lock", "--quiet"], cwd=target):
+            step.warn(problem)
+        else:
+            step.done("uv.lock")
 
     todo = sorted({p.relative_to(ROOT).as_posix()
                    for p in [*target.rglob("*"), writeup, ROOT / "README.md", ROOT / "docs" / "README.md"]
                    if p.is_file() and "TODO(attack)" in p.read_text(encoding="utf-8", errors="ignore")})
-    print("\nWhat is left is marked TODO(attack):")
+    prefix = f"demos/{name}/"
+    ui.line()
+    ui.line(f"  {ui.paint('Left for you', bold=True)}  "
+            f"{ui.paint(f'{len(todo)} files marked TODO(attack)', dim=True)}")
     for path in todo:
-        print(f"  {path}")
-    print(f"\nRun it:  cd demos/{name} && docker compose up --build")
+        inside = path.startswith(prefix)
+        ui.line("    " + (ui.paint(prefix, dim=True) + path[len(prefix):] if inside else path))
+    ui.line()
+    ui.line(f"  {ui.paint('Run it', bold=True)}")
+    ui.line(f"    cd demos/{name} && docker compose up --build")
+    ui.line(f"    {ui.paint(ui.glyph['arrow'], dim=True)} http://127.0.0.1:{port}/docs")
+    ui.line()
     return 0
 
 
