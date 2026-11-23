@@ -1,10 +1,34 @@
 opencollection: 1.0.0
 
 info:
-  name: promptinj-demo
+  name: Mithridates · Prompt injection
 bundled: false
 extensions:
   bruno:
     ignore:
       - node_modules
       - .git
+
+docs: |-
+  <img src="https://raw.githubusercontent.com/nemanjaASE/mithridates/main/docs/assets/logo.png" alt="Mithridates" width="72" align="right">
+
+  # Mithridates · Prompt injection
+
+  The requests that prove the attack and its mitigations on `promptinj-demo`, at
+  `http://127.0.0.1:8002`. Start the demo first, then run the folders in order:
+
+  | Folder | What it proves |
+  | --- | --- |
+  | `00-environments` | the stack is the real one (real models, real store) |
+  | `01-auth` | login, a rejected login, the token |
+  | `02-assistant` | the injection leaks on `vulnerable` and does not on `mitigated` |
+  | `03-agent` | the tool serves another account on `vulnerable` and refuses on `mitigated` |
+  | `04-hardening` | no token, wrong method, empty and oversized question, unknown variant |
+
+  The assertions check the **control** (`retrieval_scope`, `tool_calls[].outcome`), not the
+  text of the answer: the model is not deterministic.
+
+  - [The write-up](https://github.com/nemanjaASE/mithridates/blob/main/docs/writeups/02-llm-prompt-injection.md): the attack, why it works and the mitigations
+  - [The demo's README](https://github.com/nemanjaASE/mithridates/tree/main/demos/promptinj-demo): how to run it and how it is built
+
+  Deliberately vulnerable: keep it on `127.0.0.1`.

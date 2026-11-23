@@ -237,7 +237,7 @@ Static checks: `uv run ruff check .`
 | `503` with an `error_id` in the response | The database is unreachable. The message is generic on purpose; the cause is in the log under the same `error_id`. |
 | `ConfigurationError: Missing required env variable` | Started outside compose. Secrets have no default value in code. |
 | `admin'--` returns `401` | You are hitting the `safe` route. Check the path. |
-| `port is already allocated` | Something is already listening on 8001; change the mapping in `compose.yaml`. |
+| `port is already allocated` | Something is already listening on 8001; change the mapping and `PUBLIC_URL` in `compose.yaml`. |
 
 ---
 
