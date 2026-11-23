@@ -7,14 +7,15 @@
 <p align="center"><b>Small, controlled doses of real attacks.</b></p>
 
 <p align="center">
+  <a href="https://github.com/nemanjaASE/mithridates/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/nemanjaASE/mithridates/ci.yml?branch=main&style=flat-square&label=CI" alt="CI status"></a>
   <img src="https://img.shields.io/badge/demos-2-0a7ea4?style=flat-square" alt="2 demos">
   <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/PostgreSQL-18-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL 18">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/uv-DE5FE9?style=flat-square&logo=uv&logoColor=white" alt="uv">
-  <img src="https://img.shields.io/badge/license-MIT-8b949e?style=flat-square" alt="MIT license">
-  <img src="https://img.shields.io/badge/contributions-welcome-3fb950?style=flat-square" alt="contributions welcome">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8b949e?style=flat-square" alt="MIT license"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-3fb950?style=flat-square" alt="contributions welcome"></a>
 </p>
 
 **Real attacks, in small doses.** Every demo here is a small service with a working exploit

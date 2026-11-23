@@ -20,12 +20,12 @@ inside it:
 
 ## How to report it
 
-Use GitHub's **Report a vulnerability** button on the Security tab, so the report stays
-private until it is fixed. If it is not sensitive — a port binding, a stale document — a
-normal issue is fine.
+Use [**Report a vulnerability**](https://github.com/nemanjaASE/mithridates/security/advisories/new)
+on the Security tab, so the report stays private until it is fixed. If it is not
+sensitive — a port binding, a stale document — a normal issue is fine.
 
-Only the current state of the default branch is maintained. There are no releases and no
-patched versions to fall back to.
+Only the current state of the default branch is maintained. A release is a snapshot to
+cite or teach from; a fix lands on `main`, never as a patched release.
 
 ## Running the lab safely
 

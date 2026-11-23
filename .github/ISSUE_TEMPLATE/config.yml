@@ -1,1 +1,7 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Report a vulnerability in the lab itself
+    url: https://github.com/nemanjaASE/mithridates/security/advisories/new
+    about: >-
+      A private report for anything that puts the person running the lab at risk. The
+      vulnerabilities the demos teach are deliberate; please do not report those.
