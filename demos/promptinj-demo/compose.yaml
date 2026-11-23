@@ -3,6 +3,12 @@
 # Or together with the others from the repository root (../../docker-compose.yml).
 # Everything is bound to localhost. Do NOT expose it on a network.
 
+# When CI runs the Bruno collection (.github/workflows/bruno.yml): not on every pull
+# request, but when a change touches this demo, every week, and by hand.
+x-mithridates:
+  bruno-in-ci: on-change
+  reason: the stack downloads about 2 GB of models before it answers, and runs them on CPU
+
 x-hardening: &hardening
   read_only: true            # the container's root filesystem is read-only
   cap_drop: [ALL]            # no Linux capabilities

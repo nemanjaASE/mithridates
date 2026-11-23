@@ -1,0 +1,95 @@
+# Starts each demo and runs its Bruno collection against it: the attack succeeds on the
+# vulnerable route, and the same payload fails on the fixed one. The collections are this
+# repository's verification (CONTRIBUTING.md, "Verification"); here they run on their own.
+#
+# A demo runs on every pull request, unless its compose.yaml sets
+# `x-mithridates.bruno-in-ci: on-change`. Then it runs when a change touches it, every
+# Monday, and by hand: that is for a stack too slow to start on every change, such as one
+# that downloads a model. scripts/bruno_plan.py decides which demos run.
+name: Bruno
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * 1"   # Mondays, 04:17 UTC: every demo, the slow ones too
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bruno-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Plan the Bruno runs
+    runs-on: ubuntu-latest
+    outputs:
+      demos: ${{ steps.plan.outputs.demos }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0   # the plan compares the change with the commit it starts from
+      - uses: astral-sh/setup-uv@v10.3.3
+      - id: plan
+        name: Which demos run
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ "$EVENT" = schedule ] || [ "$EVENT" = workflow_dispatch ] \
+             || [ -z "$BASE" ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then
+            set -- --all
+          else
+            set -- --changed-since "$BASE"
+          fi
+          demos=$(uv run --no-project --with pyyaml python scripts/bruno_plan.py "$@")
+          echo "demos=$demos" >> "$GITHUB_OUTPUT"
+
+  run:
+    name: Bruno ${{ matrix.demo }}
+    needs: plan
+    if: needs.plan.outputs.demos != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        demo: ${{ fromJSON(needs.plan.outputs.demos) }}
+    env:
+      DEMO: ${{ matrix.demo }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # --wait returns once every container is healthy and every one-off job has finished;
+      # a stack that pulls a model needs most of the 40 minutes on the first run.
+      - name: Start the demo
+        run: docker compose up --build --detach --wait --wait-timeout 2400 "$DEMO"
+      # The CLI is pinned like the actions above; Node.js is the runner's own.
+      - name: Run its collection
+        working-directory: demos/${{ matrix.demo }}/bruno
+        run: npx --yes @usebruno/cli@4.3.0 run -r
+      - name: Logs
+        if: failure()
+        run: docker compose logs --tail 200
+      - name: Stop it
+        if: always()
+        run: docker compose down --volumes
+
+  result:
+    # The one check the ruleset requires. It passes when every planned run passed, or when
+    # none had to run, so a new demo needs no change to the ruleset.
+    name: Bruno
+    needs: [plan, run]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every planned run passed
+        env:
+          PLAN: ${{ needs.plan.result }}
+          RUNS: ${{ needs.run.result }}
+        run: |
+          echo "plan: $PLAN, runs: $RUNS"
+          [ "$PLAN" = success ] && { [ "$RUNS" = success ] || [ "$RUNS" = skipped ]; }

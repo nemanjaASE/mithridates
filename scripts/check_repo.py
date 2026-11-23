@@ -20,6 +20,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from bruno_plan import BRUNO_IN_CI, EVERY_PR
 from terminal import GREEN, RED, Terminal
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -169,7 +170,9 @@ def check_demo(demo: Path, report: Report) -> list[tuple[str, str]]:
 
     ports: list[tuple[str, str]] = []
     if (demo / "compose.yaml").exists():
-        services = load_yaml(demo / "compose.yaml").get("services", {})
+        compose = load_yaml(demo / "compose.yaml")
+        check_bruno_in_ci(name, compose.get("x-mithridates"), report)
+        services = compose.get("services", {})
         report.check(name, name in services, f"compose.yaml has no service named {name}")
         for service, body in services.items():
             body = body or {}
@@ -251,6 +254,25 @@ def check_demo(demo: Path, report: Report) -> list[tuple[str, str]]:
     for index in (ROOT / "README.md", ROOT / "docs" / "README.md"):
         report.check(name, name in index.read_text(encoding="utf-8"), f"not listed in {rel(index)}")
     return ports
+
+
+def check_bruno_in_ci(name: str, meta: object, report: Report) -> None:
+    """`x-mithridates` in compose.yaml: when CI runs the demo's Bruno collection.
+
+    Without it the collection runs on every pull request. `on-change` runs it only when a
+    change touches the demo, and needs a reason a reviewer can weigh: it is the one way a
+    demo's verification runs less often. scripts/bruno_plan.py reads the same field.
+    """
+    if meta is None:
+        return
+    fields = meta if isinstance(meta, dict) else {}
+    report.check(name, isinstance(meta, dict) and set(meta) <= {"bruno-in-ci", "reason"},
+                 "compose.yaml: x-mithridates takes only bruno-in-ci and reason")
+    when = fields.get("bruno-in-ci", EVERY_PR)
+    report.check(name, when in BRUNO_IN_CI,
+                 f"compose.yaml: x-mithridates.bruno-in-ci is {when!r}, not one of {', '.join(BRUNO_IN_CI)}")
+    report.check(name, when == EVERY_PR or str(fields.get("reason") or "").strip(),
+                 "compose.yaml: x-mithridates.bruno-in-ci is on-change, but gives no reason")
 
 
 def check_env_example(demo: Path, report: Report) -> None:

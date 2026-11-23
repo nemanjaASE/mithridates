@@ -25,6 +25,8 @@ the check guards a title nobody sees in `git log`.
         hardening, no secret defaults ([`ci.yml`](workflows/ci.yml))
   - [ ] `Demo generator` — `scripts/new_demo.py` still produces a demo that passes
         ([`ci.yml`](workflows/ci.yml))
+  - [ ] `Bruno` — every demo starts and its Bruno collection passes. One check for all
+        demos, so a new demo needs nothing added here ([`bruno.yml`](workflows/bruno.yml))
   - [ ] `Lint <demo>` and `Build <demo>` for every demo. These are named per demo, so a
         new demo's two checks are added here when its pull request is merged.
 - [ ] **Block force pushes** and **Restrict deletions:** on (the ruleset's defaults).
