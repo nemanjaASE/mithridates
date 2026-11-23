@@ -24,14 +24,8 @@
 
   </svg>
 
-  <text x="476" y="290" fill="#f0f6fc" font-family="Georgia, 'Times New Roman', serif" font-size="78" letter-spacing="9">MITHRIDATES</text>
-  <path d="M480 318 H1180" stroke="#30363d" stroke-width="2"/>
-  <text x="478" y="370" fill="#e6edf3" font-family="'Segoe UI', system-ui, sans-serif" font-size="34" font-weight="600">Small, controlled doses of real attacks.</text>
-  <text x="478" y="418" fill="#8b949e" font-family="'Segoe UI', system-ui, sans-serif" font-size="24">Every demo ships the attack twice: vulnerable and fixed.</text>
-  <g font-family="Consolas, 'Cascadia Mono', monospace" font-size="21">
-    <text x="478" y="473" fill="#6e7681">01</text>
-    <text x="512" y="473" fill="#c9d1d9">SQL injection</text>
-    <text x="712" y="473" fill="#6e7681">02</text>
-    <text x="746" y="473" fill="#c9d1d9">LLM prompt injection</text>
-  </g>
+  <text x="476" y="276" fill="#f0f6fc" font-family="Georgia, 'Times New Roman', serif" font-size="78" letter-spacing="9">MITHRIDATES</text>
+  <path d="M480 304 H1180" stroke="#30363d" stroke-width="2"/>
+  <text x="478" y="356" fill="#e6edf3" font-family="'Segoe UI', system-ui, sans-serif" font-size="34" font-weight="600">Small, controlled doses of real attacks.</text>
+  <text x="478" y="404" fill="#8b949e" font-family="'Segoe UI', system-ui, sans-serif" font-size="24">Every demo ships the attack twice: vulnerable and fixed.</text>
 </svg>
