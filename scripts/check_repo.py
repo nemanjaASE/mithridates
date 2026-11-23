@@ -21,6 +21,7 @@ import tomllib
 from pathlib import Path
 
 import yaml
+from terminal import GREEN, RED, Terminal
 
 ROOT = Path(__file__).resolve().parent.parent
 # `demo_template` is not a document until scripts/new_demo.py renders it.
@@ -72,27 +73,45 @@ class Report:
 
     def __init__(self) -> None:
         self.failures: dict[str, list[str]] = {}
+        self.counts: dict[str, int] = {}
         self.count = 0
 
     def check(self, subject: str, ok: object, message: str) -> bool:
         self.count += 1
+        self.counts[subject] = self.counts.get(subject, 0) + 1
         if not ok:
             self.failures.setdefault(subject, []).append(message)
         return bool(ok)
 
-    def print(self, subjects: list[str]) -> int:
-        for subject in subjects:
-            problems = self.failures.get(subject)
+    def print(self, ui: Terminal, subjects: list[str]) -> int:
+        """Prints one line per subject, and every failure under its subject.
+
+        Args:
+            ui: Where to print.
+            subjects: The subjects in the order to print them; a failing subject that is
+                not listed is printed after them.
+
+        Returns:
+            The exit status: 0 when every check passed, 1 otherwise.
+        """
+        ok, fail = ui.paint(ui.glyph["ok"], GREEN, bold=True), ui.paint(ui.glyph["fail"], RED, bold=True)
+        for subject in [*subjects, *(s for s in self.failures if s not in subjects)]:
+            problems = self.failures.get(subject, [])
+            count = self.counts.get(subject, 0)
             if problems:
-                print(f"  {subject:<18} FAIL")
+                note = ui.paint(f"{len(problems)} of {count} failed", RED)
+                ui.line(f"  {fail} {ui.paint(subject, RED)}{' ' * max(1, 20 - len(subject))}{note}")
                 for problem in problems:
-                    print(f"      - {problem}")
+                    ui.line(f"      {problem}")
             else:
-                print(f"  {subject:<18} ok")
+                ui.line(f"  {ok} {subject}{' ' * max(1, 20 - len(subject))}{ui.paint(f'{count} checks', dim=True)}")
         failed = sum(len(v) for v in self.failures.values())
-        print()
-        total = f"{self.count} checks"
-        print(f"{total}, {failed} failed" if failed else f"{total}, all passed")
+        ui.line()
+        if failed:
+            ui.line(f"  {fail} {self.count} checks, {ui.paint(f'{failed} failed', RED, bold=True)}")
+        else:
+            ui.line(f"  {ok} {self.count} checks, all passed")
+        ui.line()
         return 1 if failed else 0
 
 
@@ -289,10 +308,10 @@ def check_ports(ports: dict[str, list[tuple[str, str]]], report: Report) -> None
 def check_text(report: Report) -> None:
     for path in walk((".md", ".py", ".yml", ".yaml", ".toml", ".bru")):
         body = path.read_text(encoding="utf-8", errors="replace")
-        for match in CYRILLIC.finditer(body):
-            line = body[: match.start()].count("\n") + 1
-            point = f"U+{ord(match.group()):04X}"
-            report.check("text", False, f"{rel(path)}:{line} has a Cyrillic character ({point})")
+        found = [f"{rel(path)}:{body[: m.start()].count(chr(10)) + 1} has a Cyrillic character"
+                 f" (U+{ord(m.group()):04X})" for m in CYRILLIC.finditer(body)]
+        for problem in found or [""]:  # one check per file, or one per problem in it
+            report.check("text", not problem, problem)
 
     for path in walk((".md",)):
         body = CODE_FENCE.sub("", path.read_text(encoding="utf-8"))
@@ -303,11 +322,13 @@ def check_text(report: Report) -> None:
             report.check("links", resolved.exists(), f"{rel(path)} links to a missing {target}")
 
     for path in walk((".py",)):
+        found = []
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
             match = ENV_DEFAULT.search(line)
             if match and SECRETISH.search(match.group(1)):
-                report.check("secrets", False,
-                             f"{rel(path)}:{number} gives {match.group(1)} a default value in code")
+                found.append(f"{rel(path)}:{number} gives {match.group(1)} a default value in code")
+        for problem in found or [""]:  # one check per file, or one per problem in it
+            report.check("secrets", not problem, problem)
 
 
 def check_todo(demos: list[Path], report: Report) -> None:
@@ -347,10 +368,13 @@ def main() -> int:
     if not allow_todo:
         check_todo(demos, report)
 
-    print(f"mithridates conventions ({len(demos)} demos)")
-    print()
-    return report.print([d.name for d in demos] + ["repository", "links", "text", "secrets"])
-
+    ui = Terminal()
+    if ui.live:  # the logo is for a person at a terminal, not for a CI log
+        ui.banner()
+    skipped = ui.paint(f"  {TODO_MARKER} not checked", dim=True) if allow_todo else ""
+    ui.line(f"  {ui.paint('Conventions', bold=True)}  {len(demos)} demos{skipped}")
+    ui.line()
+    return report.print(ui, [d.name for d in demos] + ["repository", "links", "text", "secrets"])
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,10 +1,33 @@
 opencollection: 1.0.0
 
 info:
-  name: sqli-demo
+  name: Mithridates · SQL injection
 bundled: false
 extensions:
   bruno:
     ignore:
       - node_modules
       - .git
+
+docs: |-
+  <img src="https://raw.githubusercontent.com/nemanjaASE/mithridates/main/docs/assets/logo.png" alt="Mithridates" width="72" align="right">
+
+  # Mithridates · SQL injection
+
+  The requests that prove the attack and its fix on `sqli-demo`, at
+  `http://127.0.0.1:8001`. Start the demo first, then run the folders in order:
+
+  | Folder | What it proves |
+  | --- | --- |
+  | `00-environments` | the service is up and the database holds real data |
+  | `01-auth` | an honest login, a rejected login, and who owns the token |
+  | `02-attack` | all three payloads **succeed** against `vulnerable` |
+  | `03-defense` | the **same** payloads fail against `safe` |
+  | `04-hardening` | an `alg: none` token, the wrong method, oversized input, response headers |
+
+  Folders `02` and `03` send the same payload to two routes; that is the whole proof.
+
+  - [The write-up](https://github.com/nemanjaASE/mithridates/blob/main/docs/writeups/01-sql-injection.md): the attack, why it works and the fix
+  - [The demo's README](https://github.com/nemanjaASE/mithridates/tree/main/demos/sqli-demo): how to run it and how it is built
+
+  Deliberately vulnerable: keep it on `127.0.0.1`.

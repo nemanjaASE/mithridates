@@ -159,6 +159,9 @@ services:
 
 volumes:
   ollama-models:
+    # A fixed name, so the demo started here and from the repository root share the
+    # downloaded models instead of pulling them twice.
+    name: mithridates-ollama-models
 
 networks:
   default:

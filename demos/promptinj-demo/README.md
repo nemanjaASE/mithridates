@@ -80,7 +80,8 @@ anywhere, the process was not started through compose and the demonstration mean
 
 ```bash
 docker compose down       # stop the stack, keep the pulled models
-docker compose down -v    # also delete the model volume
+docker compose down -v    # also delete the model volume, if this folder created it
+python ../../scripts/lab.py clean --models   # delete it, wherever it was started from
 ```
 
 ---
@@ -306,7 +307,8 @@ Static checks: `uv run ruff check .`
 | The agent never calls the tool | A small 3B model is messy at tool calling. Try `PROMPTINJ_MODEL_STRONG=qwen2.5:7b`. |
 | The database is empty after a restart | That is correct: the data is in `tmpfs` and the seed job runs on every start. |
 | `503` from the assistant | Ollama is unreachable: `docker compose logs ollama`. A programming error gives `500` with an `error_id`. |
-| `port is already allocated` | Something is already listening on 8002; change the mapping in `compose.yaml`. |
+| `port is already allocated` | Something is already listening on 8002; change the mapping and `PUBLIC_URL` in `compose.yaml`. |
+| `volume "mithridates-ollama-models" already exists but was created for project …` | The demo was started both from the repository root and from this folder. Harmless: both share the one volume, so the models are downloaded once. |
 
 ---
 

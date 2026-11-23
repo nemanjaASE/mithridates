@@ -1,10 +1,31 @@
 opencollection: 1.0.0
 
 info:
-  name: __NAME__
+  name: Mithridates · __TITLE__
 bundled: false
 extensions:
   bruno:
     ignore:
       - node_modules
       - .git
+
+docs: |-
+  <img src="https://raw.githubusercontent.com/nemanjaASE/mithridates/main/docs/assets/logo.png" alt="Mithridates" width="72" align="right">
+
+  # Mithridates · __TITLE__
+
+  The requests that prove the attack and its fix on `__NAME__`, at
+  `http://127.0.0.1:__PORT__`. Start the demo first, then run the folders in order:
+
+  | Folder | What it proves |
+  | --- | --- |
+  | `00-environments` | the service is up |
+  | `01-auth` | login works, a wrong password is rejected, the token names its owner |
+  | `02-attack` | the attack works on `vulnerable` |
+  | `03-defense` | the same payload does not work on `__safe__` |
+  | `04-hardening` | missing and tampered tokens, wrong methods, oversized input, security headers |
+
+  - [The write-up](https://github.com/nemanjaASE/mithridates/blob/main/docs/writeups/__NN__-__SLUG__.md): the attack, why it works and the fix
+  - [The demo's README](https://github.com/nemanjaASE/mithridates/tree/main/demos/__NAME__): how to run it and how it is built
+
+  Deliberately vulnerable: keep it on `127.0.0.1`.

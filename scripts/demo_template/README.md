@@ -168,7 +168,7 @@ Static checks: `uv run ruff check .`
 
 | Symptom | Cause and what to do |
 | --- | --- |
-| `port is already allocated` | Something else uses port `__PORT__`. Stop it, or change the port in `compose.yaml`. |
+| `port is already allocated` | Something else uses port `__PORT__`. Stop it, or change the port and `PUBLIC_URL` in `compose.yaml`. |
 | Every request returns `401` | The token expired after 15 minutes. Run `01-auth/01` again. |
 
 ---

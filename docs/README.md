@@ -13,7 +13,7 @@ what the demo leaves out.
 | --- | --- | --- |
 | [`writeups/`](writeups/) | one write-up per demo, `NN-<topic>.md` | a contributor adds one with each new demo |
 | [`templates/`](templates/) | [`writeup.md`](templates/writeup.md) and [`demo-readme.md`](templates/demo-readme.md), the structure every demo follows | copied for a new demo, not edited for one; changed only when the convention changes |
-| [`assets/`](assets/) | the logo, the README banner, the social preview and the README heading icons | the maintainers |
+| [`assets/`](assets/) | the logo (an SVG, and a PNG for the Bruno collections), the README banner, the social preview and the README heading icons | the maintainers |
 
 ## Contents
 
