@@ -131,7 +131,8 @@ Fill them in this order, so that each one gives you something to try. The paths 
    behind the same interface;
 3. `app/api/routers.py`: the route's name;
 4. `bruno/02-attack` and `bruno/03-defense`: the same payload, sent to both variants;
-5. `docs/diagrams.py`: the four figures the README shows, [redrawn for your attack](#the-figures);
+5. the four C4 figures in `docs/`, [redrawn for your attack](#the-figures): in the house
+   style, by hand or with an AI agent, or in a tool of your choice;
 6. the demo's `README.md`; outside the demo folder, its write-up in `docs/writeups/` and its
    row in the root `README.md`;
 7. with `--postgres`, the tables, in `app/infrastructure/seed.py`.
@@ -140,10 +141,22 @@ Fill them in this order, so that each one gives you something to try. The paths 
 
 #### The figures
 
-The README shows the demo at the four levels of the C4 model, one figure each. The
-generator drew them from its own code: `routers.py`, `RunFeatureUseCase`, the `Feature`
-port and its two classes, and the database with `--postgres`. Redraw them for your attack
-in the four functions at the end of `docs/diagrams.py`: `context()`, `containers()`,
+The README explains the demo at the four levels of the [C4 model](https://c4model.com/),
+one figure each:
+
+| Level | What its figure shows |
+| --- | --- |
+| 1 — context | the system, who uses it, and what it depends on outside itself |
+| 2 — containers | what runs, each part in its own container, and the one port published to the host |
+| 3 — components | the parts one request passes through: the vulnerable path and the defended one |
+| 4 — code | the interface, and the two classes that implement it |
+
+That is the only rule. How you draw the figures is your choice, and there are two ways.
+
+**In the house style**, the look of the existing demos. The generator has already drawn
+the four figures from its own code: `routers.py`, `RunFeatureUseCase`, the `Feature` port
+and its two classes, and the database with `--postgres`. Redraw them for your attack in
+the four functions at the end of `docs/diagrams.py`: `context()`, `containers()`,
 `components()` and `code_level()`. Then draw them again, and check them:
 
 ```bash
@@ -154,13 +167,33 @@ python .claude/skills/house-style-figures/check_figures.py
 The first command writes the four SVGs in `docs/`; open one in a browser to see it. The
 second ends in `all passed` when no label overlaps a line or a box.
 [`figure-kit.svg`](.claude/skills/house-style-figures/figure-kit.svg) shows every part with
-the call that draws it. Two things to leave alone: the house-style block at the top of
+the call that draws it. Leave two things alone: the house-style block at the top of
 `diagrams.py`, which the check compares with the original, and the SVGs themselves, which
 the next run overwrites.
 
-Would you rather draw in draw.io, Excalidraw or Mermaid? Delete `docs/diagrams.py` and put
-your own images in `docs/`. The only rule is the C4 model: four levels, in order, each with
-a figure.
+You do not have to write the drawing code yourself. An AI coding agent can do it: describe
+your demo, or point it at your code, and ask it to redraw the figures in the house style.
+The style, its rules and its checks are written down for agents in
+[`.claude/skills/house-style-figures/`](.claude/skills/house-style-figures/SKILL.md):
+Claude Code loads them as a skill, and other agents find them through
+[`AGENTS.md`](AGENTS.md). Review the result as you would your own work: every box should
+exist in your demo, and the red path should be the one the attack really takes.
+
+**In a tool of your choice**, such as [draw.io](https://www.drawio.com/) or
+[Excalidraw](https://excalidraw.com/), in your own style:
+
+1. Delete `docs/diagrams.py`; it draws only the house-style figures.
+2. Export each figure as SVG or PNG into `docs/`, and point the README's four images at
+   them.
+3. Keep the figures editable for the next contributor. In draw.io, save as *Editable
+   Vector Image* (`.drawio.svg`); in Excalidraw, export with *Embed scene* turned on.
+   Either way, one file is both the image and its source.
+4. Give each figure a solid background. GitHub shows the README in a light and a dark
+   theme, and a transparent figure loses its lines in one of them.
+
+Whichever way you choose, keep the four **Level 1** to **Level 4** lead-ins in the README:
+`check_repo.py` finds the levels by them, and fails unless they come in order, each with
+an image.
 
 ### 5. Run it and try the attack
 
@@ -522,7 +555,8 @@ verification. Please raise it in an issue before adding one.
   "how do I run this, and what should I try" with the real defaults from the code.
 - **Figures** follow the **C4 model**: `## How it works` shows the demo at its four levels,
   context, containers, components and code, in that order, each with a figure. How you
-  draw them is up to you: any tool, any style.
+  draw them is up to you: in the house style or in any tool, as [the figures](#the-figures)
+  explains.
 - Everything is written in **English**.
 
 ### Tooling
