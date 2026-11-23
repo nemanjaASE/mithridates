@@ -1,5 +1,12 @@
 FROM python:3.13-slim
 
+# Shown by `docker inspect` and Docker Desktop.
+LABEL org.opencontainers.image.title="Mithridates: promptinj-demo" \
+      org.opencontainers.image.description="Deliberately vulnerable prompt injection demo. Run it on 127.0.0.1 only." \
+      org.opencontainers.image.source="https://github.com/nemanjaASE/mithridates" \
+      org.opencontainers.image.documentation="https://github.com/nemanjaASE/mithridates/tree/main/demos/promptinj-demo" \
+      org.opencontainers.image.licenses="MIT"
+
 # A pinned uv version gives a reproducible build.
 COPY --from=ghcr.io/astral-sh/uv:0.12.7 /uv /uvx /bin/
 

@@ -127,6 +127,7 @@ services:
       - "127.0.0.1:8002:8000"   # local only
     environment:
       <<: *db-env
+      PUBLIC_URL: http://127.0.0.1:8002   # printed at startup; matches the port above
       # Both providers are the local Ollama; there is no hosted API and no keys.
       # The factories validate the name at startup: an unknown provider is a
       # ConfigurationError, not a silent fallback to the one that works.

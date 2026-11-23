@@ -16,8 +16,9 @@ from .infrastructure.tokens import JwtTokenService
 
 @dataclass(frozen=True)
 class Container:
-    """The use cases the HTTP layer needs."""
+    """The settings and the use cases the HTTP layer needs."""
 
+    settings: Settings
     login: LoginUseCase
     get_current_user: GetCurrentUserUseCase
     run_feature: RunFeatureUseCase
@@ -47,6 +48,7 @@ def build_container(settings: Settings) -> Container:
     }
     # [/no-postgres]
     return Container(
+        settings=settings,
         login=LoginUseCase(LabAccounts(), tokens, LoggingAuditLog()),
         get_current_user=GetCurrentUserUseCase(tokens),
         run_feature=RunFeatureUseCase(features, tokens),

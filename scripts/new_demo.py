@@ -214,7 +214,7 @@ def main() -> int:
         if problem:
             step.warn(problem)
         else:
-            step.done(f"{len(list(target.rglob('*.svg')))} figures")
+            step.done(f"{len(list((target / 'docs').rglob('*.svg')))} figures")
     with ui.step("Locking the dependencies", "Locked the dependencies") as step:
         if not shutil.which("uv"):
             step.warn(f"uv is not installed: run `uv lock` in demos/{name}, "

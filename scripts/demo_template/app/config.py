@@ -12,6 +12,9 @@ from .infrastructure.database import DatabaseCredentials, DatabaseServer
 # [/postgres]
 from .infrastructure.tokens import JwtSettings
 
+# Where the host reaches the service when nothing else is set.
+LOCAL_URL = "http://127.0.0.1:8000"
+
 
 def _require(name: str) -> str:
     """Reads a required variable, or raises `ConfigurationError`."""
@@ -46,6 +49,8 @@ class Settings:
     server: DatabaseServer
     app_db: DatabaseCredentials
     # [/postgres]
+    # The address printed when the service is ready; compose sets the published port.
+    public_url: str = LOCAL_URL
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -66,6 +71,7 @@ class Settings:
             server=_server_from_env(),
             app_db=_credentials_from_env("DB_APP"),
             # [/postgres]
+            public_url=os.environ.get("PUBLIC_URL", LOCAL_URL),
         )
 # [postgres]
 

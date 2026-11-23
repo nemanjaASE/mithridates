@@ -134,6 +134,7 @@ the repository root.
 | --- | --- | --- |
 | `JWT_SECRET` | — (required, ≥ 32 bytes) | token signing key; no default value in code |
 | `JWT_TTL_SECONDS` | `900` | token lifetime |
+| `PUBLIC_URL` | `http://127.0.0.1:8000` | the address printed when the service is ready; compose: `http://127.0.0.1:__PORT__` |
 <!-- [postgres] -->
 | `DB_HOST`, `DB_NAME`, `DB_APP_USER`, `DB_APP_PASSWORD` | — (required) | the database and the read-only application account |
 <!-- [/postgres] -->

@@ -165,6 +165,8 @@ class Settings:
     expose_prompt_trace: bool = True
     # The raw output bypasses the output check, so it is off by default.
     expose_raw_output: bool = False
+    # The address printed when the service is ready; compose sets the published port.
+    public_url: str = "http://127.0.0.1:8000"
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -201,6 +203,7 @@ class Settings:
             rag_top_k=int(os.environ.get("RAG_TOP_K", defaults.rag_top_k)),
             expose_prompt_trace=_env_bool("EXPOSE_PROMPT_TRACE", defaults.expose_prompt_trace),
             expose_raw_output=_env_bool("EXPOSE_RAW_OUTPUT", defaults.expose_raw_output),
+            public_url=os.environ.get("PUBLIC_URL", defaults.public_url),
         )
 
 
