@@ -16,6 +16,13 @@ from pathlib import Path
 from types import TracebackType
 from typing import TextIO
 
+# Every script imports this module before anything newer than Python 3.10, so an older
+# Python stops here with a clear message. CONTRIBUTING.md names the same version.
+OLDEST_PYTHON = (3, 11)
+if sys.version_info < OLDEST_PYTHON:
+    sys.exit("The scripts need Python {}.{} or newer; this is Python {}.{}.".format(
+        *OLDEST_PYTHON, *sys.version_info[:2]))
+
 RED, GREEN, YELLOW, GRAY = "229;83;75", "63;185;80", "210;153;34", "139;148;158"
 
 # The logo in docs/assets/logo.svg: a drop of poison above a Greek eye-cup with one red

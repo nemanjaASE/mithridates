@@ -17,7 +17,6 @@ from __future__ import annotations
 import os
 import re
 import sys
-import tomllib
 from pathlib import Path
 
 import yaml
@@ -240,6 +239,8 @@ def check_demo(demo: Path, report: Report) -> list[tuple[str, str]]:
 
 
     if (demo / "pyproject.toml").exists():
+        import tomllib  # here, not at the top: terminal.py checks the Python version first
+
         config = tomllib.loads((demo / "pyproject.toml").read_text(encoding="utf-8"))
         tools = config.get("tool", {})
         report.check(name, "ruff" in tools, "pyproject.toml has no [tool.ruff] section")

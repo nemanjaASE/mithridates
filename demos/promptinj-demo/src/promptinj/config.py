@@ -169,7 +169,7 @@ class Settings:
     public_url: str = "http://127.0.0.1:8000"
 
     @classmethod
-    def from_env(cls) -> "Settings":
+    def from_env(cls) -> Settings:
         """Reads the settings from the environment.
 
         Returns:
@@ -218,7 +218,7 @@ class SeedSettings:
     embeddings: EmbeddingSpec = field(default_factory=EmbeddingSpec)
 
     @classmethod
-    def from_env(cls) -> "SeedSettings":
+    def from_env(cls) -> SeedSettings:
         """Reads the seed settings from the environment.
 
         Returns:

@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/port-8001-0a7ea4?style=flat-square" alt="port 8001">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/PostgreSQL-18-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL 18">
   <img src="https://img.shields.io/badge/psycopg-336791?style=flat-square" alt="psycopg">
@@ -27,7 +27,7 @@ implementation answers the request.
 
 | | |
 | --- | --- |
-| **Language** | Python 3.13, managed with [uv](https://docs.astral.sh/uv/) |
+| **Language** | Python 3.14, managed with [uv](https://docs.astral.sh/uv/) |
 | **API** | FastAPI, Pydantic, PyJWT |
 | **Database** | PostgreSQL 18, with every query written by hand through psycopg (the PostgreSQL driver for Python). There is no ORM on purpose: an ORM parameterises for you, and the one line this demo exists to show would never be written |
 | **Packaging** | Docker Compose. The application runs as an ordinary user, cannot write to its own disk and has no root privileges; the database is the one exception |

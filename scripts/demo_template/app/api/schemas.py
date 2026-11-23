@@ -19,7 +19,7 @@ class TokenOut(BaseModel):
     expires_in: int
 
     @classmethod
-    def from_domain(cls, token: AccessToken) -> "TokenOut":
+    def from_domain(cls, token: AccessToken) -> TokenOut:
         """Builds the response from an access token."""
         return cls(access_token=token.value, token_type=token.token_type, expires_in=token.expires_in)
 
@@ -31,7 +31,7 @@ class PrincipalOut(BaseModel):
     role: str
 
     @classmethod
-    def from_domain(cls, principal: Principal) -> "PrincipalOut":
+    def from_domain(cls, principal: Principal) -> PrincipalOut:
         """Builds the response from a principal."""
         return cls(username=principal.username, role=principal.role)
 
@@ -48,7 +48,7 @@ class FeatureOut(BaseModel):
     result: str
 
     @classmethod
-    def from_domain(cls, result: FeatureResult) -> "FeatureOut":
+    def from_domain(cls, result: FeatureResult) -> FeatureOut:
         """Builds the response from the feature's result."""
         return cls(result=result.result)
 

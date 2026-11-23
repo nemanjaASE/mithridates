@@ -2,7 +2,7 @@
 name = "__NAME__"
 version = "0.1.0"
 description = "Controlled lab: __TITLE__ and its fix (FastAPI)"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.160,<1",
     "uvicorn[standard]>=0.32,<1",
@@ -22,7 +22,7 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "C4"]
@@ -41,7 +41,7 @@ ignore = [
 known-first-party = ["app"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true

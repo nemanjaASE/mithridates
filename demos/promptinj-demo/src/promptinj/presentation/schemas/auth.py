@@ -22,7 +22,7 @@ class TokenOut(BaseModel):
     user_id: str
 
     @classmethod
-    def from_domain(cls, token: AccessToken, user_id: str) -> "TokenOut":
+    def from_domain(cls, token: AccessToken, user_id: str) -> TokenOut:
         """Builds the response from an access token.
 
         Args:

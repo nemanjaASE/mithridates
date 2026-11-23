@@ -14,7 +14,7 @@ class UserOut(BaseModel):
     role: LabValue
 
     @classmethod
-    def from_domain(cls, user: User) -> "UserOut":
+    def from_domain(cls, user: User) -> UserOut:
         """Builds the response from a user.
 
         Args:

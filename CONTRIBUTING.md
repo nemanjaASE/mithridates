@@ -507,6 +507,16 @@ demos. Two lines change per demo: `known-first-party` takes your package name, a
 `src/` layout also needs `mypy_path = "src"`. `uv run ruff check .` must pass; mypy is
 there for your editor, and CI does not gate on it.
 
+**Python versions.** The demos run on Python 3.14: the newest release that has been out for
+a year, so every library a demo needs ships wheels for it. Python has no long-term support
+release; each one gets [five years](https://devguide.python.org/versions/) of fixes. Each
+October, when the next release turns one, the demos move to it, and four lines change
+together: the `FROM` line in the `Dockerfile`, `requires-python`, ruff's `target-version`
+and mypy's `python_version`, followed by `uv lock`. The scripts in `scripts/` run on your own
+Python instead, so they support every release that still gets security fixes: 3.11 and
+newer, until 3.11 reaches its end of life in October 2027. `OLDEST_PYTHON` in
+`scripts/terminal.py` and in `ci.yml`, and `target-version` in `.ruff.toml`, hold them to it.
+
 ---
 
 ## <img src="docs/assets/icons/wrench.svg" width="30" height="23" alt="">Continuous integration
@@ -519,7 +529,7 @@ Every pull request runs [`ci.yml`](.github/workflows/ci.yml) and
 | **Conventions** | `scripts/check_repo.py`: the files a demo provides, the Bruno folders, the README sections and their order, the four C4 levels, that every published port is bound to `127.0.0.1` and belongs to its demo, that every container built from the repository is hardened, that no secret has a default value in code, that `.env.example` names exactly the variables `compose.yaml` reads, that no `TODO(attack)` marker is left, and that no document links to a missing path |
 | **Lint** | `uv run ruff check .` in each demo. The list is read from the folder names, so a new demo is covered without editing the workflow |
 | **Build** | the compose files resolve, and every image builds |
-| **Demo generator** | `scripts/new_demo.py` generates one demo of each kind; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them |
+| **Demo generator** | `scripts/new_demo.py` generates one demo of each kind, on Python 3.11, the oldest the scripts support; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them |
 | **Pull request format** | `scripts/check_pr.py`: the title is in the [expected form](#the-pull-request-title), `## What this changes` says what changes, and no checklist item is left unticked. It runs again when you edit the title or the description |
 
 Run them yourself before you push, all but the builds, with one command:

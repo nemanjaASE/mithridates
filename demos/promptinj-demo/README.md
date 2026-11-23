@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/port-8002-0a7ea4?style=flat-square" alt="port 8002">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/pgvector-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL 18 with pgvector">
   <img src="https://img.shields.io/badge/Ollama-000000?style=flat-square&logo=ollama&logoColor=white" alt="Ollama">
@@ -49,7 +49,7 @@ mitigated variant, and the `trace` shows it. The controls limit the **damage**.
 
 | | |
 | --- | --- |
-| **Language** | Python 3.13, managed with [uv](https://docs.astral.sh/uv/) |
+| **Language** | Python 3.14, managed with [uv](https://docs.astral.sh/uv/) |
 | **API** | FastAPI, Pydantic, PyJWT |
 | **Database** | PostgreSQL 18 with [pgvector](https://github.com/pgvector/pgvector) for the embeddings, reached through SQLAlchemy 2.0 (an ORM) over the psycopg driver, with Alembic for the schema |
 | **LLM** | [Ollama](https://ollama.com/) running `qwen2.5:3b` and `nomic-embed-text` on CPU, driven by LangChain and [LangGraph](https://langchain-ai.github.io/langgraph/) — no API key, no hosted provider |

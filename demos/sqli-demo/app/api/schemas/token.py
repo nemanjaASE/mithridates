@@ -13,7 +13,7 @@ class TokenOut(BaseModel):
     debug: DebugTraceOut | None = None
 
     @classmethod
-    def from_domain(cls, token: AccessToken, debug: DebugTraceOut | None) -> "TokenOut":
+    def from_domain(cls, token: AccessToken, debug: DebugTraceOut | None) -> TokenOut:
         """Builds the response from an access token.
 
         Args:

@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 # Shown by `docker inspect` and Docker Desktop.
 LABEL org.opencontainers.image.title="Mithridates: __NAME__" \
