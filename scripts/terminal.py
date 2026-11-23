@@ -31,8 +31,10 @@ LOGO_CENTER = 12  # the column of the stem, the drop and the space between the e
 WORDMARK = "M I T H R I D A T E S"
 TAGLINE = "Small, controlled doses of real attacks."
 
-FANCY = {"spin": "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", "ok": "✔", "warn": "▲", "fail": "✘", "dot": "·", "arrow": "→"}
-PLAIN = {"spin": "|/-\\", "ok": "+", "warn": "!", "fail": "x", "dot": "-", "arrow": "->"}
+FANCY = {"spin": "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", "ok": "✔", "warn": "▲", "fail": "✘", "dot": "·", "arrow": "→",
+         "on": "●", "off": "○"}
+PLAIN = {"spin": "|/-\\", "ok": "+", "warn": "!", "fail": "x", "dot": "-", "arrow": "->",
+         "on": "*", "off": "-"}
 
 
 def _ansi_ready(stream: TextIO) -> bool:
@@ -79,6 +81,7 @@ class Terminal:
         self.color = self.live and "NO_COLOR" not in os.environ
         self.unicode = _encodable(stream, "".join(LOGO) + "".join(FANCY.values()))
         self.glyph = FANCY if self.unicode else PLAIN
+        self.width = 34  # the label column of a step; the note starts after it
 
     def paint(self, text: str, rgb: str = "", bold: bool = False, dim: bool = False) -> str:
         """Returns `text` wrapped in the escapes for a color and a weight, if colors are on."""
@@ -123,8 +126,6 @@ class Terminal:
 
 class Step:
     """One unit of work, shown with a spinner while it runs and a mark when it ends."""
-
-    WIDTH = 34
 
     def __init__(self, terminal: Terminal, running: str, finished: str) -> None:
         self.terminal = terminal
@@ -178,7 +179,7 @@ class Step:
             mark, label = t.paint(g["warn"], YELLOW, bold=True), shown
         else:
             mark, label = t.paint(g["ok"], GREEN, bold=True), shown
-        gap = " " * max(1, self.WIDTH - len(shown)) if note else ""
+        gap = " " * max(1, t.width - len(shown)) if note else ""
         t.line(f"  {mark} {label}{gap}{t.paint(note, dim=True)}")
         if self.problem:
             for row in self.problem.strip().splitlines():
