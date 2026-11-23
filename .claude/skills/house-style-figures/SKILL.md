@@ -19,7 +19,7 @@ demos that already use the style, or for a new one whose author wants the same l
 | --- | --- |
 | `diagram_style.py` | the house style — palette, type, `node()`, `entity()`, `arrow()`, `fork()`, `zone()`, `boundary()`, `pulse()`, `key()`, `figure()`, `caption()`. The block between the `# --- house style` markers is what each demo copies. Run it to redraw `figure-kit.svg`. |
 | `figure-kit.svg` | every part, with the call that draws it |
-| `new_figures.py` | `python .claude/skills/house-style-figures/new_figures.py <topic>-demo` writes a demo's `docs/diagrams.py` with the style copied in and C1–C4 drawn with placeholder names |
+| `new_figures.py` | `python .claude/skills/house-style-figures/new_figures.py <topic>-demo [--postgres] [--mitigated]` writes a demo's `docs/diagrams.py` with the style copied in and C1–C4 drawn from the code `scripts/new_demo.py` writes, with the same options; `scripts/new_demo.py` runs it |
 | `check_figures.py` | the checks: copies identical, geometry, rhythm, contrast, no name shadowing |
 
 ## Change a figure

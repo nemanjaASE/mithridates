@@ -208,8 +208,9 @@ def main() -> int:
     with ui.step("Listing the demo", "Listed the demo") as step:
         register(name, number, slug, args.title, port)
         step.done(f"compose file {dot} README {dot} docs index")
-    with ui.step("Drawing the C4 figures", "Drew the placeholder C4 figures") as step:
-        problem = (run([sys.executable, str(FIGURES), f"demos/{name}"])
+    with ui.step("Drawing the C4 figures", "Drew the C4 figures") as step:
+        options = [f"--{option}" for option in ("postgres", "mitigated") if getattr(args, option)]
+        problem = (run([sys.executable, str(FIGURES), f"demos/{name}", *options])
                    or run([sys.executable, f"demos/{name}/docs/diagrams.py"]))
         if problem:
             step.warn(problem)
