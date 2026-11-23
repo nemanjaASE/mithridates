@@ -617,9 +617,9 @@ python scripts/lab.py check
 ```
 
 For the Bruno runs, start your demo and send its collection, as in
-[step 5](#5-run-it-and-try-the-attack). To start any demo on GitHub's machines instead,
-run [Smoke](.github/workflows/smoke.yml) by hand from the Actions tab. Nothing is published
-or deployed from this repository.
+[step 5](#5-run-it-and-try-the-attack). To run every demo's collection on GitHub's machines
+instead, run [Bruno](.github/workflows/bruno.yml) by hand from the Actions tab. Nothing is
+published or deployed from this repository.
 
 ---
 
