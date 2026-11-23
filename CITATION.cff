@@ -8,6 +8,7 @@ type: software
 authors:
   - name: "The Mithridates contributors"
 license: MIT
+repository-code: "https://github.com/nemanjaASE/mithridates"
 version: 0.1.0
 keywords:
   - security

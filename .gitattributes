@@ -1,0 +1,4 @@
+# Every text file is stored and checked out with LF line endings, on Windows too, so a
+# demo builds the same image everywhere and the generator writes the same files.
+* text=auto eol=lf
+*.png binary
