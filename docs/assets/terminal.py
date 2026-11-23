@@ -259,7 +259,7 @@ def lab_status() -> str:
     stream = Tty(raw, encoding="utf-8", newline="\n", write_through=True)
     os.environ["FORCE_COLOR"] = "1"
     ui = terminal.Terminal(stream)
-    ui.banner()
+    ui.banner(compact=True)
     lab.status(ui)
     return raw.getvalue().decode("utf-8")
 

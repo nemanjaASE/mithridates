@@ -191,7 +191,7 @@ def main() -> int:
 
     ui = Terminal()
     dot = ui.glyph["dot"]
-    ui.banner()
+    ui.banner(note="Deliberately vulnerable code: keep every demo on 127.0.0.1.")
     ui.line(f"  {ui.paint('New demo', bold=True)}  {name}")
     for key, value in (("write-up", f"{number} {dot} {args.title}"),
                        ("port", f"127.0.0.1:{port}"),

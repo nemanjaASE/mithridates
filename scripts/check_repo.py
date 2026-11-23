@@ -370,7 +370,7 @@ def main() -> int:
 
     ui = Terminal()
     if ui.live:  # the logo is for a person at a terminal, not for a CI log
-        ui.banner()
+        ui.banner(compact=True)
     skipped = ui.paint(f"  {TODO_MARKER} not checked", dim=True) if allow_todo else ""
     ui.line(f"  {ui.paint('Conventions', bold=True)}  {len(demos)} demos{skipped}")
     ui.line()
