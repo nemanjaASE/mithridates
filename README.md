@@ -25,7 +25,7 @@ breaks, the other holds, and the code that made the difference is right there to
 The name comes from Mithridates VI of Pontus, who took a little poison every day until none
 could harm him.
 
----
+<p align="center"><img src="docs/assets/meander.svg" alt="" width="100%"></p>
 
 ## <img src="docs/assets/icons/zap.svg" width="30" height="23" alt="">The idea
 
