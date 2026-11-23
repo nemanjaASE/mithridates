@@ -33,3 +33,6 @@ Instructions for AI coding agents working in this repository. People start with
 - The house style — its design, tools and checks — is the skill in
   [`.claude/skills/house-style-figures/`](.claude/skills/house-style-figures/SKILL.md). Read its `SKILL.md` before changing
   those figures or drawing new ones in the same look.
+- The terminal screenshots in `docs/assets/terminal/` are drawn from what the scripts really
+  print. After changing the output of a script in `scripts/`, draw them again:
+  `uv run --no-project --with pyyaml python docs/assets/terminal.py`.

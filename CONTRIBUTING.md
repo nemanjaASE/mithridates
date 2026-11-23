@@ -77,6 +77,13 @@ the demo in `docker-compose.yml`, `README.md` and `docs/README.md`.
 | `--postgres` | adds a database, a read-only application account and a seed job |
 | `--port` | a port other than the next free one |
 
+It prints each step as it runs, then the files left for you and the command that starts
+the demo:
+
+<p align="center">
+  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title "Cross-site scripting" --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, nine files marked TODO(attack), and how to run it">
+</p>
+
 What is left for you is marked `TODO(attack)`:
 
 - the two implementations, in `app/infrastructure/feature/`;
@@ -85,8 +92,14 @@ What is left for you is marked `TODO(attack)`:
 - the text of the README and the write-up, and the demo's row in the root README;
 - with `--postgres`, the tables, in `app/infrastructure/seed.py`.
 
-`scripts/check_repo.py` fails while any marker is left. After a trial run, `python
-scripts/lab.py clean` stops the demo and removes its image once its folder is gone.
+`scripts/check_repo.py` fails while any marker is left, and names every one of them:
+
+<p align="center">
+  <img src="docs/assets/terminal/check-repo.png" width="760" alt="scripts/check_repo.py right after the generator: sqli-demo and promptinj-demo pass, xss-demo and the repository fail on the TODO(attack) markers still left">
+</p>
+
+After a trial run, `python scripts/lab.py clean` stops the demo and removes its image
+once its folder is gone.
 
 The generator is a starting point, not a rule. A demo may change its structure, or leave
 Python altogether; [the contract](#the-contract) is what counts.
