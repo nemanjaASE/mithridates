@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/port-__PORT__-0a7ea4?style=flat-square" alt="port __PORT__">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
 <!-- [postgres] -->
   <img src="https://img.shields.io/badge/PostgreSQL-18-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL 18">
@@ -26,7 +26,7 @@
 
 | | |
 | --- | --- |
-| **Language** | Python 3.13, managed with [uv](https://docs.astral.sh/uv/) |
+| **Language** | Python 3.14, managed with [uv](https://docs.astral.sh/uv/) |
 | **API** | FastAPI, Pydantic, PyJWT, bcrypt |
 <!-- [postgres] -->
 | **Database** | PostgreSQL 18, through psycopg |

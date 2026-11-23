@@ -31,7 +31,7 @@ class Adapters:
     repository: AccountRepository | None = None
     credential_store: CredentialStore | None = None
     retriever: DocumentRetriever | None = None
-    llm_factory: "LLMFactory | None" = None
+    llm_factory: LLMFactory | None = None
 
 
 @dataclass(frozen=True)
@@ -51,7 +51,7 @@ def _label(override: object | None, real: str) -> str:
     return real if override is None else "test-double"
 
 
-def _build_stores(settings: Settings, adapters: Adapters) -> "Stores | None":
+def _build_stores(settings: Settings, adapters: Adapters) -> Stores | None:
     """Builds the account, credential and document stores.
 
     Returns:
@@ -66,7 +66,7 @@ def _build_stores(settings: Settings, adapters: Adapters) -> "Stores | None":
 
 
 def _build_retriever(
-    settings: Settings, stores: "Stores | None", override: DocumentRetriever | None
+    settings: Settings, stores: Stores | None, override: DocumentRetriever | None
 ) -> DocumentRetriever:
     """Builds the retriever: question to vector to nearest documents."""
     if override is not None:
@@ -77,7 +77,7 @@ def _build_retriever(
     return VectorRetriever(stores.documents, EmbedderFactory(settings.embeddings).build())
 
 
-def _build_llm_factory(settings: Settings, override: "LLMFactory | None") -> "LLMFactory":
+def _build_llm_factory(settings: Settings, override: LLMFactory | None) -> LLMFactory:
     """Builds the factory that resolves a model role to a chat model."""
     if override is not None:
         return override
@@ -99,7 +99,7 @@ def _build_registry(
     repository: AccountRepository,
     retriever: DocumentRetriever,
     audit: AuditLog,
-) -> "AssistantRegistry":
+) -> AssistantRegistry:
     """Builds every assistant and registers it by name.
 
     Returns:
@@ -141,7 +141,7 @@ def _build_registry(
     return registry.build_all()
 
 
-def _with_top_k(spec: "RagSpec", top_k: int) -> "RagSpec":
+def _with_top_k(spec: RagSpec, top_k: int) -> RagSpec:
     """Returns the spec with its retrieval depth set to `top_k`."""
     return replace(spec, retrieval=replace(spec.retrieval, top_k=top_k))
 

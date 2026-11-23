@@ -10,7 +10,7 @@ class DebugTraceOut(BaseModel):
     parameters: list[str] | None = None
 
     @classmethod
-    def from_trace(cls, trace: QueryTrace, expose: bool) -> "DebugTraceOut | None":
+    def from_trace(cls, trace: QueryTrace, expose: bool) -> DebugTraceOut | None:
         """Builds the trace for the response.
 
         Args:

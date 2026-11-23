@@ -14,7 +14,7 @@ class PrincipalOut(BaseModel):
     role: ClaimValue
 
     @classmethod
-    def from_domain(cls, principal: Principal) -> "PrincipalOut":
+    def from_domain(cls, principal: Principal) -> PrincipalOut:
         """Builds the response from a principal.
 
         Args:

@@ -11,6 +11,11 @@ on:
 permissions:
   contents: read
 
+# The scripts in scripts/ run on a contributor's own Python, so CI runs them on the oldest
+# one they support: the version terminal.py and CONTRIBUTING.md name.
+env:
+  OLDEST_PYTHON: "3.11"
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -27,7 +32,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.3
       - name: The contract from CONTRIBUTING.md
-        run: uv run --no-project --with pyyaml python scripts/check_repo.py
+        run: uv run --no-project --python "$OLDEST_PYTHON" --with pyyaml python scripts/check_repo.py
       - name: Lint the repository's own scripts
         run: uvx --from 'ruff>=0.14,<0.15' ruff check scripts docs
 
@@ -41,8 +46,8 @@ jobs:
       # checkout, must follow the contract, lint and build before a line of attack is written.
       - name: Generate two demos
         run: |
-          python3 scripts/new_demo.py gen-plain --title "Generator check"
-          python3 scripts/new_demo.py gen-db --title "Generator database check" --mitigated --postgres
+          uv run --no-project --python "$OLDEST_PYTHON" python scripts/new_demo.py gen-plain --title "Generator check"
+          uv run --no-project --python "$OLDEST_PYTHON" python scripts/new_demo.py gen-db --title "Generator database check" --mitigated --postgres
       - name: The generated demos follow the contract
         run: uv run --no-project --with pyyaml python scripts/check_repo.py --allow-todo
       - name: The TODO(attack) markers are caught

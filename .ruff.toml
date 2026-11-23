@@ -2,7 +2,9 @@
 # Each demo keeps its own settings in its `pyproject.toml`, and ruff picks the closest
 # configuration for every file, so this one never reaches a demo.
 line-length = 100
-target-version = "py313"
+# The scripts run on the host, on whatever Python a contributor has: py311 is the oldest
+# they support, and ruff flags any syntax newer than that.
+target-version = "py311"
 # The demo template is not code until scripts/new_demo.py renders it; the demo it
 # renders is linted with its own settings.
 extend-exclude = ["scripts/demo_template"]

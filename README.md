@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://github.com/nemanjaASE/mithridates/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/nemanjaASE/mithridates/ci.yml?branch=main&style=flat-square&label=CI" alt="CI status"></a>
   <img src="https://img.shields.io/badge/demos-2-0a7ea4?style=flat-square" alt="2 demos">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.14">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/PostgreSQL-18-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL 18">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -208,7 +208,7 @@ around those three. The language, the database and the libraries are the author'
 | **Packaging** | Docker with Compose v2.20+ |
 | **Verification** | a [Bruno](https://www.usebruno.com/) collection in `bruno/`; for a Python demo also [Ruff](https://docs.astral.sh/ruff/) and mypy, configured as in an existing `pyproject.toml` |
 | **Documentation** | the templates in [`docs/`](docs/README.md), written in English |
-| **Language** | Python 3.13 with [uv](https://docs.astral.sh/uv/) in the current demos; a new one may use another |
+| **Language** | Python 3.14 with [uv](https://docs.astral.sh/uv/) in the current demos; a new one may use another |
 | **Database** | PostgreSQL 18 here, with [pgvector](https://github.com/pgvector/pgvector) where the demo needs embeddings; a new demo uses whatever its attack calls for |
 | **Libraries** | per demo, declared in its own `pyproject.toml` — FastAPI in both, and a local [Ollama](https://ollama.com/) model driven by LangChain in `promptinj-demo`, so the LLM demo runs on CPU with no API key |
 

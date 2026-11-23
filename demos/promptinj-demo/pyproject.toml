@@ -2,7 +2,7 @@
 name = "promptinj-demo"
 version = "0.2.0"
 description = "Controlled lab: an LLM prompt injection attack and its mitigations (FastAPI + LangGraph + local Ollama)"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.160,<1",
     "uvicorn[standard]>=0.32,<1",
@@ -28,7 +28,7 @@ dev = [
 [tool.ruff]
 # One settings block, identical in both services: style is checkable, not a matter of taste.
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 # E/F  pyflakes + pycodestyle   I  import order        N  naming
@@ -57,7 +57,7 @@ ignore = [
 known-first-party = ["promptinj"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 # src layout: the package is not installed, it is imported from src/.
 mypy_path = "src"
 warn_unused_ignores = true

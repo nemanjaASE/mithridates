@@ -44,7 +44,9 @@ LAB_REPOSITORIES = ("mithridates/", "security-lab/")
 WORKING_DIR = "com.docker.compose.project.working_dir"
 PROJECT = "com.docker.compose.project"
 RECLAIMED = re.compile(r"Total(?: reclaimed space)?:\s*(\S+)")
-CONVENTIONS = ["uv", "run", "--no-project", "--with", "pyyaml", "python", "scripts/check_repo.py"]
+# check_repo.py runs on the same Python as this script, not whichever one uv finds first.
+CONVENTIONS = ["uv", "run", "--no-project", "--python", sys.executable, "--with", "pyyaml",
+               "python", "scripts/check_repo.py"]
 RUFF = ["uvx", "--from", "ruff>=0.14,<0.15", "ruff", "check", "scripts", "docs"]
 # Only the dev group: ruff needs none of the demo's own dependencies.
 DEMO_RUFF = ["uv", "run", "--frozen", "--only-group", "dev", "ruff", "check", "."]

@@ -57,7 +57,7 @@ class Settings:
     public_url: str = LOCAL_URL
 
     @classmethod
-    def from_env(cls) -> "Settings":
+    def from_env(cls) -> Settings:
         """Reads the settings from the environment.
 
         Returns:
@@ -90,7 +90,7 @@ class SeedSettings:
     app_db: DatabaseCredentials
 
     @classmethod
-    def from_env(cls) -> "SeedSettings":
+    def from_env(cls) -> SeedSettings:
         """Reads the seed settings from the environment.
 
         Returns:

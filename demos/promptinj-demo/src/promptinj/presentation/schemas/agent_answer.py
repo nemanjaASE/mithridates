@@ -31,7 +31,7 @@ class AgentAnswerOut(BaseModel):
     trace: AgentTraceOut | None = None
 
     @classmethod
-    def from_result(cls, result: AssistantAnswer, expose_trace: bool) -> "AgentAnswerOut":
+    def from_result(cls, result: AssistantAnswer, expose_trace: bool) -> AgentAnswerOut:
         """Builds the response from an assistant answer.
 
         Args:

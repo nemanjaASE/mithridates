@@ -11,7 +11,7 @@ class LabSnapshotOut(BaseModel):
     secret_names: list[str]
 
     @classmethod
-    def from_domain(cls, snapshot: LabSnapshot) -> "LabSnapshotOut":
+    def from_domain(cls, snapshot: LabSnapshot) -> LabSnapshotOut:
         """Builds the response from a lab snapshot.
 
         Args:

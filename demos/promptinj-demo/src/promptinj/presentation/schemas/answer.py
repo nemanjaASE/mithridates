@@ -33,7 +33,7 @@ class AnswerOut(BaseModel):
     trace: AssistantTraceOut | None = None
 
     @classmethod
-    def from_result(cls, result: AssistantAnswer, expose_prompt: bool, expose_raw: bool) -> "AnswerOut":
+    def from_result(cls, result: AssistantAnswer, expose_prompt: bool, expose_raw: bool) -> AnswerOut:
         """Builds the response from an assistant answer.
 
         Args:

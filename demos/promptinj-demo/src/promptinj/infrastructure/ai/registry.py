@@ -63,7 +63,7 @@ class AssistantRegistry:
             self._built[name] = entry.build()
         return self._built[name]
 
-    def build_all(self) -> "AssistantRegistry":
+    def build_all(self) -> AssistantRegistry:
         """Builds every registered assistant.
 
         Returns:
