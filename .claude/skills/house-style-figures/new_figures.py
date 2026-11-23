@@ -3,17 +3,21 @@
 The house style is optional: a demo must show the C4 model, but may draw it any way it
 likes. This script is for a contributor who wants the look of the existing demos.
 
-    python .claude/skills/house-style-figures/new_figures.py <topic>-demo
+    python .claude/skills/house-style-figures/new_figures.py <topic>-demo [--postgres] [--mitigated]
 
 Writes demos/<topic>-demo/docs/diagrams.py: the house-style block copied from
-.claude/skills/house-style-figures/diagram_style.py, and the four figures every demo's README carries — C1 context,
-C2 containers, C3 components, C4 code — drawn with placeholder names. They already pass
-check_figures.py; change the names, the boxes and the arrows to your demo's own,
-then run `python demos/<topic>-demo/docs/diagrams.py` to draw them.
+.claude/skills/house-style-figures/diagram_style.py, and the four figures every demo's
+README carries — C1 context, C2 containers, C3 components, C4 code. They draw the code
+scripts/new_demo.py writes, with the same options: a database with `--postgres`, and a
+`mitigated` variant instead of `safe` with `--mitigated`. They pass check_figures.py, and
+carry a TODO(attack) marker until the figures are redrawn for the demo's own attack; then
+run `python demos/<topic>-demo/docs/diagrams.py` to draw them.
 
 figure-kit.svg next to this file shows every part with the call that draws it, and
 SKILL.md has the rules. The script never overwrites an existing file.
 """
+import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -39,6 +43,10 @@ from pathlib import Path
 
 FIGURES = '''
 
+# TODO(attack): these figures draw the code the generator wrote. Redraw them for your
+# attack: change the names, the boxes and the arrows below, run this file, and open the
+# SVGs. .claude/skills/house-style-figures/figure-kit.svg shows every part and its call.
+
 W = 1100
 SYSTEM = "__NAME__"         # the demo; NAME is taken: the style uses it for a size
 
@@ -50,7 +58,7 @@ def context():
     a = figure(W, "c4 model · level 1 · context", "Who uses it, and what it depends on")
     top, hb = 220, node_h("kind", ["what"])
     node(a, M, top, 230, "you", "learner · attacker", ["Bruno"], dash="4 3")
-    node(a, 420, top, 260, SYSTEM, "software system", ["what it is"], icon="fastapi")
+    node(a, 420, top, 260, SYSTEM, "software system", ["vulnerable · __safe__"], icon="fastapi")
     node(a, 814, top, 230, "Docker Hub", "container registry", ["base images"],
          dash="4 3", icon="docker")
     for x in (360, 740):
@@ -71,15 +79,20 @@ def containers():
     top = 232
     hy = node(a, M, top, 180, "you", "Bruno", dash="4 3")
     node(a, 372, top, 300, SYSTEM, "FastAPI · uvicorn", accent=True, docker=True)
-    low = top + hy + 70
-    hd = node(a, 372, low, 300, "database", "PostgreSQL 18", store=True, docker=True)
+    bottom = top + hy
+# [postgres]
+    low = bottom + 70
+    bottom = low + node(a, 372, low, 300, "database", "PostgreSQL 18", store=True, docker=True)
+# [/postgres]
     panel = []
-    zone(panel, 340, 196, 364, low + hd + 36 - 196, "system · " + SYSTEM)
+    zone(panel, 340, 196, 364, bottom + 36 - 196, "system · " + SYSTEM)
     a[under:under] = panel
-    boundary(a, 268, 176, low + hd + 56)
+    boundary(a, 268, 176, bottom + 56)
     mid = top + hy // 2
     arrow(a, [(240, mid), (368, mid)], "attacks", ACCENT, at=(276, mid - 10))
+# [postgres]
     arrow(a, [(522, top + hy + 4), (522, low - 4)], "SQL", at=(536, top + hy + 38))
+# [/postgres]
     return caption(a, W, 2, "level 2 — the containers and the one published port",
                    "compose.yaml")
 
@@ -92,33 +105,36 @@ def components():
     left, centre, right, w = M, 399, 742, 302
     top = 212
     hy = node(a, left, top, w, "you", "Bruno", accent=True, dash="4 3")
-    node(a, centre, top, w, "routers/feature.py", "FastAPI")
-    node(a, right, top, w, "use_cases/feature.py", "application")
+    node(a, centre, top, w, "routers.py", "FastAPI")
+    node(a, right, top, w, "RunFeatureUseCase", "application")
     mid = top + hy // 2
     arrow(a, [(362, mid), (395, mid)], None, ACCENT)
     arrow(a, [(705, mid), (738, mid)], None)
 
     port = top + hy + 48
-    hp = node(a, right, port, w, "Port", "port")
+    hp = node(a, right, port, w, "Feature", "port")
     arrow(a, [(893, top + hy + 4), (893, port - 4)], None)
 
     bus = port + hp + 40
     row = bus + 52
-    ha = node(a, left, row, w, "VulnerableAdapter", "adapter", accent=True)
-    node(a, right, row, w, "SafeAdapter", "adapter", accent=SAFE)
+    node(a, left, row, w, "VulnerableFeature", "adapter", accent=True)
+    node(a, right, row, w, "__Safe__Feature", "adapter", accent=SAFE)
     fork(a, (893, port + hp), bus, [(207, row - 4), (893, row - 4)], [ACCENT, SAFE], down=True)
     a.append(mono(217, bus + 32, "variant=vulnerable", LABEL, ACCENT))
-    a.append(mono(903, bus + 32, "variant=safe", LABEL, SAFE))
+    a.append(mono(903, bus + 32, "variant=__safe__", LABEL, SAFE))
+# [postgres]
 
-    level = row + ha // 2
+    level = row + node_h("adapter", []) // 2
     hd = node_h("PostgreSQL 18", []) + 12          # a store is taller by its lid
     node(a, 465, level - hd // 2, 170, "database", "PostgreSQL 18", store=True)
     arrow(a, [(362, level), (461, level)], None, ACCENT)
-    a.append(mono(411.5 - mono_w("as code", LABEL) / 2, level - 10, "as code", LABEL, ACCENT))
+    a.append(mono(411.5 - mono_w("the flaw", LABEL) / 2, level - 10, "the flaw", LABEL, ACCENT))
     arrow(a, [(738, level), (639, level)], None, SAFE)
-    a.append(mono(688.5 - mono_w("as data", LABEL) / 2, level - 10, "as data", LABEL, SAFE))
+    a.append(mono(688.5 - mono_w("the defense", LABEL) / 2, level - 10, "the defense", LABEL,
+                  SAFE))
+# [/postgres]
     return caption(a, W, 3, "level 3 — the components one request passes through",
-                   "presentation/ · application/ · infrastructure/")
+                   "app/api/ · app/application/ · app/infrastructure/")
 
 
 # --------------------------------------------------------------------------
@@ -127,15 +143,15 @@ def components():
 def code_level():
     a = figure(W, "c4 model · level 4 · code", "The port and its two implementations")
     top = 220
-    hp = node(a, 399, top, 302, "Port", "typing.Protocol", ["method(argument)"])
+    hp = node(a, 399, top, 302, "Feature", "typing.Protocol", ["run(value, principal)"])
     low = top + hp + 80
-    node(a, M, low, 302, "VulnerableAdapter", "infrastructure", accent=True)
-    node(a, 742, low, 302, "SafeAdapter", "infrastructure", accent=SAFE)
+    node(a, M, low, 302, "VulnerableFeature", "infrastructure", accent=True)
+    node(a, 742, low, 302, "__Safe__Feature", "infrastructure", accent=SAFE)
     mid = top + hp // 2
     arrow(a, [(207, low - 4), (207, mid), (395, mid)], "implements", at=(217, low - 30))
     arrow(a, [(893, low - 4), (893, mid), (705, mid)], "implements", at=(903, low - 30))
     return caption(a, W, 4, "level 4 — one port, two implementations",
-                   "domain/ports/ · infrastructure/")
+                   "app/domain/ports.py · app/infrastructure/feature/")
 
 
 if __name__ == "__main__":
@@ -146,13 +162,33 @@ if __name__ == "__main__":
         ("c4-code", code_level()),
     ])
 '''
+MARKER = re.compile(r"# \[(/?)([a-z-]+)\]\s*")
+
+
+def keep_blocks(text: str, flags: set[str]) -> str:
+    """Keeps the lines between `# [name]` and `# [/name]` when `name` is in `flags`."""
+    out, keep = [], True
+    for line in text.splitlines(keepends=True):
+        marker = MARKER.fullmatch(line)
+        if marker:
+            keep = bool(marker[1]) or marker[2] in flags
+            continue
+        if keep:
+            out.append(line)
+    return "".join(out)
 
 
 def main() -> int:
-    if len(sys.argv) != 2 or not sys.argv[1].rstrip("/").endswith("-demo"):
-        print(__doc__)
-        return 2
-    name = Path(sys.argv[1].rstrip("/")).name
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("demo", help="the demo's folder, e.g. demos/xss-demo")
+    parser.add_argument("--postgres", action="store_true",
+                        help="the demo has a PostgreSQL database, as new_demo.py --postgres makes")
+    parser.add_argument("--mitigated", action="store_true",
+                        help="the second variant is `mitigated`, as new_demo.py --mitigated names it")
+    args = parser.parse_args()
+    name = Path(args.demo.rstrip("/")).name
+    if not name.endswith("-demo"):
+        parser.error("the demo's folder ends in -demo, e.g. demos/xss-demo")
     target = ROOT / "demos" / name / "docs" / "diagrams.py"
     if target.exists():
         print(f"{target.relative_to(ROOT)} already exists; nothing written.")
@@ -160,11 +196,14 @@ def main() -> int:
     style = (HERE / "diagram_style.py").read_text(encoding="utf-8")
     start = style.index("# --- house style")
     end = style.index("\n", style.index("# --- end house style")) + 1
+    second = "mitigated" if args.mitigated else "safe"
+    figures = keep_blocks(FIGURES, {"postgres"} if args.postgres else set())
+    figures = (figures.replace("__NAME__", name)
+               .replace("__Safe__", second.capitalize()).replace("__safe__", second))
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(HEAD + style[start:end] + FIGURES.replace("__NAME__", name),
-                      encoding="utf-8", newline="\n")
+    target.write_text(HEAD + style[start:end] + figures, encoding="utf-8", newline="\n")
     print(f"wrote {target.relative_to(ROOT)}")
-    print(f"next: python demos/{name}/docs/diagrams.py, then change the placeholder names")
+    print(f"next: python demos/{name}/docs/diagrams.py, then redraw the figures for your attack")
     return 0
 
 

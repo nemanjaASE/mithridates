@@ -106,7 +106,7 @@ python scripts/new_demo.py <topic> --title "<Attack name>"
 ```
 
 <p align="center">
-  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title &quot;Cross-site scripting&quot; --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, nine files marked TODO(attack), and how to run it">
+  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title &quot;Cross-site scripting&quot; --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, ten files marked TODO(attack), and how to run it">
 </p>
 <p align="center"><sub>An example run, for <code>xss</code> with <code>--postgres</code>.</sub></p>
 
@@ -131,11 +131,36 @@ Fill them in this order, so that each one gives you something to try. The paths 
    behind the same interface;
 3. `app/api/routers.py`: the route's name;
 4. `bruno/02-attack` and `bruno/03-defense`: the same payload, sent to both variants;
-5. the demo's `README.md`; outside the demo folder, its write-up in `docs/writeups/` and its
+5. `docs/diagrams.py`: the four figures the README shows, [redrawn for your attack](#the-figures);
+6. the demo's `README.md`; outside the demo folder, its write-up in `docs/writeups/` and its
    row in the root `README.md`;
-6. with `--postgres`, the tables, in `app/infrastructure/seed.py`.
+7. with `--postgres`, the tables, in `app/infrastructure/seed.py`.
 
 [The contract](#the-contract) lists what every demo has to provide.
+
+#### The figures
+
+The README shows the demo at the four levels of the C4 model, one figure each. The
+generator drew them from its own code: `routers.py`, `RunFeatureUseCase`, the `Feature`
+port and its two classes, and the database with `--postgres`. Redraw them for your attack
+in the four functions at the end of `docs/diagrams.py`: `context()`, `containers()`,
+`components()` and `code_level()`. Then draw them again, and check them:
+
+```bash
+python demos/<topic>-demo/docs/diagrams.py
+python .claude/skills/house-style-figures/check_figures.py
+```
+
+The first command writes the four SVGs in `docs/`; open one in a browser to see it. The
+second ends in `all passed` when no label overlaps a line or a box.
+[`figure-kit.svg`](.claude/skills/house-style-figures/figure-kit.svg) shows every part with
+the call that draws it. Two things to leave alone: the house-style block at the top of
+`diagrams.py`, which the check compares with the original, and the SVGs themselves, which
+the next run overwrites.
+
+Would you rather draw in draw.io, Excalidraw or Mermaid? Delete `docs/diagrams.py` and put
+your own images in `docs/`. The only rule is the C4 model: four levels, in order, each with
+a figure.
 
 ### 5. Run it and try the attack
 
@@ -318,7 +343,7 @@ This creates `demos/<topic>-demo/` with everything a demo shares:
 
 - a compose file and a Dockerfile, already hardened;
 - a layered FastAPI application with login, error handling and security headers;
-- the Bruno folders, the README and placeholder C4 figures.
+- the Bruno folders, the README, and C4 figures of the generated code, to redraw for your attack.
 
 It also starts the write-up in `docs/writeups/`, picks the next number and port, and lists
 the demo in `docker-compose.yml`, `README.md` and `docs/README.md`.

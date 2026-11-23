@@ -81,7 +81,7 @@ TOKEN=$(curl -s -X POST localhost:__PORT__/api/v1/auth/login \
 
 ## <img src="../../docs/assets/icons/network.svg" width="30" height="23" alt="">How it works
 
-<!-- TODO(attack): the four figures below are placeholders. Edit docs/diagrams.py, run it, and replace the lead-in of each level. -->
+<!-- TODO(attack): the four figures below draw the generated code. Redraw them for your attack, as step 4 of CONTRIBUTING.md shows, and rewrite the lead-in of each level. -->
 
 **Level 1 — context.** Who drives the service, and what it pulls from outside.
 
