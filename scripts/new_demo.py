@@ -12,6 +12,8 @@ removes the cause, `mitigated` when it only limits the damage.
 What is left is marked `TODO(attack)`: the vulnerable and the safe implementation, the
 payloads in `bruno/02-attack` and `bruno/03-defense`, and the text of the README and the
 write-up. `scripts/check_repo.py` fails while any marker is left.
+
+`python scripts/remove_demo.py <topic>` undoes all of it.
 """
 from __future__ import annotations
 
@@ -124,8 +126,23 @@ def start_writeup(path: Path, number: str, title: str) -> None:
     path.write_text(skeleton.replace("# NN — <Attack name>", heading, 1), encoding="utf-8", newline="\n")
 
 
+def your_demo_row(number: str, port: int) -> str:
+    """The README row that invites the next demo, with its number and port."""
+    return f"| {number} | *your demo* | `:{port}` | — | [Add one](CONTRIBUTING.md) |"
+
+
+def count_demos(text: str) -> str:
+    """Sets the README's demo badge to the number of folders under `demos/`."""
+    demos = len(list((ROOT / "demos").glob("*-demo")))
+    text = re.sub(r"badge/demos-\d+-", f"badge/demos-{demos}-", text)
+    return re.sub(r'alt="\d+ demos"', f'alt="{demos} demos"', text)
+
+
 def register(name: str, number: str, slug: str, title: str, port: int) -> None:
-    """Lists the demo in docker-compose.yml, README.md and docs/README.md."""
+    """Lists the demo in docker-compose.yml, README.md and docs/README.md.
+
+    `scripts/remove_demo.py` takes it out again: keep the two in step.
+    """
     compose = ROOT / "docker-compose.yml"
     lines = compose.read_text(encoding="utf-8").splitlines()
     last = max(i for i, line in enumerate(lines) if line.strip().startswith("- demos/"))
@@ -137,14 +154,11 @@ def register(name: str, number: str, slug: str, title: str, port: int) -> None:
     row = (f"| {number} | [**{name}**](demos/{name}/README.md) | `:{port}` "
            "| <!-- TODO(attack): the attack, in one line --> "
            "| <!-- TODO(attack): the fix or mitigation, in one line --> |")
-    following = f"| {int(number) + 1:02d} | *your demo* | `:{port + 1}` | — | [Add one](CONTRIBUTING.md) |"
+    following = your_demo_row(f"{int(number) + 1:02d}", port + 1)
     text, found = YOUR_DEMO_ROW.subn(row + "\n" + following, text, count=1)
     if not found:
         text = text.replace("\n\n> **Not every attack", "\n" + row + "\n\n> **Not every attack", 1)
-    demos = len(list((ROOT / "demos").glob("*-demo")))
-    text = re.sub(r"badge/demos-\d+-", f"badge/demos-{demos}-", text)
-    text = re.sub(r'alt="\d+ demos"', f'alt="{demos} demos"', text)
-    readme.write_text(text, encoding="utf-8", newline="\n")
+    readme.write_text(count_demos(text), encoding="utf-8", newline="\n")
 
     index = ROOT / "docs" / "README.md"
     lines = index.read_text(encoding="utf-8").splitlines()
@@ -239,6 +253,9 @@ def main() -> int:
     ui.line(f"  {ui.paint('Run it', bold=True)}")
     ui.line(f"    cd demos/{name} && docker compose up --build")
     ui.line(f"    {ui.paint(ui.glyph['arrow'], dim=True)} http://127.0.0.1:{port}/docs")
+    ui.line()
+    ui.line(f"  {ui.paint('Undo it', bold=True)}")
+    ui.line(f"    python scripts/remove_demo.py {args.topic}")
     ui.line()
     return 0
 

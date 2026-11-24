@@ -13,7 +13,7 @@ Instructions for AI coding agents working in this repository. People start with
 - Everything written into the repository is in English.
 - A new demo starts with `python scripts/new_demo.py <topic> --title "<Attack name>"`;
   what is left for the author is marked `TODO(attack)`, and `check_repo.py` fails until
-  every marker is gone.
+  every marker is gone. `python scripts/remove_demo.py <topic>` undoes the generator.
 
 ## Before you finish
 

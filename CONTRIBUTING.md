@@ -106,13 +106,16 @@ python scripts/new_demo.py <topic> --title "<Attack name>"
 ```
 
 <p align="center">
-  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title &quot;Cross-site scripting&quot; --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, ten files marked TODO(attack), and how to run it">
+  <img src="docs/assets/terminal/new-demo.png" width="600" alt="python scripts/new_demo.py xss --title &quot;Cross-site scripting&quot; --postgres: the logo, the new demo's write-up number, port, variants and database, five completed steps, ten files marked TODO(attack), how to run it, and how to undo it">
 </p>
 <p align="center"><sub>An example run, for <code>xss</code> with <code>--postgres</code>.</sub></p>
 
 The new demo already builds, runs and passes the checks: what is left is the attack itself.
 `--postgres` adds a database, and `--mitigated` names the second variant for a defense that
 only limits the damage. [All the options](#the-generator-in-detail).
+
+To start over, or to drop the idea, `python scripts/remove_demo.py <topic>` undoes the
+generator.
 
 ### 4. Write the attack and the defense
 
@@ -396,8 +399,17 @@ What is left for you is marked `TODO(attack)`, in the files
   <img src="docs/assets/terminal/check-repo.png" width="760" alt="scripts/check_repo.py right after the generator: sqli-demo and promptinj-demo pass, xss-demo and the repository fail on the TODO(attack) markers still left">
 </p>
 
-After a trial run, `python scripts/lab.py clean` stops the demo and removes its image
-once its folder is gone.
+To undo the generator, after a trial run or to start again with other options:
+
+```bash
+python scripts/remove_demo.py <topic> [--yes]
+```
+
+It deletes the demo's folder and its write-up, and takes the demo out of the three files the
+generator listed it in, which are left as they were before. It shows what it will remove,
+and how many of those files git has no copy of, and asks first; `--yes` skips the question.
+Docker is not touched: if you started the demo, `python scripts/lab.py clean` then stops it
+and removes its image.
 
 The generator is a starting point, not a rule. A demo may change its structure, or leave
 Python altogether; [the contract](#the-contract) is what counts.
@@ -607,7 +619,7 @@ Every pull request runs [`ci.yml`](.github/workflows/ci.yml) and
 | **Lint** | `uv run ruff check .` in each demo. The list is read from the folder names, so a new demo is covered without editing the workflow |
 | **Build** | the compose files resolve, and every image builds |
 | **Bruno** | every demo starts, and its Bruno collection passes against it ([`bruno.yml`](.github/workflows/bruno.yml)). A demo marked `on-change` runs only when the pull request touches it; see [Verification](#verification) |
-| **Demo generator** | `scripts/new_demo.py` generates one demo of each kind, on Python 3.11, the oldest the scripts support; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them |
+| **Demo generator** | `scripts/new_demo.py` generates one demo of each kind, on Python 3.11, the oldest the scripts support; each must follow the contract, lint and build, and `check_repo.py` must catch the markers left in them. `scripts/remove_demo.py` then removes both, and must leave the checkout as it was |
 | **Pull request format** | `scripts/check_pr.py`: the title is in the [expected form](#the-pull-request-title), `## What this changes` says what changes, and no checklist item is left unticked. It runs again when you edit the title or the description |
 
 Run them yourself before you push, all but the builds and the Bruno runs, with one command:
