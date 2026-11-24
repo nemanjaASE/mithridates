@@ -66,6 +66,17 @@ jobs:
           for demo in gen-plain-demo gen-db-demo; do
             docker build --tag "mithridates/$demo:ci" "demos/$demo"
           done
+      # The undo, in the harder order, the older demo first: what is left must be the checkout
+      # exactly as it was, so the generator and the undo cannot drift apart.
+      - name: Removing them restores the checkout
+        run: |
+          uv run --no-project --python "$OLDEST_PYTHON" python scripts/remove_demo.py gen-plain --yes
+          uv run --no-project --python "$OLDEST_PYTHON" python scripts/remove_demo.py gen-db --yes
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --short
+            echo "::error::remove_demo.py did not leave the checkout as it was."
+            exit 1
+          fi
 
   demos:
     # The matrix below is read from the folder names under demos/, so a new demo is covered by CI

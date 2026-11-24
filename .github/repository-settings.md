@@ -23,7 +23,8 @@ the check guards a title nobody sees in `git log`.
         ([`pull-request.yml`](workflows/pull-request.yml))
   - [ ] `Conventions` — `scripts/check_repo.py`: the `127.0.0.1` binding, the container
         hardening, no secret defaults ([`ci.yml`](workflows/ci.yml))
-  - [ ] `Demo generator` — `scripts/new_demo.py` still produces a demo that passes
+  - [ ] `Demo generator` — `scripts/new_demo.py` still produces a demo that passes, and
+        `scripts/remove_demo.py` still undoes it
         ([`ci.yml`](workflows/ci.yml))
   - [ ] `Bruno` — every demo starts and its Bruno collection passes. One check for all
         demos, so a new demo needs nothing added here ([`bruno.yml`](workflows/bruno.yml))
