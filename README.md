@@ -240,6 +240,18 @@ why the diff between them is small enough to read out loud.
 
 ---
 
+## <img src="docs/assets/icons/users.svg" width="30" height="23" alt="">Contributors
+
+Everyone whose work is in the lab. To join them, start with
+[**CONTRIBUTING.md**](CONTRIBUTING.md), or pick an issue labelled
+[`help wanted`](https://github.com/nemanjaASE/mithridates/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+
+<a href="https://github.com/nemanjaASE/mithridates/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=nemanjaASE/mithridates" alt="The GitHub avatars of everyone who has contributed to Mithridates">
+</a>
+
+---
+
 <p align="center">
   <sub>Built for teaching in an isolated local environment. The vulnerable code is confined
   to one adapter per demo; everything else follows the guidelines.</sub>
