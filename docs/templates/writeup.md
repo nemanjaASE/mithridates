@@ -27,15 +27,10 @@ order, so a reader who has been through one write-up knows where to look in the 
 
 ## Figures
 
-A figure that explains a line of source belongs here, next to the argument that needs it:
-the vulnerable line under **Why it works**, the fixed one under **The fix**. It sits in
-`demos/<topic>-demo/docs/` and is referenced across the folder boundary:
-
-```markdown
-![<what it shows>](../../demos/<topic>-demo/docs/<name>.svg)
-```
-
-The structural figures — the four C4 levels and the schema — stay in the service README.
+A write-up has none; it explains in text. The vulnerable line goes under **Why it works** and
+the fixed one under **The fix**, as code blocks, and the two routes' answers side by side
+in a table where that helps. The structural figures — the four C4 levels and the schema —
+stay in the service README.
 
 ## A second feature
 

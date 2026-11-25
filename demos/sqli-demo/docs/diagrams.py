@@ -3,9 +3,8 @@
     python docs/diagrams.py
 
 Writes c1-context.svg, c2-containers.svg, c3-components.svg, c4-code.svg and
-database.svg for the README, and attack-1.svg to attack-3.svg, vulnerable-query.svg and
-safe-query.svg for the write-up, next to this file. Hand-editing generated SVG is no
-fun, so change it here and re-run.
+database.svg for the README, next to this file. The write-up has no figures; it explains
+in text. Hand-editing generated SVG is no fun, so change it here and re-run.
 
 Everything between the two markers below is the repository's house style, copied verbatim
 from `.claude/skills/house-style-figures/diagram_style.py`; `check_figures.py` there fails when the copies drift
@@ -761,141 +760,7 @@ Q = chr(34)   # a double quote, so the figures can show quoted code
 
 
 # --------------------------------------------------------------------------
-# The attack, one step per sheet. The write-up shows each in a block the reader opens, so
-# the steps go one at a time, like slides: what is sent, and what each route answers.
-# --------------------------------------------------------------------------
-HALF = 484           # each route's box: half the sheet, less a 20px gutter
-
-
-def answer_box(a, x, y, route, colour, role, rows):
-    """A route's box: its name, then what it answered, one row per line."""
-    h = 64 + 24 * (len(rows) - 1)
-    a.append(frame(x, y, HALF, h, colour, ground(colour), [role]))
-    a.append(sans(x + 16, y + 24, route, 15.5, MUTED, "700"))
-    for i, row in enumerate(rows):
-        code(a, x + 16, y + 50 + 24 * i, row, 15)
-
-
-def step_sheet(number, total, head, desc, route, field, payload, colour,
-               left, right):
-    """`payload` is the lines sent; `left` and `right` are (route, colour, role, rows)."""
-    a = figure(W, f"Step {number} of {total}: {head}", desc)
-    a.append(mono(M, 176, route, 15, MUTED))
-    lead = field + " = "
-    for i, body in enumerate(payload):
-        if i == 0:
-            code(a, M, 208, [(lead, INK), (body, colour)], 17)
-        else:
-            a.append(mono(M + mono_w(lead, 17), 208 + 28 * i, body, 17, colour))
-    last = 208 + 28 * (len(payload) - 1)
-    top = last + 48
-    xs = (M, W - M - HALF)
-    fork(a, (W / 2, last + 12), last + 26, [(x + HALF / 2, top) for x in xs],
-         [left[1], right[1]], down=True)
-    for x, (name, tint, role, rows) in zip(xs, (left, right), strict=True):
-        answer_box(a, x, top, name, tint, role, rows)
-    return a
-
-
-SQLI_ROUTE = "POST /api/v1/{vulnerable|safe}/auth/login, password = anything"
-NO_USER = [[("401  ", SAFE), ("no matching user", INK)]]
-SQLI_STEPS = (
-    ("Comment-based authentication bypass",
-     "The apostrophe terminates the string literal and -- comments out the password check.",
-     "admin'--", [[("200  ", ACCENT), ("administrator token issued without a password", INK)]]),
-    ("Tautology-based injection",
-     "OR '1'='1' makes the condition true for every row; the first row is used.",
-     "' OR '1'='1'--", [[("200  ", ACCENT), ("token issued for the first row, mjovanovic", INK)]]),
-    ("UNION-based data extraction",
-     "UNION appends a second SELECT; a row of secrets is returned as a user record.",
-     "' UNION SELECT id, name, value FROM secrets WHERE name = 'flag'--",
-     [[("200  ", ACCENT), ("role = FLAG{sql_injection_demo}", INK)]]),
-)
-
-
-def attack_step(i):
-    head, desc, payload, bad = SQLI_STEPS[i]
-    a = step_sheet(i + 1, len(SQLI_STEPS), head, desc, SQLI_ROUTE,
-                   "username", [payload], ACCENT,
-                   ("vulnerable", ACCENT, "attack", bad), ("safe", SAFE, "fix", NO_USER))
-    return caption(a, W, i + 1, f"step {i + 1} of the attack", "bruno/02-*, bruno/03-*")
-
-
-# --------------------------------------------------------------------------
-# FIG. 1 and 2 — the same payload, the same four rows: what is sent, what the database
-# parses, what arrives on its own as a value, and what comes back. Only the middle changes.
-# --------------------------------------------------------------------------
-QUERY_SIZE = 18
-PAD = 24             # text inside a panel starts this far in from its edge
-
-
-def bracket(a, span, y, label, colour):
-    """A square bracket under a run of the query, and what the parser makes of that run."""
-    x0, x1 = span
-    a.append(leader([(x0, y - 6), (x0, y), (x1, y), (x1, y - 6)], colour))
-    a.append(sans(x0, y + 24, label, 15, colour))
-
-
-def query_sheet(head, desc, statement, values, result):
-    """`statement` is the query's runs and the brackets under them; `values` the rows that
-    travel separately; `result` two lines of runs."""
-    a = figure(W, head, desc)
-    heading(a, M, 176, "Input")
-    code(a, M, 208, [("username = ", INK), ("admin'--", ACCENT),
-                     ("    password = ", MUTED), ("anything", MUTED)], 20)
-
-    runs, brackets = statement
-    zone(a, M, 272, W - 2 * M, 132, "The statement, as the database parses it")
-    a.append(mono(M + PAD, 312, "SELECT id, username, role FROM users", QUERY_SIZE, MUTED))
-    spans = code(a, M + PAD, 346, runs, QUERY_SIZE)
-    for (first, last), label, colour in brackets:
-        bracket(a, (spans[first][0], spans[last][1]), 358, label, colour)
-
-    zone(a, M, 456, W - 2 * M, 96, "The values, transmitted separately")
-    top = 512 - 16 * (len(values) - 1)     # one row sits in the middle, two share it
-    for i, row in enumerate(values):
-        code(a, M + PAD, top + 32 * i, row, QUERY_SIZE)
-
-    heading(a, M, 606, "The result")
-    for i, row in enumerate(result):
-        code(a, M, 638 + 30 * i, row, QUERY_SIZE)
-    return a
-
-
-def vulnerable_query():
-    a = query_sheet(
-        "Vulnerable: parsing of the concatenated query",
-        "The username is pasted into the statement. Its quote closes the string the"
-        " programmer opened, and -- turns the password check into a comment.",
-        ([("WHERE username = ", INK), ("'", INK), ("admin'", ACCENT), ("--", ACCENT),
-          ("' AND password_hash = crypt('anything', password_hash)", MUTED)],
-         [((1, 2), "literal", INK),
-          ((3, 4), "comment: the password predicate is not evaluated", ACCENT)]),
-        [[("none: the input is part of the statement text", MUTED)]],
-        [[("returns  ", MUTED), ("the admin row; the password is not verified", INK)],
-         [("→ 200, administrator token issued", ACCENT)]])
-    return caption(a, W, 1, "VulnerableSqlAuthenticator.authenticate",
-                   "vulnerable_sql_authenticator.py, authenticate")
-
-
-def safe_query():
-    a = query_sheet(
-        "Safe: statement and values sent separately",
-        "The statement has two placeholders and is parsed on its own; the username and"
-        " password follow as values, so the payload is only ever compared, never parsed.",
-        ([("WHERE username = ", INK), ("%s", SAFE), (" AND password_hash = crypt(", INK),
-          ("%s", SAFE), (", password_hash)", INK)],
-         [((1, 1), "slot 1", SAFE), ((3, 3), "slot 2", SAFE)]),
-        [[("slot 1 = ", MUTED), ("admin'--", ACCENT), ("    bound as data, never parsed as SQL", SAFE)],
-         [("slot 2 = ", MUTED), ("anything", INK)]],
-        [[("returns  ", MUTED), ("no user named ", INK), ("admin'--", ACCENT)],
-         [("→ 401", SAFE)]])
-    return caption(a, W, 2, "SafeSqlAuthenticator.authenticate",
-                   "safe_sql_authenticator.py, authenticate")
-
-
-# --------------------------------------------------------------------------
-# FIG. 3 — where the submitted value goes
+# C4 level 3 — where the submitted value goes
 # --------------------------------------------------------------------------
 def flow():
     a = figure(W, f"Component diagram for the {SYSTEM} container",
@@ -945,7 +810,7 @@ def flow():
 
 
 # --------------------------------------------------------------------------
-# FIG. 4 — what runs, and what the host can reach
+# C4 level 2 — what runs, and what the host can reach
 # --------------------------------------------------------------------------
 def architecture():
     a = figure(W, f"Container diagram for {SYSTEM}",
@@ -1003,7 +868,7 @@ def code_level():
                    "domain/ports/authenticator.py, infrastructure/auth/")
 
 # --------------------------------------------------------------------------
-# FIG. 6 — the grant that decides what a successful injection is worth
+# The database — the grant that decides what a successful injection is worth
 # --------------------------------------------------------------------------
 def database():
     a = figure(W, "What each account may read",
@@ -1081,9 +946,6 @@ def context():
 
 if __name__ == "__main__":
     render(Path(__file__).parent, [
-        *((f"attack-{i + 1}", attack_step(i)) for i in range(len(SQLI_STEPS))),
-        ("vulnerable-query", vulnerable_query()),
-        ("safe-query", safe_query()),
         ("c3-components", flow()),
         ("c1-context", context()),
         ("c2-containers", architecture()),
