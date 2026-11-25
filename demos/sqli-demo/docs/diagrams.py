@@ -18,35 +18,53 @@ from pathlib import Path
 # --- house style · copied from .claude/skills/house-style-figures/diagram_style.py · do not edit here
 NL = chr(10)
 
-# A graphite page with nothing on it but the figure, and the system cut into it: the page
-# is the lightest ground, the panel and the boxes step darker, so a box stands off the page
-# without a heavy frame. Graphite has no hue of its own, so red and lime carry all the
-# colour, and only where they mean something: lime "this holds", red "this breaks". Every
-# text colour reads at 4.5:1 or better on every ground, every edge at 3:1 or better.
-PAPER = "#252A33"    # the page — graphite, the lightest tone
-INK = "#E0E6F0"      # anything being read
-LINE = "#9DA6B7"     # every drawn line: arrows and rules
-ACCENT = "#E08585"   # red, softened — the attack, and the code it gets through
-SAFE = "#9FEF00"     # lime — the fix, and the control that stops it; Hack The Box's own
-TECH = "#9AA3B4"     # grey — the [technology] under a name, the Docker badge, the heading
-MUTED = "#AAB2C2"    # labels, notes, the caption
-HAIR = "#3F4552"     # the faintest rules: under the title, above the caption, between rows
-PANEL = "#1B1F26"    # the system boundary: a darker ground, not a frame
-FILL = "#0E1015"     # a box that is part of the running system: darker again, inset
-OUT = "#2F3540"      # a box outside the system, or already gone: lighter than the page
-EDGE = "#8F98AA"     # the grey corner brackets that mark a box out
-FRAME = "#2A2F38"    # the faint full outline a box keeps under its brackets
+# A white sheet, black type and black lines, and colour only where it means something:
+# the light theme of IBM Design Language's technical diagrams, where the canvas is white,
+# text is always black, and a swatch 10 is the only tint. White and black are what hold up
+# on a projector in a lit room, where a dark ground and a grey line both fade. Every text
+# colour reads at 4.5:1 or better on every ground, every edge at 3:1.
+PAPER = "#FFFFFF"        # the page
+INK = "#161616"          # anything being read: IBM Gray 100
+MUTED = "#262626"        # labels, notes, the caption: Gray 90
+TECH = "#393939"         # the [technology] under a name, the Docker badge: Gray 80
+LINE = "#161616"         # every drawn line: arrows, the system frame
+EDGE = "#161616"         # the outline of a box that is part of the system
+HAIR = "#C6C6C6"         # the faintest rules: under the title, above the caption: Gray 30
+FILL = "#FFFFFF"         # a box that is part of the running system
+OUT = "#E0E0E0"          # a box outside the system, or already gone: Gray 20
+ACCENT = "#A2191F"       # IBM Red 70: the attack, and the code it gets through
+SAFE = "#0E6027"         # IBM Green 70: the fix, and the control that stops it
+ACCENT_FILL = "#FFF1F1"  # Red 10: inside a box on the attack path
+SAFE_FILL = "#DEFBE6"    # Green 10: inside a box that is the fix
 
-# One monospaced face at a few sizes: the figures read like the code they describe.
-TITLE = "Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace"
-BODY = TITLE
-MONO = TITLE
+# Two faces. Every label is set in a sans-serif of even stroke, which reads from the back
+# of a room; code, and only code, stays monospaced, so it looks like the source it is.
+SANS = "Arial, 'Liberation Sans', Helvetica, sans-serif"
+MONO = "Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace"
 
 M = 56               # page margin, left and right
 
 # text sizes, so a figure can grow without anything drifting out of line
-NAME, KIND, DESC, LABEL, CAPS = 17, 13.5, 15, 15, 14
+NAME, KIND, DESC, LABEL, HEADING = 21, 17.5, 18.5, 18.5, 17.5
 CW = 0.55            # advance width of one mono character, as a fraction of its size
+
+# Arial's advance widths in thousandths of an em, which Liberation Sans and Helvetica
+# share, for printable ASCII and the few marks the figures use.
+_GLYPHS = "".join(map(chr, range(32, 127))) + "·—–…→’“”"
+_REGULAR = dict(zip(_GLYPHS, (
+    278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556,
+    556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722,
+    722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722,
+    667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556,
+    556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500,
+    500, 334, 260, 334, 584, 333, 1000, 556, 1000, 1000, 222, 333, 333), strict=True))
+_BOLD = dict(zip(_GLYPHS, (
+    278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556,
+    556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722,
+    722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722,
+    667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611,
+    611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556,
+    500, 389, 280, 389, 584, 333, 1000, 556, 1000, 1000, 278, 500, 500), strict=True))
 
 
 def esc(s):
@@ -54,20 +72,35 @@ def esc(s):
 
 
 def mono_w(s, size):
-    """How wide a mono run is. Every run is drawn with this width, so a figure lays out
-    identically whether or not the reader has the first font in the list."""
+    """How wide a mono run is."""
     return round(len(s) * CW * size, 2)
 
 
-def text(x, y, s, size=16, fill=INK, weight="400", font=BODY, anchor="start", width=None):
-    w = f' textLength="{width}" lengthAdjust="spacingAndGlyphs"' if width else ""
+def sans_w(s, size, bold=False):
+    """How wide a sans run is, by Arial's metrics; a mark they lack counts as a digit."""
+    widths = _BOLD if bold else _REGULAR
+    return round(sum(widths.get(c, 556) for c in s) * size / 1000, 2)
+
+
+def text(x, y, s, size=16, fill=INK, weight="400", font=SANS, anchor="start", width=None):
+    """One run of type, always drawn at its measured width, so a figure lays out the same
+    whichever font of the list the reader has, and check_figures.py measures what is drawn."""
+    if width is None:
+        width = mono_w(s, size) if font == MONO else sans_w(s, size, int(weight) >= 600)
     an = f' text-anchor="{anchor}"' if anchor != "start" else ""
     return (f'<text x="{x}" y="{y}" fill="{fill}" font-family="{font}" font-size="{size}"'
-            f' font-weight="{weight}"{an} xml:space="preserve"{w}>{esc(s)}</text>')
+            f' font-weight="{weight}"{an} xml:space="preserve" textLength="{width}"'
+            f' lengthAdjust="spacingAndGlyphs">{esc(s)}</text>')
+
+
+def sans(x, y, s, size=LABEL, fill=INK, weight="400"):
+    """A label: a name, a technology, what travels over an arrow."""
+    return text(x, y, s, size, fill, weight, SANS)
 
 
 def mono(x, y, s, size=20, fill=INK, weight="400"):
-    return text(x, y, s, size, fill, weight, MONO, width=mono_w(s, size))
+    """Code: a line of source, a route, a payload, a column."""
+    return text(x, y, s, size, fill, weight, MONO)
 
 
 def line(x1, y1, x2, y2, colour=LINE, width=1):
@@ -78,33 +111,33 @@ def line(x1, y1, x2, y2, colour=LINE, width=1):
 def leader(points, colour=LINE):
     """A right-angled thread from a span of code to the note that explains it."""
     pts = " ".join(f"{x},{y}" for x, y in points)
-    return f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="1"/>'
+    return f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="1.5"/>'
 
 
 def _arrowhead(name, colour):
-    return (f'<marker id="{name}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7"'
-            f' markerHeight="7" orient="auto-start-reverse">'
+    return (f'<marker id="{name}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12"'
+            f' markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">'
             f'<path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="{colour}"'
-            f' stroke-width="1.1"/></marker>')
+            f' stroke-width="1.4"/></marker>')
 
 
 HEADS = (_arrowhead("to", LINE) + _arrowhead("to-ink", INK)
          + _arrowhead("to-accent", ACCENT) + _arrowhead("to-safe", SAFE))
 
 
+def figure(w, head, desc=""):
+    """Opens a figure: the ground, the title, one rule.
 
-def figure(w, eyebrow, head, desc=""):
-    """Opens a figure: the ground, the level or subject above, the title, one rule.
-
-    There is no height to give: `caption()` measures how far the drawing reaches and sizes
-    the sheet to it, so the 40px rhythm above the key and the caption holds by itself."""
+    The title says what the figure is and what it covers, the way the C4 model asks:
+    "Container diagram for sqli-demo". There is no height to give: `caption()` measures how
+    far the drawing reaches and sizes the sheet to it, so the 40px rhythm above the key and
+    the caption holds by itself."""
     a = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} __H__" width="{w}"'
          ' height="__H__" role="img" aria-labelledby="t d">',
          f"<title id=\"t\">{esc(head)}</title><desc id=\"d\">{esc(desc or head)}</desc>",
          f"<defs>{HEADS}</defs>",
          f'<rect width="{w}" height="__H__" fill="{PAPER}"/>',
-         mono(M, 64, eyebrow.upper(), 15, TECH, "700"),
-         mono(M, 108, head, 32, INK, "700")]
+         sans(M, 96, head, 34, INK, "700")]
     a.append(line(M, 132, w - M, 132, HAIR, 1))
     return a
 
@@ -136,9 +169,9 @@ def caption(a, w, number, what, source=""):
         a[i] = a[i].replace("__H__", str(h))
     y = h - 58
     a.append(line(M, y, w - M, y, HAIR, 1))
-    a.append(mono(M, y + 30, f"{number:02d}", 15, TECH, "700"))
+    a.append(sans(M, y + 30, f"{number:02d}", 17, TECH, "700"))
     if source:
-        a.append(mono(M + 40, y + 30, source, 14.5, MUTED))
+        a.append(sans(M + 40, y + 30, source, 17, MUTED))
     a.append("</svg>")
     return NL.join(a)
 
@@ -160,12 +193,12 @@ def code(a, x, y, parts, size=26):
 
 
 def underline(a, span, y, colour=MUTED):
-    a.append(line(span[0], y, span[1], y, colour, 1))
+    a.append(line(span[0], y, span[1], y, colour, 2))
 
 
 def note(a, x, y, head, rows, size=20, leading=31):
-    """A bold label and the mono lines under it. A row is a list of `(text, colour)`."""
-    a.append(text(x, y, head, 20, INK, "700"))
+    """A bold label and the lines of code under it. A row is a list of `(text, colour)`."""
+    a.append(sans(x, y, head, 20, INK, "700"))
     ty = y + 40
     for row in rows:
         tx = x
@@ -186,17 +219,18 @@ def annotate(a, span, under_y, head, rows, at, colour=MUTED, drop=None):
     return note(a, x, y, head, rows)
 
 
-def caps(a, x, y, s, size=15, fill=MUTED):
-    a.append(mono(x, y, s.upper(), size, fill, "700"))
+def heading(a, x, y, s, size=HEADING, fill=MUTED):
+    """The name of what follows on the sheet: bold, in sentence case, never in capitals."""
+    a.append(sans(x, y, s, size, fill, "700"))
 
 
 def stage(a, x, y, name, sub=None, size=20, colour=INK):
-    """A step in a flow: its name in mono, one line of detail under it, a rule beneath."""
-    a.append(mono(x, y, name, size, colour, "700"))
-    w = mono_w(name, size)
+    """A step in a flow: its name, one line of detail under it, a rule beneath."""
+    a.append(sans(x, y, name, size, colour, "700"))
+    w = sans_w(name, size, True)
     if sub:
-        a.append(text(x, y + 22, sub, 14, MUTED))
-        w = max(w, len(sub) * 7.0)
+        a.append(sans(x, y + 22, sub, 15, MUTED))
+        w = max(w, sans_w(sub, 15))
     a.append(line(x, y + (34 if sub else 12), x + w, y + (34 if sub else 12), HAIR, 1))
     return w
 
@@ -205,12 +239,12 @@ def thread(a, x1, y, x2, label=None, colour=MUTED, dash=""):
     """The line between two stages, with what travels over it written above."""
     da = f' stroke-dasharray="{dash}"' if dash else ""
     a.append(f'<polyline points="{x1},{y} {x2},{y}" fill="none" stroke="{colour}"'
-             f' stroke-width="1"{da}/>')
+             f' stroke-width="2"{da}/>')
     tip = x2 - 7 if x2 > x1 else x2 + 7
     a.append(f'<polyline points="{tip},{y - 3.5} {x2},{y} {tip},{y + 3.5}" fill="none"'
-             f' stroke="{colour}" stroke-width="1"/>')
+             f' stroke="{colour}" stroke-width="2"/>')
     if label:
-        a.append(mono(round((x1 + x2) / 2 - mono_w(label, LABEL) / 2, 2), y - 10, label, LABEL,
+        a.append(sans(round((x1 + x2) / 2 - sans_w(label, LABEL) / 2, 2), y - 10, label, LABEL,
                       colour))
 
 
@@ -221,7 +255,7 @@ def table(a, x, y, columns, rows, size=16, leading=28):
     """
     tx = x
     for head, width, _ in columns:
-        caps(a, tx, y, head, 12)
+        heading(a, tx, y, head, 13)
         tx += width
     total = sum(w for _, w, _ in columns)
     a.append(line(x, y + 12, x + total, y + 12, HAIR, 1))
@@ -230,48 +264,24 @@ def table(a, x, y, columns, rows, size=16, leading=28):
         tx = x
         for (_head, width, is_mono), cell in zip(columns, row, strict=True):
             body, colour = cell if isinstance(cell, tuple) else (cell, INK)
-            if is_mono:
-                a.append(mono(tx, ty, body, size, colour))
-            else:
-                a.append(text(tx, ty, body, size, colour))
+            a.append((mono if is_mono else sans)(tx, ty, body, size, colour))
             tx += width
         a.append(line(x, ty + 10, x + total, ty + 10, HAIR, 1))
         ty += leading
     return ty - leading
 
 
-def box(x, y, w, h, stroke=EDGE, dash="", op=1, fill="none", r=6):
-    """A rectangle: slightly rounded corners, a 1px edge, a fill only when the box is solid."""
-    da = f' stroke-dasharray="{dash}"' if dash else ""
-    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{r}" fill="{fill}"'
-            f' stroke="{stroke}" stroke-width="1" stroke-opacity="{op}"{da}/>')
+def frame(x, y, w, h, colour, fill, roles=()):
+    """A box on the sheet: a 3px outline in its colour around its ground. `roles` names
+    what the box stands for, so the key under the figure can list exactly what is on it."""
+    cls = " ".join(["frame"] + [f"frame-{r}" for r in roles])
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{colour}"'
+            f' stroke-width="3" class="{cls}"/>')
 
 
-# One icon set, drawn the same way: a 20px square, 1.5px strokes, round caps, no fills.
-# Each says what kind of thing a box is, so the name beside it can say which one.
-ICONS = {
-    "person": '<circle cx="10" cy="6" r="3.5"/><path d="M3 18c0-5 14-5 14 0"/>',
-    "database": '<ellipse cx="10" cy="4.5" rx="7" ry="2.5"/>'
-                '<path d="M3 4.5v11a7 2.5 0 0 0 14 0v-11"/><path d="M3 10a7 2.5 0 0 0 14 0"/>',
-    "job": '<circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/>',
-    "model": '<rect x="5" y="5" width="10" height="10" rx="1"/>'
-             '<path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3"/>',
-    "volume": '<rect x="2" y="6" width="16" height="8" rx="2"/><path d="M5 10h6"/>'
-              '<circle cx="14.5" cy="10" r="0.8"/>',
-    "code": '<path d="M7 3C4 3 5.5 9 3 10c2.5 1-1 7 4 7M13 3c3 0 1.5 6 4 7-2.5 1 1 7-4 7"/>',
-    "interface": '<circle cx="14" cy="10" r="4"/><path d="M2 10h8"/>',
-    "adapter": '<path d="M7 2v4M13 2v4"/><rect x="4" y="6" width="12" height="6" rx="1.5"/>'
-               '<path d="M10 12v6"/>',
-    "key": '<circle cx="6.5" cy="10" r="3.5"/><path d="M10 10h8M15 10v3M17.5 10v2.5"/>',
-    "message": '<path d="M3 4h14v9H9l-4 3.5V13H3z"/>',
-    "search": '<circle cx="8.5" cy="8.5" r="5"/><path d="M12.5 12.5l5 5"/>',
-    "document": '<path d="M5 2h7l4 4v12H5z"/><path d="M12 2v4h4M8 11h5M8 14h5"/>',
-    "filter": '<path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7z"/>',
-    "route": '<path d="M10 2v16M10 5h6l2 2-2 2h-6M10 11H4l-2 2 2 2h6"/>',
-    "gear": '<circle cx="10" cy="10" r="2.8"/><circle cx="10" cy="10" r="6.5"'
-            ' stroke-dasharray="2.6 2.5"/>',
-    "table": '<rect x="2" y="3" width="16" height="14" rx="1"/><path d="M2 8h16M8 8v9"/>',
-}
+def ground(colour, outside=False):
+    """What a box is filled with: grey outside the system, else a tint of its colour."""
+    return OUT if outside else {ACCENT: ACCENT_FILL, SAFE: SAFE_FILL}.get(colour, FILL)
 
 
 # Real technology marks, from Simple Icons 16.37.0 (CC0): one filled 24px path each.
@@ -460,90 +470,65 @@ BRANDS = {
 }
 
 
-def guess_icon(name, tech, store, dash):
-    """The icon a box gets when the call does not name one."""
+def guess_icon(tech, store):
+    """The logo a box gets when the call does not name one. Only a technology has one."""
     t = (tech or "").lower()
-    rules = (("volume" in t, "volume"), (t.startswith("table"), "table"),
-             (store and "postgres" in t, "postgresql"), (store, "database"),
-             (t == "role", "key"), (name in ("you",), "person"),
-             (name.startswith("the question") or name.startswith("the answer"), "message"),
-             ("python" in t, "python"), ("one-off" in t, "job"),
-             # searching comes before the model: retrieval embeds with ollama too
-             (("pgvector" in t and "ollama" in t) or "retrieval" in t, "search"),
-             ("llama" in t or t == "ollama", "ollama"),
-             ("protocol" in t or t == "port", "interface"), ("adapter" in t, "adapter"),
-             ("fastapi" in t, "fastapi"),
-             ("router" in t or name.startswith("routers/"), "route"),
-             (t == "application" or name.endswith("Config"), "gear"),
-             ("templates" in t, "document"), ("filter" in t, "filter"))
+    rules = ((store and "postgres" in t, "postgresql"),
+             # retrieval embeds with ollama, but is not ollama
+             (("pgvector" in t and "ollama" in t) or "retrieval" in t, None),
+             ("python" in t, "python"), ("llama" in t or t == "ollama", "ollama"),
+             ("fastapi" in t, "fastapi"))
     for hit, icon in rules:
         if hit:
             return icon
-    return "code"
+    return None
 
 
 def glyph(x, y, icon, colour):
-    """A 20px icon: a line drawing from ICONS, or a filled logo from BRANDS."""
-    if icon in BRANDS:
-        return (f'<g transform="translate({x},{y}) scale({20 / 24:.4f})">'
-                f'<path d="{BRANDS[icon]}" fill="{colour}"/></g>')
-    return (f'<g transform="translate({x},{y})" fill="none" stroke="{colour}"'
-            f' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
-            f"{ICONS[icon]}</g>")
-
-
-def corners(x, y, w, h, colour, size=14, roles=()):
-    """Four corner brackets, one path: how a box is marked out on the sheet. `roles` names
-    what the box stands for, so the key under the figure can list exactly what is on it."""
-    d = " ".join(f"M{cx},{cy + sy * size} V{cy} H{cx + sx * size}"
-                 for cx, cy, sx, sy in ((x, y, 1, 1), (x + w, y, -1, 1),
-                                        (x, y + h, 1, -1), (x + w, y + h, -1, -1)))
-    cls = " ".join(["corners"] + [f"corners-{r}" for r in roles])
-    return (f'<path class="{cls}" d="{d}" fill="none" stroke="{colour}"'
-            ' stroke-width="2"/>')
+    """A 20px technology logo from BRANDS."""
+    return (f'<g transform="translate({x},{y}) scale({20 / 24:.4f})">'
+            f'<path d="{BRANDS[icon]}" fill="{colour}"/></g>')
 
 
 def node_h(tech, lines):
-    return 62 + (22 if tech else 0) + 21 * len(lines)
+    return 66 + (25 if tech else 0) + 24 * len(lines)
 
 
 def node(a, x, y, w, name, tech=None, lines=(), accent=False, dash="", store=False,
-         icon=None, docker=False):
-    """One C4 element: an icon, the name, the technology in brackets, what it does.
+         icon=None, docker=False, mono_lines=False):
+    """One C4 element: the name, the technology in brackets, what it does.
 
-    A box is marked out the way a HUD marks a target: a faint outline, and four corner
-    brackets in its colour — grey for a part, red or lime for a variant.
-
-    A box that is part of the running system is dark, cut into the sheet. Anything that is
-    not — you, an outside registry, a job that has already exited — is a tone lighter than
-    the page, lying on it (`dash` asks for that; the name is kept from when it meant a
-    dashed edge). `store` adds the lid of a database.
-    `icon` names one of `ICONS`; left out, it is chosen from the name and the technology.
-    `docker` puts the whale in the top-right corner: this box runs as a Docker container.
+    A box is a 3px outline in its colour: black for a part, red or green for a variant, and
+    tinted inside with the same red or green. A box that is part of the running system is
+    white; anything that is not — you, an outside registry, a job that has already exited —
+    is grey (`dash` asks for that; the name is kept from when it meant a dashed edge).
+    `store` adds the lid of a database. A technology's logo goes before the name, chosen
+    from the technology unless `icon` names one; `docker` puts the whale in the top-right
+    corner: this box runs as a Docker container. `mono_lines` sets the lines as code.
     """
     h = node_h(tech, lines) + (12 if store else 0)
     colour = accent if isinstance(accent, str) else (ACCENT if accent else None)
     roles = (["attack"] if colour == ACCENT else ["fix"] if colour == SAFE else [])
     edge = colour or EDGE
-    a.append(box(x, y, w, h, FRAME, "", 1, OUT if dash else FILL, r=0))
-    a.append(corners(x, y, w, h, edge, roles=roles + ["outside" if dash else "system"]))
+    a.append(frame(x, y, w, h, edge, ground(colour, bool(dash)),
+                   roles + ["outside" if dash else "system"]))
     if store:
-        a.append(f'<path d="M {x} {y + 16} H {x + w}" stroke="{edge}" stroke-opacity="0.5"'
-                 ' stroke-width="1"/>')
-    top = y + (49 if store else 35)
-    kind = icon or guess_icon(name, tech, store, dash)
-    a.append(glyph(x + 16, top - 16, kind, colour or MUTED))
-    a.append(mono(x + 44, top, name, NAME, colour or INK, "700"))
+        a.append(f'<path d="M {x} {y + 16} H {x + w}" stroke="{edge}" stroke-width="1.5"/>')
+    top = y + (52 if store else 38)
+    logo = icon or guess_icon(tech, store)
+    if logo:
+        a.append(glyph(x + 16, top - 16, logo, colour or INK))
+    a.append(sans(x + (44 if logo else 16), top, name, NAME, colour or INK, "700"))
     if docker:
         a.append(glyph(x + w - 36, y + (24 if store else 12), "docker", TECH).replace(
             "<g ", '<g class="badge-docker" ', 1))
-    ty = top + 22
+    ty = top + 25
     if tech:
-        a.append(mono(x + 16, ty, "[" + tech + "]", KIND, TECH))
-        ty += 21
+        a.append(sans(x + 16, ty, "[" + tech + "]", KIND, TECH))
+        ty += 24
     for body in lines:
-        a.append(text(x + 16, ty, body, DESC, MUTED))
-        ty += 21
+        a.append(text(x + 16, ty, body, DESC, MUTED, "400", MONO if mono_lines else SANS))
+        ty += 24
     return h
 
 
@@ -557,41 +542,38 @@ def entity(a, x, y, w, name, columns, accent=False):
     the key on the left, the name, the type on the right.
 
     `columns` holds `(name, type, key)`, where key is "PK", "FK", "UQ", "PK FK" or "". A
-    fourth item colours that column alone, red or lime, where the figure is about it."""
+    fourth item colours that column alone, red or green, where the figure is about it."""
     h = entity_h(len(columns))
     colour = accent if isinstance(accent, str) else (ACCENT if accent else None)
     roles = (["attack"] if colour == ACCENT else ["fix"] if colour == SAFE else []) + ["system"]
     edge = colour or EDGE
-    a.append(box(x, y, w, h, FRAME, "", 1, FILL, r=0))
-    a.append(corners(x, y, w, h, edge, roles=roles))
-    a.append(glyph(x + 16, y + 19, "table", colour or MUTED))
-    a.append(mono(x + 44, y + 35, name, NAME, colour or INK, "700"))
-    a.append(mono(x + 16, y + 57, "[table]", KIND, TECH))
-    a.append(f'<path d="M {x} {y + 70} H {x + w}" stroke="{edge}" stroke-opacity="0.5"'
-             ' stroke-width="1"/>')
+    a.append(frame(x, y, w, h, edge, ground(colour), roles))
+    a.append(sans(x + 16, y + 35, name, NAME, colour or INK, "700"))
+    a.append(sans(x + 16, y + 57, "[table]", KIND, TECH))
+    a.append(f'<path d="M {x} {y + 70} H {x + w}" stroke="{edge}" stroke-width="1.5"/>')
     for i, column in enumerate(columns):
         column_name, kind, key = column[:3]
         tint = column[3] if len(column) > 3 else None
         ry = y + 94 + 22 * i
         if key:
-            a.append(mono(x + 16, ry, key, 12, TECH, "700"))
-        a.append(mono(x + 64, ry, column_name, 14, tint or INK, "700" if tint else "400"))
-        a.append(text(x + w - 16, ry, kind, 13, tint or MUTED, "400", MONO, "end",
-                      width=mono_w(kind, 13)))
+            a.append(sans(x + 16, ry, key, 13, TECH, "700"))
+        a.append(mono(x + 64, ry, column_name, 15, tint or INK, "700" if tint else "400"))
+        a.append(text(x + w - 16, ry, kind, 14, tint or MUTED, "400", MONO, "end"))
     return h
 
 
 def zone(a, x, y, w, h, label, dash=""):
-    """The system boundary as a darker ground. The one dashed line on a sheet is the trust
-    boundary, so a system is told apart by tone instead."""
-    a.append(box(x, y, w, h, PANEL, "", 1, PANEL, 12))
-    a.append(mono(x, y - 10, label.upper(), CAPS, MUTED, "700"))
+    """The system boundary: a 2px black frame around the parts it holds, with its name
+    above. The one dashed line on a sheet is the trust boundary, so this one is solid."""
+    a.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{PAPER}"'
+             f' stroke="{LINE}" stroke-width="2"/>')
+    heading(a, x, y - 10, label)
 
 
-def boundary(a, x, y1, y2, label="TRUST BOUNDARY"):
+def boundary(a, x, y1, y2, label="Trust boundary"):
     """The trust boundary: the one dashed line on a sheet, with its name centred above it."""
-    a.append(line(x, y1, x, y2, LINE, 1).replace("/>", ' stroke-dasharray="5 4"/>'))
-    a.append(mono(x - mono_w(label, CAPS) / 2, y1 - 10, label, CAPS, MUTED, "700"))
+    a.append(line(x, y1, x, y2, LINE, 1.5).replace("/>", ' stroke-dasharray="6 5"/>'))
+    heading(a, x - sans_w(label, HEADING, True) / 2, y1 - 10, label)
 
 
 def arrow(a, points, label=None, colour=LINE, dash="", above=True, head="to",
@@ -602,7 +584,7 @@ def arrow(a, points, label=None, colour=LINE, dash="", above=True, head="to",
     da = f' stroke-dasharray="{dash}"' if dash else ""
     marker = {LINE: "to", INK: "to-ink", ACCENT: "to-accent",
               SAFE: "to-safe"}.get(colour, head)
-    weight = 1.8 if colour in (ACCENT, SAFE) else 1.2
+    weight = 3.5 if colour in (ACCENT, SAFE) else 2.5
     a.append(f'<polyline points="{pts}" fill="none" stroke="{colour}"'
              f' stroke-width="{weight}"{da} marker-end="url(#{marker})"/>')
     if not label:
@@ -614,54 +596,52 @@ def arrow(a, points, label=None, colour=LINE, dash="", above=True, head="to",
         if abs(y2 - y1) > abs(x2 - x1):
             lx, ly = max(x1, x2) + 10, (y1 + y2) / 2 + 4
         else:
-            lx = round((x1 + x2) / 2 - mono_w(label, LABEL) / 2, 2)
+            lx = round((x1 + x2) / 2 - sans_w(label, LABEL) / 2, 2)
             ly = min(y1, y2) + (-10 if above else 22)
-    a.append(mono(lx, ly, label, LABEL, colour))
+    a.append(sans(lx, ly, label, LABEL, colour))
     if tech:
-        a.append(mono(lx, ly + 17, "[" + tech + "]", 12, TECH))
+        a.append(sans(lx, ly + 17, "[" + tech + "]", 13.5, TECH))
 
 
 def key(a, y, body, x=M):
-    """One quiet line that says what the marks on this sheet mean, and only those.
-
-    It reads `body` — everything drawn so far — for what is actually there: the two tones
-    of box, red and lime (as a box when a box carries the colour, as a line when only an
+    """One quiet row above the caption: only the marks this sheet uses — the three kinds
+    of box, red and green (as a box when a box carries the colour, as a line when only an
     arrow or a run of code does), the trust boundary, the Docker badge on a container (not
     the logo of Docker Hub, which is a registry). Each is shown with
     the real mark, not described. Nothing is drawn when the sheet uses none of them."""
     items = []
-    if "corners-system" in body:
+    if "frame-system" in body:
         items.append(("the system", "box", FILL, EDGE))
-    if "corners-outside" in body:
+    if "frame-outside" in body:
         items.append(("outside it", "box", OUT, EDGE))
     for role, colour, label in (("attack", ACCENT, "attack path"), ("fix", SAFE, "the fix")):
-        if f"corners-{role}" in body:
-            items.append((label, "box", FILL, colour))
+        if f"frame-{role}" in body:
+            items.append((label, "box", ground(colour), colour))
         elif colour in body:
             items.append((label, "line", None, colour))
-    if 'stroke-dasharray="5 4"' in body:
+    if 'stroke-dasharray="6 5"' in body:
         items.append(("trust boundary", "boundary", None, LINE))
     if "badge-docker" in body:
-        items.append(("runs in Docker", "docker", None, MUTED))
+        items.append(("runs in Docker", "docker", None, TECH))
     if not items:
         return False
     g = ["<!-- key -->", '<g class="key">']
     for label, kind, fill, colour in items:
         if kind == "box":
-            g.append(box(x, y, 28, 18, FRAME, "", 1, fill, r=0))
-            g.append(corners(x, y, 28, 18, colour, size=6))
+            g.append(frame(x, y, 28, 18, colour, fill))
         elif kind == "line":
-            g.append(line(x, y + 9, x + 28, y + 9, colour, 2))
+            g.append(line(x, y + 9, x + 28, y + 9, colour, 3))
         elif kind == "boundary":
-            g.append(line(x + 14, y, x + 14, y + 18, colour, 1).replace(
-                "/>", ' stroke-dasharray="5 4"/>'))
+            g.append(line(x + 14, y, x + 14, y + 18, colour, 1.5).replace(
+                "/>", ' stroke-dasharray="6 5"/>'))
         else:
             g.append(glyph(x + 4, y - 1, "docker", colour))
-        g.append(mono(x + 38, y + 14, label, 13.5, MUTED))
-        x += 38 + mono_w(label, 13.5) + 40
+        g.append(sans(x + 38, y + 15, label, 17, MUTED))
+        x += 38 + sans_w(label, 17) + 40
     g += ["</g>", "<!-- /key -->"]
     a.append(NL.join(g))
     return True
+
 
 def pulse(points, colour=ACCENT, seconds=7):
     """A dot that travels a request's path, the only thing that moves on any sheet.
@@ -686,15 +666,15 @@ def fork(a, start, bus, ends, colours=None, down=False):
     colours = colours or [LINE] * len(ends)
     sx, sy = start
     if down:
-        a.append(line(sx, sy, sx, bus, LINE, 1.2))
+        a.append(line(sx, sy, sx, bus, LINE, 2.5))
         xs = [sx] + [x for x, _ in ends]
-        a.append(line(min(xs), bus, max(xs), bus, LINE, 1.2))
+        a.append(line(min(xs), bus, max(xs), bus, LINE, 2.5))
         for (ex, ey), c in zip(ends, colours, strict=True):
             arrow(a, [(ex, bus), (ex, ey)], None, c)
     else:
-        a.append(line(sx, sy, bus, sy, LINE, 1.2))
+        a.append(line(sx, sy, bus, sy, LINE, 2.5))
         ys = [sy] + [y for _, y in ends]
-        a.append(line(bus, min(ys), bus, max(ys), LINE, 1.2))
+        a.append(line(bus, min(ys), bus, max(ys), LINE, 2.5))
         for (ex, ey), c in zip(ends, colours, strict=True):
             arrow(a, [(bus, ey), (ex, ey)], None, c)
 
@@ -710,13 +690,13 @@ def masthead(label, route, field, payload, extra, variants, aria=None):
 
     `variants` is a pair of `(name, colour, code, status, outcome)`.
     """
-    sans, mono_f = BODY, MONO
+    mono_f = MONO
     muted, faint, wire = "#8b949e", "#b1bac4", "#6e7681"
     vuln, safe, accent = "#e5534b", "#3fb950", "#6cb6ff"
     w, h = 1200, 350
     pw = round(len(payload) * 0.62 * 15, 1)
 
-    def t(x, y, body, size=12, fill=muted, weight="400", anchor="start", font=sans):
+    def t(x, y, body, size=12, fill=muted, weight="400", anchor="start", font=mono_f):
         return text(x, y, body, size, fill, weight, font, anchor)
 
     def card(x, y, cw, ch, stroke=wire):
@@ -776,6 +756,7 @@ def render(here, sheets):
 
 
 W = 1100
+SYSTEM = "sqli-demo"
 Q = chr(34)   # a double quote, so the figures can show quoted code
 
 
@@ -789,17 +770,16 @@ HALF = 484           # each route's box: half the sheet, less a 20px gutter
 def answer_box(a, x, y, route, colour, role, rows):
     """A route's box: its name, then what it answered, one row per line."""
     h = 64 + 24 * (len(rows) - 1)
-    a.append(box(x, y, HALF, h, FRAME, "", 1, FILL, r=0))
-    a.append(corners(x, y, HALF, h, colour, roles=[role]))
-    a.append(mono(x + 16, y + 24, route, 14, MUTED))
+    a.append(frame(x, y, HALF, h, colour, ground(colour), [role]))
+    a.append(sans(x + 16, y + 24, route, 15.5, MUTED, "700"))
     for i, row in enumerate(rows):
         code(a, x + 16, y + 50 + 24 * i, row, 15)
 
 
-def step_sheet(subject, number, total, head, desc, route, field, payload, colour,
+def step_sheet(number, total, head, desc, route, field, payload, colour,
                left, right):
     """`payload` is the lines sent; `left` and `right` are (route, colour, role, rows)."""
-    a = figure(W, f"{subject} · step {number} of {total}", head, desc)
+    a = figure(W, f"Step {number} of {total}: {head}", desc)
     a.append(mono(M, 176, route, 15, MUTED))
     lead = field + " = "
     for i, body in enumerate(payload):
@@ -817,7 +797,7 @@ def step_sheet(subject, number, total, head, desc, route, field, payload, colour
     return a
 
 
-SQLI_ROUTE = "POST /api/v1/{vulnerable|safe}/auth/login · password = anything"
+SQLI_ROUTE = "POST /api/v1/{vulnerable|safe}/auth/login, password = anything"
 NO_USER = [[("401  ", SAFE), ("no matching user", INK)]]
 SQLI_STEPS = (
     ("Comment-based authentication bypass",
@@ -835,10 +815,10 @@ SQLI_STEPS = (
 
 def attack_step(i):
     head, desc, payload, bad = SQLI_STEPS[i]
-    a = step_sheet("sql injection", i + 1, len(SQLI_STEPS), head, desc, SQLI_ROUTE,
+    a = step_sheet(i + 1, len(SQLI_STEPS), head, desc, SQLI_ROUTE,
                    "username", [payload], ACCENT,
                    ("vulnerable", ACCENT, "attack", bad), ("safe", SAFE, "fix", NO_USER))
-    return caption(a, W, i + 1, f"step {i + 1} of the attack", "bruno/02-* · bruno/03-*")
+    return caption(a, W, i + 1, f"step {i + 1} of the attack", "bruno/02-*, bruno/03-*")
 
 
 # --------------------------------------------------------------------------
@@ -853,30 +833,30 @@ def bracket(a, span, y, label, colour):
     """A square bracket under a run of the query, and what the parser makes of that run."""
     x0, x1 = span
     a.append(leader([(x0, y - 6), (x0, y), (x1, y), (x1, y - 6)], colour))
-    a.append(mono(x0, y + 24, label, 14, colour))
+    a.append(sans(x0, y + 24, label, 15, colour))
 
 
-def query_sheet(eyebrow, head, desc, statement, values, result):
+def query_sheet(head, desc, statement, values, result):
     """`statement` is the query's runs and the brackets under them; `values` the rows that
     travel separately; `result` two lines of runs."""
-    a = figure(W, eyebrow, head, desc)
-    caps(a, M, 176, "input", 14)
+    a = figure(W, head, desc)
+    heading(a, M, 176, "Input")
     code(a, M, 208, [("username = ", INK), ("admin'--", ACCENT),
                      ("    password = ", MUTED), ("anything", MUTED)], 20)
 
     runs, brackets = statement
-    zone(a, M, 272, W - 2 * M, 132, "the statement, as the database parses it")
+    zone(a, M, 272, W - 2 * M, 132, "The statement, as the database parses it")
     a.append(mono(M + PAD, 312, "SELECT id, username, role FROM users", QUERY_SIZE, MUTED))
     spans = code(a, M + PAD, 346, runs, QUERY_SIZE)
     for (first, last), label, colour in brackets:
         bracket(a, (spans[first][0], spans[last][1]), 358, label, colour)
 
-    zone(a, M, 456, W - 2 * M, 96, "the values, transmitted separately")
+    zone(a, M, 456, W - 2 * M, 96, "The values, transmitted separately")
     top = 512 - 16 * (len(values) - 1)     # one row sits in the middle, two share it
     for i, row in enumerate(values):
         code(a, M + PAD, top + 32 * i, row, QUERY_SIZE)
 
-    caps(a, M, 606, "the result", 14)
+    heading(a, M, 606, "The result")
     for i, row in enumerate(result):
         code(a, M, 638 + 30 * i, row, QUERY_SIZE)
     return a
@@ -884,7 +864,7 @@ def query_sheet(eyebrow, head, desc, statement, values, result):
 
 def vulnerable_query():
     a = query_sheet(
-        "sql injection · vulnerable", "Parsing of the concatenated query",
+        "Vulnerable: parsing of the concatenated query",
         "The username is pasted into the statement. Its quote closes the string the"
         " programmer opened, and -- turns the password check into a comment.",
         ([("WHERE username = ", INK), ("'", INK), ("admin'", ACCENT), ("--", ACCENT),
@@ -895,12 +875,12 @@ def vulnerable_query():
         [[("returns  ", MUTED), ("the admin row; the password is not verified", INK)],
          [("→ 200, administrator token issued", ACCENT)]])
     return caption(a, W, 1, "VulnerableSqlAuthenticator.authenticate",
-                   "vulnerable_sql_authenticator.py · authenticate")
+                   "vulnerable_sql_authenticator.py, authenticate")
 
 
 def safe_query():
     a = query_sheet(
-        "sql injection · safe", "Parameterized query: statement and values separated",
+        "Safe: statement and values sent separately",
         "The statement has two placeholders and is parsed on its own; the username and"
         " password follow as values, so the payload is only ever compared, never parsed.",
         ([("WHERE username = ", INK), ("%s", SAFE), (" AND password_hash = crypt(", INK),
@@ -911,14 +891,14 @@ def safe_query():
         [[("returns  ", MUTED), ("no user named ", INK), ("admin'--", ACCENT)],
          [("→ 401", SAFE)]])
     return caption(a, W, 2, "SafeSqlAuthenticator.authenticate",
-                   "safe_sql_authenticator.py · authenticate")
+                   "safe_sql_authenticator.py, authenticate")
 
 
 # --------------------------------------------------------------------------
 # FIG. 3 — where the submitted value goes
 # --------------------------------------------------------------------------
 def flow():
-    a = figure(W, "c4 model · level 3 · components", "Inside the container, one request",
+    a = figure(W, f"Component diagram for the {SYSTEM} container",
                "A C4 component view of one login request. The router, the use case and the"
                " port are shared; only the adapter below them changes.")
     under = len(a)                    # the travelling dot goes beneath every box
@@ -943,8 +923,8 @@ def flow():
     # row 3 — the two adapters on the outside, the database between them
     bus = port + hp + 40
     row = bus + 52
-    ha = node(a, left, row, 302, "VulnerableSqlAuthenticator", "adapter · psycopg", accent=True)
-    node(a, right, row, 302, "SafeSqlAuthenticator", "adapter · psycopg", accent=SAFE)
+    ha = node(a, left, row, 302, "VulnerableSqlAuthenticator", "adapter, psycopg", accent=True)
+    node(a, right, row, 302, "SafeSqlAuthenticator", "adapter, psycopg", accent=SAFE)
     fork(a, (893, port + hp), bus, [(207, row - 4), (893, row - 4)], [ACCENT, SAFE], down=True)
     a.append(mono(217, bus + 32, "variant=vulnerable", LABEL, ACCENT))
     a.append(mono(903, bus + 32, "variant=safe", LABEL, SAFE))
@@ -953,33 +933,34 @@ def flow():
     hd = node_h("PostgreSQL 18", []) + 12          # a store is taller by its lid
     node(a, 465, level - hd // 2, 170, "sqli-db", "PostgreSQL 18", store=True)
     arrow(a, [(362, level), (461, level)], None, ACCENT)
-    a.append(mono(411.5 - mono_w("as SQL", LABEL) / 2, level - 10, "as SQL", LABEL, ACCENT))
+    a.append(sans(411.5 - sans_w("as SQL", LABEL) / 2, level - 10, "as SQL", LABEL, ACCENT))
     arrow(a, [(738, level), (639, level)], None, SAFE)
-    a.append(mono(688.5 - mono_w("as a value", LABEL) / 2, level - 10, "as a value", LABEL, SAFE))
+    a.append(sans(688.5 - sans_w("as a value", LABEL) / 2, level - 10, "as a value", LABEL,
+                  SAFE))
     # the request's whole way, from you to the table, along the vulnerable variant
     a.insert(under, pulse([(207, mid), (550, mid), (893, mid), (893, bus), (207, bus),
                            (207, level), (550, level)]))
     return caption(a, W, 3, "level 3 — the components one request passes through",
-                   "presentation/routers/auth.py · container.py")
+                   "presentation/routers/auth.py, container.py")
 
 
 # --------------------------------------------------------------------------
 # FIG. 4 — what runs, and what the host can reach
 # --------------------------------------------------------------------------
 def architecture():
-    a = figure(W, "c4 model · level 2 · containers", "What runs, and what it is built on",
+    a = figure(W, f"Container diagram for {SYSTEM}",
                "A C4 container view: every element names the technology it is built on,"
                " and every arrow names what travels over it.")
     under = len(a)
     top = 232
     hy = node(a, M, top, 180, "you", "Bruno", dash="4 3")
-    node(a, 372, top, 300, "sqli-demo", "FastAPI · uvicorn", accent=True, docker=True)
-    node(a, 712, top, 300, "sqli-seed", "Python · one-off", dash="4 3", docker=True)
+    node(a, 372, top, 300, "sqli-demo", "FastAPI, uvicorn", accent=True, docker=True)
+    node(a, 712, top, 300, "sqli-seed", "Python, one-off", dash="4 3", docker=True)
     low = top + hy + 70
     hd = node(a, 372, low, 300, "sqli-db", "PostgreSQL 18", store=True, docker=True)
 
     panel = []
-    zone(panel, 340, 196, 704, low + hd + 36 - 196, "system · sqli-demo")
+    zone(panel, 340, 196, 704, low + hd + 36 - 196, SYSTEM)
     a[under:under] = panel
     boundary(a, 268, 176, low + hd + 56)
 
@@ -996,12 +977,12 @@ def architecture():
 # C4 level 4 — the code behind the two components
 # --------------------------------------------------------------------------
 def code_level():
-    a = figure(W, "c4 model · level 4 · code", "The port and its two implementations",
+    a = figure(W, "Code diagram for the Authenticator port",
                "One Protocol, two classes. Everything above this level is identical for"
                " both variants; the difference is the statement each one builds.")
     top = 196
     hp = node(a, 372, top, 356, "Authenticator", "typing.Protocol",
-              ["authenticate(username, password)"])
+              ["authenticate(username, password)"], mono_lines=True)
     row = top + hp + 70
     hc = node(a, M, row, 420, "VulnerableSqlAuthenticator", "infrastructure.auth", accent=True)
     node(a, 624, row, 420, "SafeSqlAuthenticator", "infrastructure.auth", accent=SAFE)
@@ -1019,13 +1000,13 @@ def code_level():
         spans = code(a, M, y, [("conn.execute(", None), (rest, colour), (")", None)], 19)
         underline(a, spans[1], y + 12, colour)
     return caption(a, W, 4, "level 4 — the one method the two classes implement",
-                   "domain/ports/authenticator.py · infrastructure/auth/")
+                   "domain/ports/authenticator.py, infrastructure/auth/")
 
 # --------------------------------------------------------------------------
 # FIG. 6 — the grant that decides what a successful injection is worth
 # --------------------------------------------------------------------------
 def database():
-    a = figure(W, "privileges", "What each account may read",
+    a = figure(W, "What each account may read",
                "The vulnerable adapter connects as an account that can read the secrets"
                " table; the safe one cannot see it at all.")
     # roles on the right, 24px apart; the two tables on the left share their top and bottom
@@ -1054,9 +1035,9 @@ def database():
     arrow(a, [(696, e1), (460, e1)], "owns", at=(560, e1 - 10))
     arrow(a, [(696, mid("lab_app")), (600, mid("lab_app")), (600, e2), (460, e2)],
           "SELECT", SAFE, at=(610, mid("lab_app") - 10))
-    arrow(a, [(696, out - 24), (540, out - 24), (540, e3), (460, e3)], "SELECT",
-          at=(610, out - 34))
-    arrow(a, [(696, out), (460, out)], "SELECT", ACCENT, at=(480, out - 10))
+    arrow(a, [(696, out - 32), (540, out - 32), (540, e3), (460, e3)], "SELECT",
+          at=(610, out - 42))
+    arrow(a, [(696, out), (460, out)], "SELECT", ACCENT, at=(470, out - 10))
     return caption(a, W, 5, "the UNION payload reads secrets because one grant allows it",
                    "infrastructure/persistence/seed.py")
 
@@ -1065,7 +1046,7 @@ def database():
 # C4 level 1 — who uses it, and what it reaches outside itself
 # --------------------------------------------------------------------------
 def context():
-    system, purpose = 'sqli-demo', ['login API', 'vulnerable and safe']
+    system, purpose = SYSTEM, ['login API', 'vulnerable and safe']
     sources = [  # (name, what kind of system it is, what is pulled from it, icon)
         ('Docker Hub', 'container registry', 'python, postgres images', 'docker'),
         ('ghcr.io', 'container registry', 'the uv binary', 'github'),
@@ -1075,7 +1056,7 @@ def context():
     # one trust boundary in each gap, the same distance from the system on both sides
     top, gap, hb = 200, 24, node_h("kind", ["what"])
     bottom = top + len(sources) * (hb + gap) - gap
-    a = figure(W, "c4 model · level 1 · context", "Who uses it, and what it depends on",
+    a = figure(W, f"System context diagram for {system}",
                "A C4 system context: the demo as one box, the person who drives it, and"
                " the public registries it pulls from.")
     ends = []
@@ -1086,16 +1067,16 @@ def context():
     centre = (ends[0][1] + ends[-1][1]) // 2
     hs = node_h("software system", purpose)
     node(a, 420, centre - hs // 2, 260, system, "software system", purpose, icon="fastapi")
-    node(a, M, centre - hb // 2, 230, "you", "learner · attacker", ["Bruno"],
+    node(a, M, centre - hb // 2, 230, "you", "learner, attacker", ["Bruno"],
          dash="4 3")
     for bx in (360, 740):
         boundary(a, bx, top - 20, bottom + 20)
-    a.append(mono(814, top - 10, "PUBLIC REGISTRIES", CAPS, MUTED, "700"))
+    heading(a, 814, top - 10, "Public registries")
     arrow(a, [(290, centre), (416, centre)], "attacks", ACCENT, at=(293, centre - 10))
-    a.append(mono(692, centre - 10, "pulls", LABEL, LINE))
+    a.append(sans(692, centre - 10, "pulls", LABEL, LINE))
     fork(a, (684, centre), 776, ends)
     return caption(a, W, 1, "level 1 — the system, its user, and what it pulls from",
-                   "compose.yaml · Dockerfile")
+                   "compose.yaml, Dockerfile")
 
 
 if __name__ == "__main__":

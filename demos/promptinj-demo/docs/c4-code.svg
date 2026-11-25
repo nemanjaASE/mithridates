@@ -1,52 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 728" width="1100" height="728" role="img" aria-labelledby="t d">
-<title id="t">The port, the adapter and the switch</title><desc id="d">One Protocol and one implementation. The variants do not change the class — they change the arguments it is called with.</desc>
-<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9DA6B7" stroke-width="1.1"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E0E6F0" stroke-width="1.1"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E08585" stroke-width="1.1"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9FEF00" stroke-width="1.1"/></marker></defs>
-<rect width="1100" height="728" fill="#252A33"/>
-<text x="56" y="64" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="206.25" lengthAdjust="spacingAndGlyphs">C4 MODEL · LEVEL 4 · CODE</text>
-<text x="56" y="108" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="32" font-weight="700" xml:space="preserve" textLength="633.6" lengthAdjust="spacingAndGlyphs">The port, the adapter and the switch</text>
-<polyline points="56,132 1044,132" fill="none" stroke="#3F4552" stroke-width="1"/>
-<rect x="56" y="196" width="420" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-system" d="M56,210 V196 H70 M476,210 V196 H462 M56,287 V301 H70 M476,287 V301 H462" fill="none" stroke="#8F98AA" stroke-width="2"/>
-<g transform="translate(72,215)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="10" r="4"/><path d="M2 10h8"/></g>
-<text x="100" y="231" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="158.95" lengthAdjust="spacingAndGlyphs">DocumentRetriever</text>
-<text x="72" y="253" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="126.23" lengthAdjust="spacingAndGlyphs">[typing.Protocol]</text>
-<text x="72" y="274" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">retrieve(query, k, owner_id, …)</text>
-<rect x="624" y="196" width="420" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-system" d="M624,210 V196 H638 M1044,210 V196 H1030 M624,287 V301 H638 M1044,287 V301 H1030" fill="none" stroke="#8F98AA" stroke-width="2"/>
-<g transform="translate(640,215)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="5"/><path d="M12.5 12.5l5 5"/></g>
-<text x="668" y="231" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="140.25" lengthAdjust="spacingAndGlyphs">VectorRetriever</text>
-<text x="640" y="253" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="193.05" lengthAdjust="spacingAndGlyphs">[infrastructure.retrieval]</text>
-<text x="640" y="274" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">one query over pgvector</text>
-<rect x="56" y="371" width="420" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-fix corners-system" d="M56,385 V371 H70 M476,385 V371 H462 M56,462 V476 H70 M476,462 V476 H462" fill="none" stroke="#9FEF00" stroke-width="2"/>
-<g transform="translate(72,390)" fill="none" stroke="#9FEF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="2.8"/><circle cx="10" cy="10" r="6.5" stroke-dasharray="2.6 2.5"/></g>
-<text x="100" y="406" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="140.25" lengthAdjust="spacingAndGlyphs">RetrievalConfig</text>
-<text x="72" y="428" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="230.18" lengthAdjust="spacingAndGlyphs">[assistants.account_demo.specs]</text>
-<text x="72" y="449" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">scope_to_owner · safe_fields</text>
-<polyline points="480,248 620,248" fill="none" stroke="#9DA6B7" stroke-width="1.2" marker-end="url(#to)"/>
-<text x="492" y="238" fill="#9DA6B7" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="115.5" lengthAdjust="spacingAndGlyphs">implemented by</text>
-<polyline points="266,367 266,305" fill="none" stroke="#9FEF00" stroke-width="1.8" marker-end="url(#to-safe)"/>
-<text x="282" y="341" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="82.5" lengthAdjust="spacingAndGlyphs">configures</text>
-<polyline points="56,516 1044,516" fill="none" stroke="#8F98AA" stroke-width="1"/>
-<text x="56" y="560" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="114.95" lengthAdjust="spacingAndGlyphs">owner_id = </text>
-<text x="170.95" y="560" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="250.8" lengthAdjust="spacingAndGlyphs">state["current_user_id"]</text>
-<text x="421.75" y="560" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="41.8" lengthAdjust="spacingAndGlyphs"> if </text>
-<text x="463.55" y="560" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="219.45" lengthAdjust="spacingAndGlyphs">config.scope_to_owner</text>
-<text x="683.0" y="560" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="104.5" lengthAdjust="spacingAndGlyphs"> else None</text>
-<polyline points="170.95,572 421.75,572" fill="none" stroke="#9FEF00" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 748" width="1100" height="748" role="img" aria-labelledby="t d">
+<title id="t">Code diagram for the DocumentRetriever port</title><desc id="d">One Protocol and one implementation. The variants do not change the class — they change the arguments it is called with.</desc>
+<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#161616" stroke-width="1.4"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#161616" stroke-width="1.4"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#A2191F" stroke-width="1.4"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#0E6027" stroke-width="1.4"/></marker></defs>
+<rect width="1100" height="748" fill="#FFFFFF"/>
+<text x="56" y="96" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="34" font-weight="700" xml:space="preserve" textLength="740.55" lengthAdjust="spacingAndGlyphs">Code diagram for the DocumentRetriever port</text>
+<polyline points="56,132 1044,132" fill="none" stroke="#C6C6C6" stroke-width="1"/>
+<rect x="56" y="196" width="420" height="115" fill="#FFFFFF" stroke="#161616" stroke-width="3" class="frame frame-system"/>
+<text x="72" y="234" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="193.7" lengthAdjust="spacingAndGlyphs">DocumentRetriever</text>
+<text x="72" y="259" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="125.47" lengthAdjust="spacingAndGlyphs">[typing.Protocol]</text>
+<text x="72" y="283" fill="#262626" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="18.5" font-weight="400" xml:space="preserve" textLength="315.43" lengthAdjust="spacingAndGlyphs">retrieve(query, k, owner_id, …)</text>
+<rect x="624" y="196" width="420" height="115" fill="#FFFFFF" stroke="#161616" stroke-width="3" class="frame frame-system"/>
+<text x="640" y="234" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="156.39" lengthAdjust="spacingAndGlyphs">VectorRetriever</text>
+<text x="640" y="259" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="178.94" lengthAdjust="spacingAndGlyphs">[infrastructure.retrieval]</text>
+<text x="640" y="283" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="18.5" font-weight="400" xml:space="preserve" textLength="199.49" lengthAdjust="spacingAndGlyphs">one query over pgvector</text>
+<rect x="56" y="381" width="420" height="115" fill="#DEFBE6" stroke="#0E6027" stroke-width="3" class="frame frame-fix frame-system"/>
+<text x="72" y="419" fill="#0E6027" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="155.19" lengthAdjust="spacingAndGlyphs">RetrievalConfig</text>
+<text x="72" y="444" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="257.76" lengthAdjust="spacingAndGlyphs">[assistants.account_demo.specs]</text>
+<text x="72" y="468" fill="#262626" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="18.5" font-weight="400" xml:space="preserve" textLength="274.73" lengthAdjust="spacingAndGlyphs">scope_to_owner, safe_fields</text>
+<polyline points="480,253 620,253" fill="none" stroke="#161616" stroke-width="2.5" marker-end="url(#to-ink)"/>
+<text x="484.71500000000003" y="243" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="18.5" font-weight="400" xml:space="preserve" textLength="130.57" lengthAdjust="spacingAndGlyphs">implemented by</text>
+<polyline points="266,377 266,315" fill="none" stroke="#0E6027" stroke-width="3.5" marker-end="url(#to-safe)"/>
+<text x="282" y="351" fill="#0E6027" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="18.5" font-weight="400" xml:space="preserve" textLength="85.34" lengthAdjust="spacingAndGlyphs">configures</text>
+<polyline points="56,536 1044,536" fill="none" stroke="#161616" stroke-width="1"/>
+<text x="56" y="580" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="114.95" lengthAdjust="spacingAndGlyphs">owner_id = </text>
+<text x="170.95" y="580" fill="#0E6027" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="250.8" lengthAdjust="spacingAndGlyphs">state["current_user_id"]</text>
+<text x="421.75" y="580" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="41.8" lengthAdjust="spacingAndGlyphs"> if </text>
+<text x="463.55" y="580" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="219.45" lengthAdjust="spacingAndGlyphs">config.scope_to_owner</text>
+<text x="683.0" y="580" fill="#A2191F" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="104.5" lengthAdjust="spacingAndGlyphs"> else None</text>
+<polyline points="170.95,592 421.75,592" fill="none" stroke="#0E6027" stroke-width="2"/>
 <!-- key -->
 <g class="key">
-<rect x="56" y="612" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners" d="M56,618 V612 H62 M84,618 V612 H78 M56,624 V630 H62 M84,624 V630 H78" fill="none" stroke="#8F98AA" stroke-width="2"/>
-<text x="94" y="626" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="74.25" lengthAdjust="spacingAndGlyphs">the system</text>
-<polyline points="208.25,621 236.25,621" fill="none" stroke="#E08585" stroke-width="2"/>
-<text x="246.25" y="626" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="81.68" lengthAdjust="spacingAndGlyphs">attack path</text>
-<rect x="367.93" y="612" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners" d="M367.93,618 V612 H373.93 M395.93,618 V612 H389.93 M367.93,624 V630 H373.93 M395.93,624 V630 H389.93" fill="none" stroke="#9FEF00" stroke-width="2"/>
-<text x="405.93" y="626" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">the fix</text>
+<rect x="56" y="632" width="28" height="18" fill="#FFFFFF" stroke="#161616" stroke-width="3" class="frame"/>
+<text x="94" y="647" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="82.19" lengthAdjust="spacingAndGlyphs">the system</text>
+<polyline points="216.19,641 244.19,641" fill="none" stroke="#A2191F" stroke-width="3"/>
+<text x="254.19" y="647" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="83.16" lengthAdjust="spacingAndGlyphs">attack path</text>
+<rect x="377.35" y="632" width="28" height="18" fill="#DEFBE6" stroke="#0E6027" stroke-width="3" class="frame"/>
+<text x="415.35" y="647" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="45.36" lengthAdjust="spacingAndGlyphs">the fix</text>
 </g>
 <!-- /key -->
-<polyline points="56,670 1044,670" fill="none" stroke="#3F4552" stroke-width="1"/>
-<text x="56" y="700" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="16.5" lengthAdjust="spacingAndGlyphs">04</text>
-<text x="96" y="700" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14.5" font-weight="400" xml:space="preserve" textLength="494.45" lengthAdjust="spacingAndGlyphs">application/ports.py · infrastructure/ai/rag/nodes/retrieve.py</text>
+<polyline points="56,690 1044,690" fill="none" stroke="#C6C6C6" stroke-width="1"/>
+<text x="56" y="720" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="700" xml:space="preserve" textLength="18.9" lengthAdjust="spacingAndGlyphs">04</text>
+<text x="96" y="720" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="437.46" lengthAdjust="spacingAndGlyphs">application/ports.py, infrastructure/ai/rag/nodes/retrieve.py</text>
 </svg>
