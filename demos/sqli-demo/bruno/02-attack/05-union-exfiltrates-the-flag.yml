@@ -1,7 +1,7 @@
 info:
   name: UNION exfiltrates the flag
   type: http
-  seq: 4
+  seq: 5
 
 http:
   method: POST
@@ -30,7 +30,7 @@ runtime:
       value: "200"
 
 docs: |-
-  # 02.4 — Data exfiltration through the token claims
+  # 02.5 — Data exfiltration through the token claims
 
   The payload appends a row from a table the login query was never about:
 

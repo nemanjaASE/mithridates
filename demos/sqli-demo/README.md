@@ -213,14 +213,14 @@ attack.
 
 ## <img src="../../docs/assets/icons/shield.svg" width="30" height="23" alt="">Verification
 
-[`bruno/`](bruno/) — 19 requests, each with an explanation and an assertion:
+[`bruno/`](bruno/) — 20 requests, each with an explanation and an assertion:
 
 | Folder | What it proves |
 | --- | --- |
 | `00-environments` | the service is up and the database holds real data |
 | `01-auth` | an honest login, a rejected login, and who owns the token |
-| `02-attack` | all three payloads **succeed** against `vulnerable` |
-| `03-defense` | the **same** payloads fail against `safe` |
+| `02-attack` | a lone quote breaks the query, then all three payloads **succeed** against `vulnerable` |
+| `03-defense` | the **same** quote and payloads fail against `safe` |
 | `04-hardening` | an `alg: none` token, the wrong method, oversized input, response headers |
 
 Folders `02` and `03` send the same payload to two routes — that is the entire proof.

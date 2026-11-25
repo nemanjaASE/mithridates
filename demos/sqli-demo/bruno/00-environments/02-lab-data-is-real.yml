@@ -22,4 +22,4 @@ docs: |-
   against real rows rather than against a plausible-looking response.
 
   Note what is NOT here: `secret_names` lists the names, never the values. The value of
-  `flag` is what request 02.3 exfiltrates — through the token, not through this endpoint.
+  `flag` is what request 02.5 exfiltrates — through the token, not through this endpoint.

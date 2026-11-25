@@ -1,7 +1,7 @@
 info:
   name: Tautology is refused
   type: http
-  seq: 2
+  seq: 3
 
 http:
   method: POST
@@ -26,7 +26,7 @@ runtime:
       value: "401"
 
 docs: |-
-  # 03.2 — The tautology is just a username
+  # 03.3 — The tautology is just a username
 
   `401`. The payload is compared, as text, against the `username` column, and matches
   nothing.

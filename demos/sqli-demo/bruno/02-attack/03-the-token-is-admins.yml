@@ -1,7 +1,7 @@
 info:
   name: The token really is admin's
   type: http
-  seq: 2
+  seq: 3
 
 http:
   method: GET
@@ -23,7 +23,7 @@ runtime:
       value: "admin"
 
 docs: |-
-  # 02.2 — The impact, not the trick
+  # 02.3 — The impact, not the trick
 
   `username: admin`, `role: admin` — from a request that carried no valid password.
 

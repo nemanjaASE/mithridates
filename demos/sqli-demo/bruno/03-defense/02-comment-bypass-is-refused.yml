@@ -1,7 +1,7 @@
 info:
   name: Comment bypass is refused
   type: http
-  seq: 1
+  seq: 2
 
 http:
   method: POST
@@ -29,7 +29,7 @@ runtime:
       value: "Invalid username or password."
 
 docs: |-
-  # 03.1 — The same payload, parameterized
+  # 03.2 — The same payload, parameterized
 
   `401`, and the same generic message as a plain wrong password in 01.2.
 

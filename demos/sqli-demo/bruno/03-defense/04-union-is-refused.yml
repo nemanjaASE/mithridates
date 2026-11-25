@@ -1,7 +1,7 @@
 info:
   name: UNION is refused
   type: http
-  seq: 3
+  seq: 4
 
 http:
   method: POST
@@ -26,7 +26,7 @@ runtime:
       value: "401"
 
 docs: |-
-  # 03.3 — No second query to append to
+  # 03.4 — No second query to append to
 
   `401`, and nothing from `secrets` anywhere in the response.
 
