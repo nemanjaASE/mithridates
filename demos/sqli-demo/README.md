@@ -242,4 +242,5 @@ Static checks: `uv run ruff check .`
 ---
 
 The full story of the attack (flow, cause, defense): [`../../docs/writeups/01-sql-injection.md`](../../docs/writeups/01-sql-injection.md)
+· Slides to present it: [`docs/slides/sql-injection.pdf`](docs/slides/sql-injection.pdf)
 · Lab overview: [`../../README.md`](../../README.md)
