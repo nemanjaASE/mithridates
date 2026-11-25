@@ -15,42 +15,23 @@ the affected input is the username of the login endpoint. The application concat
 into the authentication query, and the database has no means of distinguishing the
 statement written by the developer from the characters supplied by the user.
 
-Three payloads are demonstrated. `admin'--` authenticates as the administrator with an
-arbitrary password. `' OR '1'='1'--` authenticates as the first user in the table. A
-`UNION`-based payload returns a row of the `secrets` table, which the application then
-places in the issued token. Against the `safe` route, each payload results in `401`. The
-requests and responses are listed in the demo's README:
+Three payloads are demonstrated, each sent as the username to both routes with the password
+`anything`:
+
+| Payload | `vulnerable` | `safe` |
+| --- | --- | --- |
+| `admin'--` | `200`, an administrator token | `401` |
+| `' OR '1'='1'--` | `200`, a token for the first user in the table | `401` |
+| `' UNION SELECT id, name, value FROM secrets WHERE name = 'flag'--` | `200`, a row of `secrets` in the token: the role is the flag | `401` |
+
+The requests and responses are in the demo's README:
 [The attack, step by step](../../demos/sqli-demo/README.md#the-attack-step-by-step).
-
-Select a step to view the responses of both routes:
-
-<details open>
-<summary><b>Step 1 · Comment-based authentication bypass</b></summary>
-
-![admin'-- as the username: the vulnerable route returns 200 with an administrator token, the safe route 401](../../demos/sqli-demo/docs/attack-1.svg)
-
-</details>
-<details>
-<summary><b>Step 2 · Tautology-based injection</b></summary>
-
-![' OR '1'='1'-- as the username: the vulnerable route returns 200 with a token for the first row, the safe route 401](../../demos/sqli-demo/docs/attack-2.svg)
-
-</details>
-<details>
-<summary><b>Step 3 · UNION-based data extraction</b></summary>
-
-![A UNION query over the secrets table as the username: the vulnerable route returns 200 with the flag as the role, the safe route 401](../../demos/sqli-demo/docs/attack-3.svg)
-
-</details>
 
 Outside the scope of this demo, the same flaw can allow data to be modified or deleted and,
 in some database configurations, commands to be executed on the server. Here these outcomes
 are prevented by the privileges of the database accounts (see **The fix**).
 
 ## Why it works
-
-![admin'-- concatenated into the statement: the apostrophe terminates the string literal,
-and -- turns the password predicate into a comment](../../demos/sqli-demo/docs/vulnerable-query.svg)
 
 **Code and data share a single string.** `VulnerableSqlAuthenticator`
 (`app/infrastructure/auth/vulnerable_sql_authenticator.py`) constructs the query by string
@@ -83,9 +64,6 @@ same pattern with a condition that is always true, and the `UNION` payload appen
 `SELECT` whose three columns, taken from `secrets`, are returned in place of a user record.
 
 ## The fix
-
-![The statement parsed with two placeholders, and admin'-- transmitted separately as a
-value that is never parsed as SQL](../../demos/sqli-demo/docs/safe-query.svg)
 
 **Parameterized queries.** `SafeSqlAuthenticator`
 (`app/infrastructure/auth/safe_sql_authenticator.py`) passes user input to the database

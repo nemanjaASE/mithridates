@@ -1,6 +1,6 @@
 ---
 name: house-style-figures
-description: Draw, change or check the SVG figures of sqli-demo and promptinj-demo — the C4 levels 1–4, the database figure and the annotated code figures of the write-ups — in the repository's house style. Use when editing a demo's docs/diagrams.py, regenerating its SVGs, starting a new demo's figures in the same look, or checking figures for overlaps, alignment and contrast.
+description: Draw, change or check the SVG figures of sqli-demo and promptinj-demo — the C4 levels 1–4 and the database figure — in the repository's house style. Use when editing a demo's docs/diagrams.py, regenerating its SVGs, starting a new demo's figures in the same look, or checking figures for overlaps, alignment and contrast.
 ---
 
 # House-style figures
@@ -66,7 +66,8 @@ the drawing, draws the key for exactly the marks on the sheet, and sizes the she
 ## The rules
 
 - **C4 for structure.** Context, containers, components, code, in that order in the
-  README; a database figure where there is one; annotated code figures in the write-up.
+  README, and a database figure where there is one. A write-up has no figures: it explains
+  in text, with code blocks and tables.
 - **Grid.** Margin 56px. Three columns at x = 56, 399, 742 (302 wide) or four at 56, 310,
   564, 818 (226 wide); the gutter widens only where an arrow has to carry a label.
 - **Right angles.** Arrows leave and enter a box at its centre, horizontal or vertical
