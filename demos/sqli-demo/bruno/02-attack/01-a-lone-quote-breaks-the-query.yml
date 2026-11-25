@@ -1,0 +1,49 @@
+info:
+  name: A lone quote breaks the query
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8001/api/v1/vulnerable/auth/login
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "'",
+        "password": "anything"
+      }
+  auth:
+    type: none
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: "The request could not be processed."
+
+docs: |-
+  # 02.1 — Finding the injection point
+
+  One quote as the username, and the response is `400`, not the `401` of a wrong login.
+
+  The vulnerable adapter pastes it into the SQL text:
+
+  ```sql
+  SELECT id, username, role FROM users
+  WHERE username = ''' AND password_hash = crypt('anything', password_hash)
+  ```
+
+  The quotes no longer pair up, so the database cannot parse the statement. For an
+  attacker that `400` is the signal: the input ends up inside the SQL, and the next
+  requests type SQL there on purpose.
+
+  The body says only `"The request could not be processed."` and an `error_id`, nothing
+  about SQL, so the response does not confirm the guess. The database's own error goes to
+  the server log, under that `error_id`. 03.1 sends the same body to the safe route.

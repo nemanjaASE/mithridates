@@ -39,4 +39,4 @@ docs: |-
   ```
 
   If `GET /api/v1/debug/users` is missing, the service was started with
-  `ENABLE_DEBUG_ENDPOINTS=false` and request 02.4 will return `404`.
+  `ENABLE_DEBUG_ENDPOINTS=false` and request 00.2 will return `404`.

@@ -1,7 +1,7 @@
 info:
-  name: A broken payload is harmless data
+  name: A lone quote is harmless data
   type: http
-  seq: 4
+  seq: 1
 
 http:
   method: POST
@@ -26,11 +26,11 @@ runtime:
       value: "401"
 
 docs: |-
-  # 03.4 — A lone quote proves which route you are on
+  # 03.1 — A lone quote proves which route you are on
 
   On the safe route a single quote is a one-character username: `401`.
 
-  Send the same body to `/api/v1/vulnerable/auth/login` and it is `400` with
+  02.1 sends the same body to `/api/v1/vulnerable/auth/login` and gets `400` with
   `"The request could not be processed."` — the concatenated SQL no longer parses.
 
   That `400` is how an attacker finds an injection point, which is why the message is

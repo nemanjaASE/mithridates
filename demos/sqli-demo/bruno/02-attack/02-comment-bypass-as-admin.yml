@@ -1,7 +1,7 @@
 info:
   name: Comment bypass logs in as admin
   type: http
-  seq: 1
+  seq: 2
 
 http:
   method: POST
@@ -30,7 +30,7 @@ runtime:
       value: "200"
 
 docs: |-
-  # 02.1 — Authentication bypass (OWASP A05:2025 Injection)
+  # 02.2 — Authentication bypass (OWASP A05:2025 Injection)
 
   The password is `anything`, and the response is `200` with a token.
 
@@ -45,7 +45,7 @@ docs: |-
   whole password check — into a comment. The database never sees a condition about the
   password, because there is no longer one to see.
 
-  The token is stored in `token`, so run 02.2 next to see whose it is.
+  The token is stored in `token`, so run 02.3 next to see whose it is.
 
   Set `EXPOSE_QUERY_TRACE=true` on the service and the response carries a `debug` object
   with the executed statement, which is the version to put on a projector.

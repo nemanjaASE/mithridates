@@ -1,7 +1,7 @@
 info:
   name: Tautology takes the first row
   type: http
-  seq: 3
+  seq: 4
 
 http:
   method: POST
@@ -30,9 +30,9 @@ runtime:
       value: "200"
 
 docs: |-
-  # 02.3 — No valid identifier needed
+  # 02.4 — No valid identifier needed
 
-  02.1 still had to know a username. This one does not:
+  02.2 still had to know a username. This one does not:
 
   ```sql
   WHERE username = '' OR '1'='1'--' AND password_hash = ...
