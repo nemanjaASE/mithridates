@@ -4,7 +4,8 @@
 
 For every demo whose docs/diagrams.py carries the house-style block: the block is an exact
 copy of diagram_style.py next to this file; no label sits on a line, crosses a box edge,
-runs into the caption or off the sheet; every segment is horizontal or vertical; every
+comes within 8px of the edge of the box it sits in or 5px of a box beside it, or runs
+into the caption or the 56px margin; every segment is horizontal or vertical; every
 arrow ends on a box; boxes keep 16px apart; the drawing ends 40px above the caption; no
 demo names another; no figure code redefines a name the style uses; and the palette holds
 WCAG contrast. A demo that draws its figures some other way is not looked at.
@@ -165,8 +166,8 @@ def check_figures(demos: list[Path], report: Report) -> None:
                              f"{where}: an arrow ends in empty space at ({px:.0f},{py:.0f})")
 
             for i, (x1, y1, x2, y2, t) in enumerate(texts):
-                report.check("figures", x1 >= 24 and x2 <= width - 24,
-                             f"{where}: {t!r} runs off the sheet")
+                report.check("figures", x1 >= 56 - 1 and x2 <= width - 56 + 1,
+                             f"{where}: {t!r} runs into the 56px margin")
                 report.check("figures", y2 <= height - 62, f"{where}: {t!r} runs into the caption")
                 for x3, y3, x4, y4, t2 in texts[i + 1:]:
                     report.check("figures",
@@ -177,6 +178,17 @@ def check_figures(demos: list[Path], report: Report) -> None:
                     inside = fx1 <= x1 and x2 <= fx2 and fy1 <= y1 and y2 <= fy2
                     report.check("figures", not overlaps or inside,
                                  f"{where}: {t!r} crosses the edge of a box")
+                    # beside a box it is not in, it keeps 5px clear of the box
+                    gap = max(fx1 - x2, x1 - fx2)
+                    report.check("figures", inside or not (y1 < fy2 and fy1 < y2) or not 0 <= gap < 5,
+                                 f"{where}: {t!r} comes within 5px of a box beside it")
+                # and inside the box it sits in, it keeps 8px clear of the left and right edge
+                holders = [f for f in frames
+                           if f[0] <= x1 and x2 <= f[2] and f[1] <= y1 and y2 <= f[3]]
+                if holders:
+                    fx1, _, fx2, _ = min(holders, key=lambda f: (f[2] - f[0]) * (f[3] - f[1]))
+                    report.check("figures", x1 >= fx1 + 8 and x2 <= fx2 - 8,
+                                 f"{where}: {t!r} comes within 8px of the edge of its box")
                 for (ax, ay), (bx, by) in segments:
                     flat = abs(ay - by) < 1 and y1 - 2 < ay < y2 + 2 and min(ax, bx) < x2 and x1 < max(ax, bx)
                     tall = abs(ax - bx) < 1 and x1 - 2 < ax < x2 + 2 and min(ay, by) < y2 and y1 < max(ay, by)
@@ -228,7 +240,7 @@ def check_palette(report: Report) -> None:
     (non-text, 1.4.11) on every ground a figure draws on."""
     style = STYLE.read_text(encoding="utf-8")
     colour = dict(re.findall(r'^([A-Z_]+) = "(#[0-9A-Fa-f]{6})"', style, re.M))
-    grounds = ("PAPER", "PANEL", "FILL", "OUT")
+    grounds = ("PAPER", "FILL", "OUT", "ACCENT_FILL", "SAFE_FILL")
     rules = (
         (("INK", "MUTED", "TECH", "ACCENT", "SAFE"), grounds, 4.5, "text"),
         (("EDGE", "LINE"), grounds, 3, "a line"),

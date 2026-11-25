@@ -55,10 +55,10 @@ SYSTEM = "__NAME__"         # the demo; NAME is taken: the style uses it for a s
 # C4 level 1 — who uses it, and what it reaches outside itself
 # --------------------------------------------------------------------------
 def context():
-    a = figure(W, "c4 model · level 1 · context", "Who uses it, and what it depends on")
+    a = figure(W, f"System context diagram for {SYSTEM}")
     top, hb = 220, node_h("kind", ["what"])
-    node(a, M, top, 230, "you", "learner · attacker", ["Bruno"], dash="4 3")
-    node(a, 420, top, 260, SYSTEM, "software system", ["vulnerable · __safe__"], icon="fastapi")
+    node(a, M, top, 230, "you", "learner, attacker", ["Bruno"], dash="4 3")
+    node(a, 420, top, 260, SYSTEM, "software system", ["vulnerable and __safe__"], icon="fastapi")
     node(a, 814, top, 230, "Docker Hub", "container registry", ["base images"],
          dash="4 3", icon="docker")
     for x in (360, 740):
@@ -67,25 +67,25 @@ def context():
     arrow(a, [(290, mid), (416, mid)], "attacks", ACCENT, at=(293, mid - 10))
     arrow(a, [(684, mid), (810, mid)], "pulls", at=(692, mid - 10))
     return caption(a, W, 1, "level 1 — the system, its user, and what it pulls from",
-                   "compose.yaml · Dockerfile")
+                   "compose.yaml, Dockerfile")
 
 
 # --------------------------------------------------------------------------
 # C4 level 2 — what runs, and the one way in
 # --------------------------------------------------------------------------
 def containers():
-    a = figure(W, "c4 model · level 2 · containers", "What runs, and what it is built on")
+    a = figure(W, f"Container diagram for {SYSTEM}")
     under = len(a)                    # the system panel goes beneath everything in it
     top = 232
     hy = node(a, M, top, 180, "you", "Bruno", dash="4 3")
-    node(a, 372, top, 300, SYSTEM, "FastAPI · uvicorn", accent=True, docker=True)
+    node(a, 372, top, 300, SYSTEM, "FastAPI, uvicorn", accent=True, docker=True)
     bottom = top + hy
 # [postgres]
     low = bottom + 70
     bottom = low + node(a, 372, low, 300, "database", "PostgreSQL 18", store=True, docker=True)
 # [/postgres]
     panel = []
-    zone(panel, 340, 196, 364, bottom + 36 - 196, "system · " + SYSTEM)
+    zone(panel, 340, 196, 364, bottom + 36 - 196, SYSTEM)
     a[under:under] = panel
     boundary(a, 268, 176, bottom + 56)
     mid = top + hy // 2
@@ -101,7 +101,7 @@ def containers():
 # C4 level 3 — what one request passes through inside the container
 # --------------------------------------------------------------------------
 def components():
-    a = figure(W, "c4 model · level 3 · components", "Inside the container, one request")
+    a = figure(W, f"Component diagram for the {SYSTEM} container")
     left, centre, right, w = M, 399, 742, 302
     top = 212
     hy = node(a, left, top, w, "you", "Bruno", accent=True, dash="4 3")
@@ -121,29 +121,31 @@ def components():
     node(a, right, row, w, "__Safe__Feature", "adapter", accent=SAFE)
     fork(a, (893, port + hp), bus, [(207, row - 4), (893, row - 4)], [ACCENT, SAFE], down=True)
     a.append(mono(217, bus + 32, "variant=vulnerable", LABEL, ACCENT))
-    a.append(mono(903, bus + 32, "variant=__safe__", LABEL, SAFE))
+    right = "variant=__safe__"         # left of its line, so it stays inside the margin
+    a.append(mono(883 - mono_w(right, LABEL), bus + 32, right, LABEL, SAFE))
 # [postgres]
 
     level = row + node_h("adapter", []) // 2
     hd = node_h("PostgreSQL 18", []) + 12          # a store is taller by its lid
     node(a, 465, level - hd // 2, 170, "database", "PostgreSQL 18", store=True)
     arrow(a, [(362, level), (461, level)], None, ACCENT)
-    a.append(mono(411.5 - mono_w("the flaw", LABEL) / 2, level - 10, "the flaw", LABEL, ACCENT))
+    a.append(sans(411.5 - sans_w("the flaw", LABEL) / 2, level - 10, "the flaw", LABEL, ACCENT))
     arrow(a, [(738, level), (639, level)], None, SAFE)
-    a.append(mono(688.5 - mono_w("the defense", LABEL) / 2, level - 10, "the defense", LABEL,
+    a.append(sans(688.5 - sans_w("the defense", LABEL) / 2, level - 10, "the defense", LABEL,
                   SAFE))
 # [/postgres]
     return caption(a, W, 3, "level 3 — the components one request passes through",
-                   "app/api/ · app/application/ · app/infrastructure/")
+                   "app/api/, app/application/, app/infrastructure/")
 
 
 # --------------------------------------------------------------------------
 # C4 level 4 — the port, and the two classes that implement it
 # --------------------------------------------------------------------------
 def code_level():
-    a = figure(W, "c4 model · level 4 · code", "The port and its two implementations")
+    a = figure(W, "Code diagram for the Feature port")
     top = 220
-    hp = node(a, 399, top, 302, "Feature", "typing.Protocol", ["run(value, principal)"])
+    hp = node(a, 399, top, 302, "Feature", "typing.Protocol", ["run(value, principal)"],
+             mono_lines=True)
     low = top + hp + 80
     node(a, M, low, 302, "VulnerableFeature", "infrastructure", accent=True)
     node(a, 742, low, 302, "__Safe__Feature", "infrastructure", accent=SAFE)
@@ -151,7 +153,7 @@ def code_level():
     arrow(a, [(207, low - 4), (207, mid), (395, mid)], "implements", at=(217, low - 30))
     arrow(a, [(893, low - 4), (893, mid), (705, mid)], "implements", at=(903, low - 30))
     return caption(a, W, 4, "level 4 — one port, two implementations",
-                   "app/domain/ports.py · app/infrastructure/feature/")
+                   "app/domain/ports.py, app/infrastructure/feature/")
 
 
 if __name__ == "__main__":

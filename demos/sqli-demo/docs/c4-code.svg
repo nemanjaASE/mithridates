@@ -1,53 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 759" width="1100" height="759" role="img" aria-labelledby="t d">
-<title id="t">The port and its two implementations</title><desc id="d">One Protocol, two classes. Everything above this level is identical for both variants; the difference is the statement each one builds.</desc>
-<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9DA6B7" stroke-width="1.1"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E0E6F0" stroke-width="1.1"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#E08585" stroke-width="1.1"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#9FEF00" stroke-width="1.1"/></marker></defs>
-<rect width="1100" height="759" fill="#252A33"/>
-<text x="56" y="64" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="206.25" lengthAdjust="spacingAndGlyphs">C4 MODEL · LEVEL 4 · CODE</text>
-<text x="56" y="108" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="32" font-weight="700" xml:space="preserve" textLength="633.6" lengthAdjust="spacingAndGlyphs">The port and its two implementations</text>
-<polyline points="56,132 1044,132" fill="none" stroke="#3F4552" stroke-width="1"/>
-<rect x="372" y="196" width="356" height="105" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-system" d="M372,210 V196 H386 M728,210 V196 H714 M372,287 V301 H386 M728,287 V301 H714" fill="none" stroke="#8F98AA" stroke-width="2"/>
-<g transform="translate(388,215)" fill="none" stroke="#AAB2C2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="10" r="4"/><path d="M2 10h8"/></g>
-<text x="416" y="231" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="121.55" lengthAdjust="spacingAndGlyphs">Authenticator</text>
-<text x="388" y="253" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="126.23" lengthAdjust="spacingAndGlyphs">[typing.Protocol]</text>
-<text x="388" y="274" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve">authenticate(username, password)</text>
-<rect x="56" y="371" width="420" height="84" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-attack corners-system" d="M56,385 V371 H70 M476,385 V371 H462 M56,441 V455 H70 M476,441 V455 H462" fill="none" stroke="#E08585" stroke-width="2"/>
-<g transform="translate(72,390)" fill="none" stroke="#E08585" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3C4 3 5.5 9 3 10c2.5 1-1 7 4 7M13 3c3 0 1.5 6 4 7-2.5 1 1 7-4 7"/></g>
-<text x="100" y="406" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="243.1" lengthAdjust="spacingAndGlyphs">VulnerableSqlAuthenticator</text>
-<text x="72" y="428" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="155.93" lengthAdjust="spacingAndGlyphs">[infrastructure.auth]</text>
-<rect x="624" y="371" width="420" height="84" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners corners-fix corners-system" d="M624,385 V371 H638 M1044,385 V371 H1030 M624,441 V455 H638 M1044,441 V455 H1030" fill="none" stroke="#9FEF00" stroke-width="2"/>
-<g transform="translate(640,390)" fill="none" stroke="#9FEF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3C4 3 5.5 9 3 10c2.5 1-1 7 4 7M13 3c3 0 1.5 6 4 7-2.5 1 1 7-4 7"/></g>
-<text x="668" y="406" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="17" font-weight="700" xml:space="preserve" textLength="187.0" lengthAdjust="spacingAndGlyphs">SafeSqlAuthenticator</text>
-<text x="640" y="428" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="155.93" lengthAdjust="spacingAndGlyphs">[infrastructure.auth]</text>
-<polyline points="266,367 266,248 368,248" fill="none" stroke="#9DA6B7" stroke-width="1.2" marker-end="url(#to)"/>
-<text x="276" y="347" fill="#9DA6B7" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="82.5" lengthAdjust="spacingAndGlyphs">implements</text>
-<polyline points="834,367 834,248 732,248" fill="none" stroke="#9DA6B7" stroke-width="1.2" marker-end="url(#to)"/>
-<text x="844" y="347" fill="#9DA6B7" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="400" xml:space="preserve" textLength="82.5" lengthAdjust="spacingAndGlyphs">implements</text>
-<polyline points="56,495 1044,495" fill="none" stroke="#8F98AA" stroke-width="1"/>
-<text x="56" y="539" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="135.85" lengthAdjust="spacingAndGlyphs">conn.execute(</text>
-<text x="191.85" y="539" fill="#E08585" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="177.65" lengthAdjust="spacingAndGlyphs">f"… '{username}'"</text>
-<text x="369.5" y="539" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="10.45" lengthAdjust="spacingAndGlyphs">)</text>
-<polyline points="191.85,551 369.5,551" fill="none" stroke="#E08585" stroke-width="1"/>
-<text x="56" y="591" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="135.85" lengthAdjust="spacingAndGlyphs">conn.execute(</text>
-<text x="191.85" y="591" fill="#9FEF00" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="365.75" lengthAdjust="spacingAndGlyphs">_AUTHENTICATE, (username, password)</text>
-<text x="557.6" y="591" fill="#E0E6F0" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="10.45" lengthAdjust="spacingAndGlyphs">)</text>
-<polyline points="191.85,603 557.6,603" fill="none" stroke="#9FEF00" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 776" width="1100" height="776" role="img" aria-labelledby="t d">
+<title id="t">Code diagram for the Authenticator port</title><desc id="d">One Protocol, two classes. Everything above this level is identical for both variants; the difference is the statement each one builds.</desc>
+<defs><marker id="to" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#161616" stroke-width="1.4"/></marker><marker id="to-ink" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#161616" stroke-width="1.4"/></marker><marker id="to-accent" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#A2191F" stroke-width="1.4"/></marker><marker id="to-safe" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1.2 L7.4,4 L0,6.8" fill="none" stroke="#0E6027" stroke-width="1.4"/></marker></defs>
+<rect width="1100" height="776" fill="#FFFFFF"/>
+<text x="56" y="96" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="34" font-weight="700" xml:space="preserve" textLength="647.94" lengthAdjust="spacingAndGlyphs">Code diagram for the Authenticator port</text>
+<polyline points="56,132 1044,132" fill="none" stroke="#C6C6C6" stroke-width="1"/>
+<rect x="372" y="196" width="356" height="115" fill="#FFFFFF" stroke="#161616" stroke-width="3" class="frame frame-system"/>
+<text x="388" y="234" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="136.5" lengthAdjust="spacingAndGlyphs">Authenticator</text>
+<text x="388" y="259" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="125.47" lengthAdjust="spacingAndGlyphs">[typing.Protocol]</text>
+<text x="388" y="283" fill="#262626" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="18.5" font-weight="400" xml:space="preserve" textLength="325.6" lengthAdjust="spacingAndGlyphs">authenticate(username, password)</text>
+<rect x="56" y="381" width="420" height="91" fill="#FFF1F1" stroke="#A2191F" stroke-width="3" class="frame frame-attack frame-system"/>
+<text x="72" y="419" fill="#A2191F" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="276.55" lengthAdjust="spacingAndGlyphs">VulnerableSqlAuthenticator</text>
+<text x="72" y="444" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="150.76" lengthAdjust="spacingAndGlyphs">[infrastructure.auth]</text>
+<rect x="624" y="381" width="420" height="91" fill="#DEFBE6" stroke="#0E6027" stroke-width="3" class="frame frame-fix frame-system"/>
+<text x="640" y="419" fill="#0E6027" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="21" font-weight="700" xml:space="preserve" textLength="213.53" lengthAdjust="spacingAndGlyphs">SafeSqlAuthenticator</text>
+<text x="640" y="444" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17.5" font-weight="400" xml:space="preserve" textLength="150.76" lengthAdjust="spacingAndGlyphs">[infrastructure.auth]</text>
+<polyline points="266,377 266,253 368,253" fill="none" stroke="#161616" stroke-width="2.5" marker-end="url(#to-ink)"/>
+<text x="276" y="357" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="18.5" font-weight="400" xml:space="preserve" textLength="94.57" lengthAdjust="spacingAndGlyphs">implements</text>
+<polyline points="834,377 834,253 732,253" fill="none" stroke="#161616" stroke-width="2.5" marker-end="url(#to-ink)"/>
+<text x="844" y="357" fill="#161616" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="18.5" font-weight="400" xml:space="preserve" textLength="94.57" lengthAdjust="spacingAndGlyphs">implements</text>
+<polyline points="56,512 1044,512" fill="none" stroke="#161616" stroke-width="1"/>
+<text x="56" y="556" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="135.85" lengthAdjust="spacingAndGlyphs">conn.execute(</text>
+<text x="191.85" y="556" fill="#A2191F" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="177.65" lengthAdjust="spacingAndGlyphs">f"… '{username}'"</text>
+<text x="369.5" y="556" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="10.45" lengthAdjust="spacingAndGlyphs">)</text>
+<polyline points="191.85,568 369.5,568" fill="none" stroke="#A2191F" stroke-width="2"/>
+<text x="56" y="608" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="135.85" lengthAdjust="spacingAndGlyphs">conn.execute(</text>
+<text x="191.85" y="608" fill="#0E6027" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="365.75" lengthAdjust="spacingAndGlyphs">_AUTHENTICATE, (username, password)</text>
+<text x="557.6" y="608" fill="#161616" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="19" font-weight="400" xml:space="preserve" textLength="10.45" lengthAdjust="spacingAndGlyphs">)</text>
+<polyline points="191.85,620 557.6,620" fill="none" stroke="#0E6027" stroke-width="2"/>
 <!-- key -->
 <g class="key">
-<rect x="56" y="643" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners" d="M56,649 V643 H62 M84,649 V643 H78 M56,655 V661 H62 M84,655 V661 H78" fill="none" stroke="#8F98AA" stroke-width="2"/>
-<text x="94" y="657" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="74.25" lengthAdjust="spacingAndGlyphs">the system</text>
-<rect x="208.25" y="643" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners" d="M208.25,649 V643 H214.25 M236.25,649 V643 H230.25 M208.25,655 V661 H214.25 M236.25,655 V661 H230.25" fill="none" stroke="#E08585" stroke-width="2"/>
-<text x="246.25" y="657" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="81.68" lengthAdjust="spacingAndGlyphs">attack path</text>
-<rect x="367.93" y="643" width="28" height="18" rx="0" fill="#0E1015" stroke="#2A2F38" stroke-width="1" stroke-opacity="1"/>
-<path class="corners" d="M367.93,649 V643 H373.93 M395.93,649 V643 H389.93 M367.93,655 V661 H373.93 M395.93,655 V661 H389.93" fill="none" stroke="#9FEF00" stroke-width="2"/>
-<text x="405.93" y="657" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="13.5" font-weight="400" xml:space="preserve" textLength="51.98" lengthAdjust="spacingAndGlyphs">the fix</text>
+<rect x="56" y="660" width="28" height="18" fill="#FFFFFF" stroke="#161616" stroke-width="3" class="frame"/>
+<text x="94" y="675" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="82.19" lengthAdjust="spacingAndGlyphs">the system</text>
+<rect x="216.19" y="660" width="28" height="18" fill="#FFF1F1" stroke="#A2191F" stroke-width="3" class="frame"/>
+<text x="254.19" y="675" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="83.16" lengthAdjust="spacingAndGlyphs">attack path</text>
+<rect x="377.35" y="660" width="28" height="18" fill="#DEFBE6" stroke="#0E6027" stroke-width="3" class="frame"/>
+<text x="415.35" y="675" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="45.36" lengthAdjust="spacingAndGlyphs">the fix</text>
 </g>
 <!-- /key -->
-<polyline points="56,701 1044,701" fill="none" stroke="#3F4552" stroke-width="1"/>
-<text x="56" y="731" fill="#9AA3B4" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="15" font-weight="700" xml:space="preserve" textLength="16.5" lengthAdjust="spacingAndGlyphs">04</text>
-<text x="96" y="731" fill="#AAB2C2" font-family="Consolas, 'Cascadia Mono', 'SF Mono', Menlo, monospace" font-size="14.5" font-weight="400" xml:space="preserve" textLength="414.7" lengthAdjust="spacingAndGlyphs">domain/ports/authenticator.py · infrastructure/auth/</text>
+<polyline points="56,718 1044,718" fill="none" stroke="#C6C6C6" stroke-width="1"/>
+<text x="56" y="748" fill="#393939" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="700" xml:space="preserve" textLength="18.9" lengthAdjust="spacingAndGlyphs">04</text>
+<text x="96" y="748" fill="#262626" font-family="Arial, 'Liberation Sans', Helvetica, sans-serif" font-size="17" font-weight="400" xml:space="preserve" textLength="375.12" lengthAdjust="spacingAndGlyphs">domain/ports/authenticator.py, infrastructure/auth/</text>
 </svg>
